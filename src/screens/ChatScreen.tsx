@@ -1,18 +1,60 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView,FlatList, Image } from 'react-native';
+import React, { useContext, useRef, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  FlatList,
+  Image,
+  Animated,
+} from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
+
+const UnreadBadge = ({ count }: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.unreadBadge,
+        {
+          opacity: fadeAnim,
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}
+    >
+      <Text style={styles.unreadText}>{count}</Text>
+    </Animated.View>
+  );
+};
 
 const ChatScreen = () => {
   const { theme } = useContext(ThemeContext);
 
-  const data = [
+  const chats = [
     {
       id: '1',
-      name: 'Riya Sharma',
+      name: 'Harshvardhan Pundir',
       message: 'Kal milte hain 😊',
       time: '10:45 PM',
       unread: 2,
-      image: 'https://i.pravatar.cc/150?img=5',
+      image: 'https://i.pravatar.cc/150?img=3',
     },
     {
       id: '2',
@@ -56,55 +98,65 @@ const ChatScreen = () => {
     },
   ];
 
+  // 🔥 renderItem FIXED + CLEAN
+  const renderItem = ({ item }: any) => {
+    // 🔥 animation values
+    return (
+      <View style={styles.chatItem}>
+        {/* Avatar */}
+        <Image source={{ uri: item.image }} style={styles.avatar} />
+
+        {/* Name + Message */}
+        <View style={styles.flexOne}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.message}>{item.message}</Text>
+        </View>
+
+        {/* Time + Unread */}
+        <View style={styles.rightSection}>
+          <Text style={styles.time}>{item.time}</Text>
+
+          {item.unread > 0 && <UnreadBadge count={item.unread} />}
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
-
-      <TextInput
-        placeholder="Search chats..."
-        placeholderTextColor="#aaa"
-        style={styles.search}
-      />
-
-      <Text style={styles.section}>Active Now</Text>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {[1, 2, 3].map(i => (
-          <View key={i} style={styles.activeUser}>
-            <Image
-              source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
-              style={styles.activeAvatar}
-            />
-          </View>
-        ))}
-      </ScrollView>
-
-      <Text style={styles.section}>Recent Chats</Text>
-
       <FlatList
-        data={data}
+        data={chats}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={[styles.card, { backgroundColor: theme.card }]}>
-            <Image source={{ uri: item.image }} style={styles.avatar} />
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <>
+            {/* Logo */}
+            <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-            <View style={styles.flexOne}>
-              <Text style={[styles.bold, { color: theme.text }]}>
-                {item.name}
-              </Text>
-              <Text style={{ color: theme.subText }}>{item.message}</Text>
-            </View>
+            {/* Search */}
+            <TextInput
+              placeholder="Search chats..."
+              placeholderTextColor="#aaa"
+              style={styles.search}
+            />
 
-            <View>
-              <Text style={{ color: theme.subText }}>{item.time}</Text>
-              {item.unread > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.whiteText}>{item.unread}</Text>
+            {/* Active Now */}
+            <Text style={styles.section}>Active Now</Text>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {[1, 2, 3].map(i => (
+                <View key={i} style={styles.activeUser}>
+                  <Image
+                    source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
+                    style={styles.activeAvatar}
+                  />
                 </View>
-              )}
-            </View>
-          </View>
-        )}
+              ))}
+            </ScrollView>
+
+            <Text style={styles.section}>Recent Chats</Text>
+          </>
+        }
       />
     </View>
   );
@@ -115,20 +167,18 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
+    paddingHorizontal: 14,
+    paddingTop: 10,
   },
 
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-
-  card: {
+  chatItem: {
     flexDirection: 'row',
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 10,
+    padding: 14,
+    borderRadius: 16,
+    marginBottom: 12,
+    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
   },
 
   avatar: {
@@ -138,24 +188,48 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 
-  badge: {
-    backgroundColor: '#7C3AED',
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    marginTop: 5,
-  },
-
   flexOne: {
     flex: 1,
   },
 
-  bold: {
+  name: {
+    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 15,
+  },
+
+  message: {
+    color: '#aaa',
+    marginTop: 2,
+    fontSize: 13,
+  },
+
+  rightSection: {
+    alignItems: 'flex-end',
+  },
+
+  time: {
+    color: '#aaa',
+    fontSize: 12,
+  },
+
+  unreadBadge: {
+    marginTop: 5,
+    backgroundColor: '#7C3AED',
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+  },
+
+  unreadText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: 'bold',
   },
 
-  whiteText: {
-    color: '#fff',
-  },
   logo: {
     width: 160,
     height: 80,
@@ -165,11 +239,12 @@ const styles = StyleSheet.create({
 
   search: {
     backgroundColor: '#1E293B',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 15,
+    borderRadius: 25,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    marginBottom: 18,
     color: '#fff',
+    fontSize: 14,
   },
 
   section: {
@@ -188,5 +263,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2,
     borderColor: '#7C3AED',
+    shadowColor: '#7C3AED',
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
   },
 });
