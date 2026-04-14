@@ -102,19 +102,31 @@ const ChatScreen = () => {
   const renderItem = ({ item }: any) => {
     // 🔥 animation values
     return (
-      <View style={styles.chatItem}>
+      <View
+        style={[
+          styles.chatItem,
+          {
+            backgroundColor: theme.card,
+            borderColor: theme.border,
+          },
+        ]}
+      >
         {/* Avatar */}
         <Image source={{ uri: item.image }} style={styles.avatar} />
 
         {/* Name + Message */}
         <View style={styles.flexOne}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.message}>{item.message}</Text>
+          <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
+          <Text style={[styles.message, { color: theme.subText }]}>
+            {item.message}
+          </Text>
         </View>
 
         {/* Time + Unread */}
         <View style={styles.rightSection}>
-          <Text style={styles.time}>{item.time}</Text>
+          <Text style={[styles.time, { color: theme.subText }]}>
+            {item.time}
+          </Text>
 
           {item.unread > 0 && <UnreadBadge count={item.unread} />}
         </View>
@@ -137,11 +149,20 @@ const ChatScreen = () => {
             <TextInput
               placeholder="Search chats..."
               placeholderTextColor="#aaa"
-              style={styles.search}
+              style={[
+                styles.search,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.border,
+                  color: theme.text,
+                },
+              ]}
             />
 
             {/* Active Now */}
-            <Text style={styles.section}>Active Now</Text>
+            <Text style={[styles.section, { color: theme.subText }]}>
+              Active Now
+            </Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {[1, 2, 3].map(i => (
@@ -173,19 +194,22 @@ const styles = StyleSheet.create({
 
   chatItem: {
     flexDirection: 'row',
-    padding: 14,
-    borderRadius: 16,
-    marginBottom: 12,
-    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    padding: 16,
+    borderRadius: 18,
+    marginBottom: 14,
+    backgroundColor: '#1E293B',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: 'rgba(255,255,255,0.08)',
+    elevation: 4,
   },
 
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
   },
 
   flexOne: {
@@ -193,14 +217,14 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#fff',
-    fontSize: 15,
+    fontSize: 16,
   },
 
   message: {
-    color: '#aaa',
-    marginTop: 2,
+    color: '#fff',
+    marginTop: 4,
     fontSize: 13,
   },
 
@@ -209,19 +233,22 @@ const styles = StyleSheet.create({
   },
 
   time: {
-    color: '#aaa',
-    fontSize: 12,
+    color: '#94A3B8',
+    fontSize: 11,
   },
 
   unreadBadge: {
-    marginTop: 5,
-    backgroundColor: '#7C3AED',
-    minWidth: 22,
-    height: 22,
-    borderRadius: 11,
+    marginTop: 6,
+    backgroundColor: '#8B5CF6',
+    minWidth: 24,
+    height: 24,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 6,
+    shadowColor: '#8B5CF6',
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
   },
 
   unreadText: {
@@ -239,18 +266,21 @@ const styles = StyleSheet.create({
 
   search: {
     backgroundColor: '#1E293B',
-    borderRadius: 25,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    marginBottom: 18,
+    borderColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    marginBottom: 20,
     color: '#fff',
     fontSize: 14,
   },
 
   section: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#94A3B8', // 🔥 soft white
+    fontSize: 15,
     marginBottom: 10,
+    marginTop: 8,
   },
 
   activeUser: {
@@ -258,13 +288,14 @@ const styles = StyleSheet.create({
   },
 
   activeAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
     borderWidth: 2,
-    borderColor: '#7C3AED',
-    shadowColor: '#7C3AED',
-    shadowOpacity: 0.6,
-    shadowRadius: 6,
+    borderColor: '#8B5CF6',
+
+    shadowColor: '#8B5CF6',
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
   },
 });

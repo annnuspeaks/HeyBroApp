@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatScreen from '../screens/ChatScreen';
@@ -6,6 +6,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ThemeToggle from '../components/ThemeToggle';
 import VoiceScreen from '../screens/VoiceScreen';
 import VideoScreen from '../screens/VideoScreen';
+import { ThemeContext } from '../theme/ThemeContext';
 
 const renderThemeToggle = () => <ThemeToggle />;
 const Tab = createBottomTabNavigator();
@@ -27,18 +28,21 @@ const profileIcon = ({ color }: any) => (
 );
 
 const BottomTabs = () => {
+  const { theme } = useContext(ThemeContext);
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#0F172A',
-          borderTopWidth: 0,
+          backgroundColor: theme.card,
+          borderTopWidth: 1,
+          borderTopColor: theme.border,
           height: 70,
         },
-        tabBarActiveTintColor: '#7C3AED',
-        tabBarInactiveTintColor: '#888',
+        tabBarActiveTintColor: '#8B5CF6',
+        tabBarInactiveTintColor: theme.subText,
         headerRight: renderThemeToggle,
+        tabBarShowLabel: false,
       }}
     >
       <Tab.Screen
