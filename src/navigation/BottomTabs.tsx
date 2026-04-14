@@ -13,7 +13,7 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerRight: renderThemeToggle,
+        headerShown: false,
       }}
     >
       <Tab.Screen name="Chats" component={ChatScreen} />

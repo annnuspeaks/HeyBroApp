@@ -26,7 +26,10 @@ const ChatScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text style={[styles.title, { color: theme.text }]}>heybro 💬</Text>
+      <Image
+        source={require('../assets/logo.png')}
+        style={styles.logo}
+      />
 
       <FlatList
         data={data}
@@ -102,5 +105,11 @@ const styles = StyleSheet.create({
 
   whiteText: {
     color: '#fff',
+  },
+  logo: {
+    width: 160,
+    height: 80,
+    resizeMode: 'contain',
+    marginBottom: 10,
   },
 });
