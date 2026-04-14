@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView,FlatList, Image } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 
 const ChatScreen = () => {
@@ -20,16 +20,66 @@ const ChatScreen = () => {
       message: 'Vishu, tum kahan ho bro? 😟',
       time: '10:45 PM',
       unread: 1,
-      image: 'https://i.pravatar.cc/150?img=5',
+      image: 'https://i.pravatar.cc/150?img=11',
+    },
+    {
+      id: '3',
+      name: 'Aanya Patil',
+      message: 'Meet me in cafe at 5? ☕',
+      time: '10:45 PM',
+      unread: 0,
+      image: 'https://i.pravatar.cc/150?img=9',
+    },
+    {
+      id: '4',
+      name: 'Oliver Smith',
+      message: 'Beat the bug!',
+      time: '10:45 PM',
+      unread: 1,
+      image: 'https://i.pravatar.cc/150?img=12',
+    },
+    {
+      id: '5',
+      name: 'Freddy McLachlan',
+      message: 'Kinda! nn😟',
+      time: '10:45 PM',
+      unread: 0,
+      image: 'https://i.pravatar.cc/150?img=6',
+    },
+    {
+      id: '6',
+      name: 'Andy Rodriguez',
+      message: 'Walking downstairs, meet me there.',
+      time: '10:45 PM',
+      unread: 1,
+      image: 'https://i.pravatar.cc/150?img=15',
     },
   ];
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Image
-        source={require('../assets/logo.png')}
-        style={styles.logo}
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
+
+      <TextInput
+        placeholder="Search chats..."
+        placeholderTextColor="#aaa"
+        style={styles.search}
       />
+
+      <Text style={styles.section}>Active Now</Text>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {[1, 2, 3].map(i => (
+          <View key={i} style={styles.activeUser}>
+            <Image
+              source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
+              style={styles.activeAvatar}
+            />
+          </View>
+        ))}
+      </ScrollView>
+
+      <Text style={styles.section}>Recent Chats</Text>
 
       <FlatList
         data={data}
@@ -111,5 +161,32 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'contain',
     marginBottom: 10,
+  },
+
+  search: {
+    backgroundColor: '#1E293B',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: 15,
+    color: '#fff',
+  },
+
+  section: {
+    color: '#fff',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+
+  activeUser: {
+    marginRight: 10,
+  },
+
+  activeAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#7C3AED',
   },
 });
