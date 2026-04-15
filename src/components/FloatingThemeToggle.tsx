@@ -36,10 +36,7 @@ const FloatingThemeToggle = () => {
         ]}
       >
         <Animated.Text
-          style={[
-            styles.text,
-            { color: dark ? '#FFD700' : '#0EA5E9' },
-          ]}
+          style={[styles.text, dark ? styles.textDark : styles.textLight]}
         >
           {dark ? '🌙' : '☀️'}
         </Animated.Text>
@@ -61,7 +58,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 30,
     borderWidth: 1,
-    backdropFilter: 'blur(10px)',
     elevation: 8,
     shadowColor: '#000',
     shadowOpacity: 0.25,
@@ -69,5 +65,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+  },
+  textDark: {
+    color: '#FFD700',
+  },
+  textLight: {
+    color: '#0EA5E9',
   },
 });
