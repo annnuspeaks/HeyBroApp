@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatScreen from '../screens/ChatScreen';
@@ -13,11 +13,32 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Tab = createBottomTabNavigator();
 
 const renderIcon = (name: string, focused: boolean, color: string) => {
+  // 🔥 animation value
+  const scale = new Animated.Value(focused ? 1.2 : 1);
+
+  Animated.spring(scale, {
+    toValue: focused ? 1.2 : 1,
+    friction: 5,
+    useNativeDriver: true,
+  }).start();
+
   return (
-    <View style={styles.iconContainer}>
-      <Icon name={focused ? name : `${name}-outline`} size={26} color={color} />
-      {focused && <View style={styles.dot} />}
-    </View>
+    <Animated.View
+      style={[
+        styles.iconContainer,
+        {
+          transform: [{ scale }],
+        },
+      ]}
+    >
+      <Icon
+        name={focused ? name : `${name}-outline`}
+        size={28}
+        color={focused ? '#8B5CF6' : color}
+      />
+
+      {focused && <View style={styles.activeDot} />}
+    </Animated.View>
   );
 };
 
@@ -37,19 +58,19 @@ const TabsWrapper = () => {
         tabBarStyle: {
           position: 'absolute',
           marginHorizontal: 15,
-          bottom: 10,
+          bottom: 15,
           height: 70,
           borderRadius: 20,
           backgroundColor:
             theme.background === '#020617'
-              ? 'rgba(15,23,42,0.75)'
-              : 'rgba(255,255,255,0.7)',
+              ? 'rgba(15,23,42,0.95)'
+              : 'rgba(255,255,255,0.95)',
           borderWidth: 1,
           borderColor: theme.border,
-          elevation: 10,
+          elevation: 12,
           shadowColor: '#000',
-          shadowOpacity: 0.2,
-          shadowRadius: 10,
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
           paddingBottom: 10,
           paddingTop: 10,
         },
@@ -91,6 +112,7 @@ export default BottomTabs;
 const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   dot: {
@@ -99,5 +121,17 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     backgroundColor: '#8B5CF6',
+  },
+  activeDot: {
+    marginTop: 5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#8B5CF6',
+
+    shadowColor: '#8B5CF6',
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
+    elevation: 6,
   },
 });

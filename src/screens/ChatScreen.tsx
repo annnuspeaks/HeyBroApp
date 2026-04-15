@@ -1,11 +1,17 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, Image, TouchableOpacity, Animated,} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
-import FloatingThemeToggle from '../components/FloatingThemeToggle'; 
-
-
-
+import FloatingThemeToggle from '../components/FloatingThemeToggle';
 
 const UnreadBadge = ({ count }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -69,8 +75,16 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
         style={[
           styles.chatItem,
           {
-            backgroundColor: theme.card,
-            borderColor: theme.border,
+            backgroundColor:
+              theme.background === '#020617'
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(0,0,0,0.04)',
+
+            borderColor:
+              theme.background === '#020617'
+                ? 'rgba(255,255,255,0.08)'
+                : 'rgba(0,0,0,0.08)',
+
             opacity,
             transform: [{ translateY }],
           },
@@ -203,7 +217,7 @@ const ChatScreen = () => {
             />
 
             {/* Active Now */}
-            <Text style={[styles.section, { color: theme.subText }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Active Now
             </Text>
 
@@ -218,7 +232,9 @@ const ChatScreen = () => {
               ))}
             </ScrollView>
 
-            <Text style={styles.section}>Recent Chats</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>
+              Recent Chats
+            </Text>
           </>
         }
       />
@@ -239,11 +255,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 18,
     borderRadius: 18,
-    marginBottom: 16,
-    backgroundColor: '#1E293B',
+    marginBottom: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 6,
   },
 
   avatar: {
@@ -282,26 +299,23 @@ const styles = StyleSheet.create({
 
   unreadBadge: {
     marginTop: 6,
-    backgroundColor: '#8B5CF6',
-
     minWidth: 26,
     height: 26,
     borderRadius: 13,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     paddingHorizontal: 8,
-
+    backgroundColor: '#8B5CF6',
     shadowColor: '#8B5CF6',
-    shadowOpacity: 0.7,
-    shadowRadius: 8,
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    elevation: 4,
   },
 
   unreadText: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 
   logo: {
@@ -323,15 +337,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  section: {
-    color: '#94A3B8', // 🔥 soft white
-    fontSize: 15,
-    marginBottom: 10,
-    marginTop: 8,
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 1,
+    marginBottom: 12,
+    marginTop: 5,
+    opacity: 0.5,
   },
 
   activeUser: {
-    marginRight: 10,
+    marginRight: 15,
   },
 
   activeAvatar: {
