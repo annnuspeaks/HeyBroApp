@@ -36,9 +36,8 @@ const TabsWrapper = () => {
 
         tabBarStyle: {
           position: 'absolute',
+          marginHorizontal: 15,
           bottom: 10,
-          left: 16,
-          right: 16,
           height: 70,
           borderRadius: 20,
           backgroundColor:

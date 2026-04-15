@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Aanya",
         "Anurag",
+        "buildscript",
         "chatbubble",
         "hain",
         "Harshvardhan",
@@ -11,9 +12,11 @@
         "Patil",
         "Pundir",
         "Riya",
+        "rootproject",
         "Sharma",
         "Shukla",
         "videocam",
         "Vishu"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

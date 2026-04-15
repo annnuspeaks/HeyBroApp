@@ -41,19 +41,36 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* 🔥 HEADER */}
       <View style={[styles.header, { borderBottomColor: theme.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
+        {/* 🔥 LEFT SECTION (back + avatar + name) */}
+        <View style={styles.leftSection}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" size={24} color={theme.text} />
+          </TouchableOpacity>
 
-        <Image source={{ uri: user.image }} style={styles.avatar} />
+          <Image source={{ uri: user.image }} style={styles.avatar} />
 
-        <View>
-          <Text style={[styles.name, { color: theme.text }]}>{user.name}</Text>
-          <Text style={[styles.timeText, { color: theme.subText }]}>online</Text>
+          <View>
+            <Text style={[styles.name, { color: theme.text }]}>
+              {user.name}
+            </Text>
+            <Text style={[styles.timeText, { color: theme.subText }]}>
+              online
+            </Text>
+          </View>
+        </View>
+
+        {/* 🔥 RIGHT SECTION (icons) */}
+        <View style={styles.rightIcons}>
+          <TouchableOpacity style={styles.iconBtn}>
+            <Icon name="call-outline" size={22} color={theme.text} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.iconBtn}>
+            <Icon name="videocam-outline" size={24} color={theme.text} />
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* 🔥 MESSAGES */}
       <FlatList
         data={messages}
         keyExtractor={item => item.id}
@@ -61,7 +78,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         contentContainerStyle={styles.listContent}
       />
 
-      {/* 🔥 INPUT */}
       <View style={[styles.inputBar, { borderColor: theme.border }]}>
         <TextInput
           placeholder="Type message..."
@@ -85,7 +101,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
+    justifyContent: 'space-between', // 🔥 IMPORTANT
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
   },
 
@@ -144,5 +162,19 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 12,
+  },
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  rightIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  iconBtn: {
+    marginLeft: 15,
   },
 });

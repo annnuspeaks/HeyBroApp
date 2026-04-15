@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, TextInput, ScrollView, Image, TouchableOpacity,
 import { ThemeContext } from '../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import FloatingThemeToggle from '../components/FloatingThemeToggle'; 
+import Icon from 'react-native-vector-icons/Ionicons';
+
+
+
 
 const UnreadBadge = ({ count }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
