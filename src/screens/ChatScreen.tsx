@@ -1,15 +1,7 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  FlatList,
-  Image,
-  Animated,
-} from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, Image, TouchableOpacity, Animated,} from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
 
 const UnreadBadge = ({ count }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -44,8 +36,76 @@ const UnreadBadge = ({ count }: any) => {
   );
 };
 
+const ChatItem = ({ item, index, theme, onPress }: any) => {
+  const translateY = useRef(new Animated.Value(30)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 80,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 400,
+        delay: index * 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
+
+  return (
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+      <Animated.View
+        style={[
+          styles.chatItem,
+          {
+            backgroundColor: theme.card,
+            borderColor: theme.border,
+            opacity,
+            transform: [{ translateY }],
+          },
+        ]}
+      >
+        <Image source={{ uri: item.image }} style={styles.avatar} />
+
+        <View style={styles.flexOne}>
+          <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
+
+          <Text style={[styles.message, { color: theme.subText }]}>
+            {item.message}
+          </Text>
+        </View>
+
+        <View style={styles.rightSection}>
+          <Text style={[styles.time, { color: theme.subText }]}>
+            {item.time}
+          </Text>
+
+          {item.unread > 0 && <UnreadBadge count={item.unread} />}
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
 const ChatScreen = () => {
+  const navigation = useNavigation<any>();
   const { theme } = useContext(ThemeContext);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   const chats = [
     {
@@ -98,48 +158,26 @@ const ChatScreen = () => {
     },
   ];
 
-  // 🔥 renderItem FIXED + CLEAN
-  const renderItem = ({ item }: any) => {
-    // 🔥 animation values
-    return (
-      <View
-        style={[
-          styles.chatItem,
-          {
-            backgroundColor: theme.card,
-            borderColor: theme.border,
-          },
-        ]}
-      >
-        {/* Avatar */}
-        <Image source={{ uri: item.image }} style={styles.avatar} />
-
-        {/* Name + Message */}
-        <View style={styles.flexOne}>
-          <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
-          <Text style={[styles.message, { color: theme.subText }]}>
-            {item.message}
-          </Text>
-        </View>
-
-        {/* Time + Unread */}
-        <View style={styles.rightSection}>
-          <Text style={[styles.time, { color: theme.subText }]}>
-            {item.time}
-          </Text>
-
-          {item.unread > 0 && <UnreadBadge count={item.unread} />}
-        </View>
-      </View>
-    );
-  };
+  const renderItem = ({ item, index }: any) => (
+    <ChatItem
+      item={item}
+      index={index}
+      theme={theme}
+      onPress={() => navigation.navigate('ChatOpen', { user: item })}
+    />
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <FlatList
+      <Animated.FlatList
         data={chats}
         keyExtractor={item => item.id}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+        style={{
+          opacity: fadeAnim, // 🔥 fade in whole screen
+        }}
         ListHeaderComponent={
           <>
             {/* Logo */}
@@ -189,14 +227,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 14,
-    paddingTop: 10,
+    paddingTop: 16,
   },
 
   chatItem: {
     flexDirection: 'row',
-    padding: 16,
+    padding: 18,
     borderRadius: 18,
-    marginBottom: 14,
+    marginBottom: 16,
     backgroundColor: '#1E293B',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
@@ -204,9 +242,9 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     marginRight: 12,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.1)',
@@ -219,13 +257,13 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '600',
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
   },
 
   message: {
     color: '#fff',
     marginTop: 4,
-    fontSize: 13,
+    fontSize: 14,
   },
 
   rightSection: {
@@ -233,22 +271,26 @@ const styles = StyleSheet.create({
   },
 
   time: {
-    color: '#94A3B8',
+    color: '#64748B',
     fontSize: 11,
   },
 
   unreadBadge: {
     marginTop: 6,
     backgroundColor: '#8B5CF6',
-    minWidth: 24,
-    height: 24,
-    borderRadius: 12,
+
+    minWidth: 26,
+    height: 26,
+    borderRadius: 13,
+
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 6,
+
+    paddingHorizontal: 8,
+
     shadowColor: '#8B5CF6',
-    shadowOpacity: 0.6,
-    shadowRadius: 6,
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
   },
 
   unreadText: {
@@ -297,5 +339,8 @@ const styles = StyleSheet.create({
     shadowColor: '#8B5CF6',
     shadowOpacity: 0.7,
     shadowRadius: 8,
+  },
+  listContent: {
+    paddingBottom: 100,
   },
 });
