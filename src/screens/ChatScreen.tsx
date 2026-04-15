@@ -2,6 +2,7 @@ import React, { useContext, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Image, TouchableOpacity, Animated,} from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+import FloatingThemeToggle from '../components/FloatingThemeToggle'; 
 
 const UnreadBadge = ({ count }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -169,6 +170,7 @@ const ChatScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <FloatingThemeToggle />
       <Animated.FlatList
         data={chats}
         keyExtractor={item => item.id}
