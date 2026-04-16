@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
   Image,
-  TouchableOpacity,
+  Pressable, // ✅ replace
   Animated,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
@@ -70,7 +70,20 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
   }, [index]);
 
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      android_ripple={{
+        color:
+          theme.background === '#020617'
+            ? 'rgba(255,255,255,0.1)'
+            : 'rgba(0,0,0,0.1)',
+      }}
+      style={({ pressed }) => [
+        {
+          transform: [{ scale: pressed ? 0.97 : 1 }], // 🔥 press shrink
+        },
+      ]}
+    >
       <Animated.View
         style={[
           styles.chatItem,
@@ -108,7 +121,7 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
           {item.unread > 0 && <UnreadBadge count={item.unread} />}
         </View>
       </Animated.View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
