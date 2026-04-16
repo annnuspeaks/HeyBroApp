@@ -182,10 +182,10 @@ const styles = StyleSheet.create({
   otherMessage: {
     borderTopLeftRadius: 4,
   },
-
   messageText: {
-    fontSize: 14,
-    lineHeight: 18,
+    fontSize: 15,
+    fontWeight: '500',
+    lineHeight: 25,
   },
   listContent: {
     padding: 16,
