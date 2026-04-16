@@ -27,12 +27,38 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     return (
       <View
         style={[
-          styles.messageBubble,
-          isMe ? styles.myMessage : styles.otherMessage,
-          !isMe && { backgroundColor: theme.border },
+          styles.messageRow,
+          {
+            justifyContent: isMe ? 'flex-end' : 'flex-start',
+          },
         ]}
       >
-        <Text style={styles.messageText}>{item.text}</Text>
+        <View
+          style={[
+            styles.messageBubble,
+
+            // 🔥 DIFFERENT STYLE FOR ME vs THEM
+            isMe ? styles.myMessage : styles.otherMessage,
+
+            // 🔥 THEME BASED COLOR
+            {
+              backgroundColor: isMe
+                ? '#8B5CF6' // my message (purple)
+                : theme.card, // received message
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.messageText,
+              {
+                color: isMe ? '#fff' : theme.text,
+              },
+            ]}
+          >
+            {item.text}
+          </Text>
+        </View>
       </View>
     );
   };
@@ -120,10 +146,14 @@ const styles = StyleSheet.create({
   },
 
   messageBubble: {
-    padding: 12,
-    borderRadius: 14,
-    marginBottom: 10,
-    maxWidth: '70%',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+    maxWidth: '75%',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
 
   inputBar: {
@@ -146,19 +176,20 @@ const styles = StyleSheet.create({
   },
 
   myMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#8B5CF6',
+    borderTopRightRadius: 4,
   },
 
   otherMessage: {
-    alignSelf: 'flex-start',
+    borderTopLeftRadius: 4,
   },
 
   messageText: {
-    color: '#fff',
+    fontSize: 14,
+    lineHeight: 18,
   },
   listContent: {
     padding: 16,
+    paddingBottom: 80,
   },
   timeText: {
     fontSize: 12,
@@ -176,5 +207,9 @@ const styles = StyleSheet.create({
 
   iconBtn: {
     marginLeft: 15,
+  },
+  messageRow: {
+    flexDirection: 'row',
+    marginBottom: 10,
   },
 });
