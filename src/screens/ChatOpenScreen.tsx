@@ -26,34 +26,19 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
     return (
       <View
-        style={[
-          styles.messageRow,
-          {
-            justifyContent: isMe ? 'flex-end' : 'flex-start',
-          },
-        ]}
+        style={[styles.messageRow, isMe ? styles.alignRight : styles.alignLeft]}
       >
         <View
           style={[
             styles.messageBubble,
-
-            // 🔥 DIFFERENT STYLE FOR ME vs THEM
             isMe ? styles.myMessage : styles.otherMessage,
-
-            // 🔥 THEME BASED COLOR
-            {
-              backgroundColor: isMe
-                ? '#8B5CF6' // my message (purple)
-                : theme.card, // received message
-            },
+            isMe ? styles.myBubble : styles.otherBubble,
           ]}
         >
           <Text
             style={[
               styles.messageText,
-              {
-                color: isMe ? '#fff' : theme.text,
-              },
+              isMe ? styles.myText : styles.otherText,
             ]}
           >
             {item.text}
@@ -104,15 +89,29 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         contentContainerStyle={styles.listContent}
       />
 
-      <View style={[styles.inputBar, { borderColor: theme.border }]}>
+      <View
+        style={[
+          styles.inputWrapper,
+          {
+            backgroundColor: '#111827',
+            borderColor: '#334155',
+          },
+        ]}
+      >
+        <TouchableOpacity style={styles.iconBtn}>
+          <Icon name="happy-outline" size={22} color={theme.text} />
+        </TouchableOpacity>
+
+        {/* ✍️ Input */}
         <TextInput
           placeholder="Type message..."
           placeholderTextColor="#aaa"
           style={[styles.input, { color: theme.text }]}
         />
 
+        {/* 🎤 Mic OR Send */}
         <TouchableOpacity style={styles.sendBtn}>
-          <Icon name="send" size={20} color="#fff" />
+          <Icon name="mic-outline" size={22} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -123,7 +122,6 @@ export default ChatOpenScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -132,19 +130,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
   },
-
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginHorizontal: 10,
   },
-
   name: {
     fontSize: 16,
     fontWeight: '600',
   },
-
   messageBubble: {
     paddingVertical: 10,
     paddingHorizontal: 14,
@@ -155,30 +150,21 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-
-  inputBar: {
-    flexDirection: 'row',
-    padding: 10,
-    borderTopWidth: 1,
-    alignItems: 'center',
-  },
-
   input: {
     flex: 1,
     fontSize: 14,
+    marginHorizontal: 10,
   },
-
   sendBtn: {
     backgroundColor: '#8B5CF6',
     padding: 10,
-    borderRadius: 20,
-    marginLeft: 10,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-
   myMessage: {
     borderTopRightRadius: 4,
   },
-
   otherMessage: {
     borderTopLeftRadius: 4,
   },
@@ -199,17 +185,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-
   rightIcons: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-
   iconBtn: {
-    marginLeft: 15,
+    padding: 6,
   },
   messageRow: {
     flexDirection: 'row',
     marginBottom: 10,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 30,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  alignRight: {
+    justifyContent: 'flex-end',
+  },
+  alignLeft: {
+    justifyContent: 'flex-start',
+  },
+  myBubble: {
+    backgroundColor: '#8B5CF6',
+  },
+  otherBubble: {
+    backgroundColor: '#1E293B',
+  },
+  myText: {
+    color: '#fff',
+  },
+  otherText: {
+    color: '#000',
   },
 });
