@@ -12,6 +12,8 @@ import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const ChatOpenScreen = ({ route, navigation }: any) => {
+  const [message, setMessage] = React.useState('');
+  const [chatData, setChatData] = React.useState(messages);
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
@@ -46,6 +48,20 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         </View>
       </View>
     );
+  };
+
+  const handleSend = () => {
+    if (message.trim() === '') return; // empty message ignore
+
+    const newMsg = {
+      id: Date.now().toString(),
+      text: message,
+      sender: 'me',
+    };
+
+    setChatData(prev => [...prev, newMsg]);
+
+    setMessage('');
   };
 
   return (
@@ -83,7 +99,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       </View>
 
       <FlatList
-        data={messages}
+        data={chatData}
         keyExtractor={item => item.id}
         renderItem={renderMessage}
         contentContainerStyle={styles.listContent}
@@ -93,8 +109,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         style={[
           styles.inputWrapper,
           {
-            backgroundColor: '#111827',
-            borderColor: '#334155',
+            backgroundColor:
+              theme.background === '#020617'
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(0,0,0,0.05)',
+            borderColor: theme.border,
           },
         ]}
       >
@@ -105,13 +124,21 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         {/* ✍️ Input */}
         <TextInput
           placeholder="Type message..."
+          value={message}
+          onChangeText={setMessage}
+          onSubmitEditing={handleSend}
           placeholderTextColor="#aaa"
           style={[styles.input, { color: theme.text }]}
+          
         />
 
         {/* 🎤 Mic OR Send */}
-        <TouchableOpacity style={styles.sendBtn}>
-          <Icon name="mic-outline" size={22} color="#fff" />
+        <TouchableOpacity style={styles.sendBtn} onPress={handleSend}>
+          <Icon
+            name={message.trim() ? 'send' : 'mic-outline'}
+            size={22}
+            color="#fff"
+          />
         </TouchableOpacity>
       </View>
     </View>
