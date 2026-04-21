@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
   Image,
-  Pressable, // ✅ replace
+  Pressable,
   Animated,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
@@ -148,9 +148,16 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
 };
 
 const ChatScreen = () => {
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation<any>();
   const { theme } = useContext(ThemeContext);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
+  }, []);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -163,7 +170,7 @@ const ChatScreen = () => {
   const chats = [
     {
       id: '1',
-      name: 'Harshvardhan Pundir',
+      name: 'Shreya Ji',
       message: 'Kal milte hain 😊',
       time: '10:45 PM',
       unread: 2,
@@ -171,7 +178,7 @@ const ChatScreen = () => {
     },
     {
       id: '2',
-      name: 'Anurag Shukla',
+      name: 'Rohan Shukla',
       message: 'Vishu, tum kahan ho bro? 😟',
       time: '10:45 PM',
       unread: 1,
@@ -179,7 +186,7 @@ const ChatScreen = () => {
     },
     {
       id: '3',
-      name: 'Aanya Patil',
+      name: 'Aaditya',
       message: 'Meet me in cafe at 5? ☕',
       time: '10:45 PM',
       unread: 0,
@@ -219,6 +226,27 @@ const ChatScreen = () => {
       onPress={() => navigation.navigate('ChatOpen', { user: item })}
     />
   );
+
+  if (loading) {
+    return (
+      <View style={{ padding: 20 }}>
+        {[1, 2, 3].map(i => (
+          <View
+            key={i}
+            style={{
+              height: 70,
+              borderRadius: 16,
+              marginBottom: 12,
+              backgroundColor:
+                theme.background === '#020617'
+                  ? 'rgba(255,255,255,0.05)'
+                  : 'rgba(0,0,0,0.05)',
+            }}
+          />
+        ))}
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
