@@ -65,13 +65,15 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
         useNativeDriver: true,
       }),
     ]).start();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        const HapticFeedback = require('react-native-haptic-feedback').default;
+        HapticFeedback.trigger('impactLight'); // ✅ subtle haptic on press
+        onPress();
+      }}
       android_ripple={{
         color:
           theme.background === '#020617'
@@ -80,7 +82,7 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
       }}
       style={({ pressed }) => [
         {
-          transform: [{ scale: pressed ? 0.97 : 1 }], 
+          transform: [{ scale: pressed ? 0.97 : 1 }],
           opacity: pressed ? 0.9 : 1,
         },
       ]}
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-    onlineDotActive: {
+  onlineDotActive: {
     position: 'absolute',
     bottom: 0,
     right: 7,

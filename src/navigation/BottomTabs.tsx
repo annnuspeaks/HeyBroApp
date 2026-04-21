@@ -31,6 +31,14 @@ const AnimatedIcon = ({ name, focused, color }: IconProps) => {
 
   return (
     <Pressable
+      android_ripple={{
+        color: 'rgba(139,92,246,0.25)', // 🔥 ripple
+        borderless: true,
+      }}
+      onPress={() => {
+        const HapticFeedback = require('react-native-haptic-feedback').default;
+        HapticFeedback.trigger('selection'); // 🔥 tab vibration
+      }}
       style={({ pressed }) => [
         {
           transform: [{ scale: pressed ? 0.9 : 1 }],
