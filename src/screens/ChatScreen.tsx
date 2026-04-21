@@ -258,14 +258,18 @@ const ChatScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         style={{
-          opacity: fadeAnim, // 🔥 fade in whole screen
+          opacity: fadeAnim,
         }}
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: 'center', marginTop: 100 }}>
+            <Text style={{ color: theme.text, opacity: 0.5 }}>
+               Start a new conversation 🚀
+            </Text>
+          </View>
+        )}
         ListHeaderComponent={
           <>
-            {/* Logo */}
             <Image source={require('../assets/logo.png')} style={styles.logo} />
-
-            {/* Search */}
             <TextInput
               placeholder="Search chats..."
               placeholderTextColor="#aaa"
@@ -279,7 +283,6 @@ const ChatScreen = () => {
               ]}
             />
 
-            {/* Active Now */}
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
               Active Now
             </Text>
