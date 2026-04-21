@@ -53,23 +53,24 @@ const TabsWrapper = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#8B5CF6',
-        tabBarInactiveTintColor: theme.subText,
-
+        tabBarInactiveTintColor:
+          theme.background === '#020617' ? theme.subText : '#6B7280',
         tabBarStyle: {
           position: 'absolute',
           marginHorizontal: 15,
           bottom: 15,
           height: 70,
-          borderRadius: 20,
+          borderRadius: 22,
           backgroundColor:
             theme.background === '#020617'
               ? 'rgba(15,23,42,0.95)'
-              : 'rgba(255,255,255,0.95)',
+              : 'rgba(255,255,255,0.75)',
           borderWidth: 1,
-          borderColor: theme.border,
+          borderColor:
+            theme.background === '#020617' ? theme.border : 'rgba(0,0,0,0.08)',
           elevation: 12,
-          shadowColor: '#000',
-          shadowOpacity: 0.25,
+          shadowColor: theme.background === '#020617' ? '#000' : '#999',
+          shadowOpacity: theme.background === '#020617' ? 0.25 : 0.12,
           shadowRadius: 12,
           paddingBottom: 10,
           paddingTop: 10,
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#8B5CF6',
 
     shadowColor: '#8B5CF6',
-    shadowOpacity: 0.8,
-    shadowRadius: 8,
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
     elevation: 6,
   },
 });

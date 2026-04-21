@@ -91,19 +91,38 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
             backgroundColor:
               theme.background === '#020617'
                 ? 'rgba(255,255,255,0.05)'
-                : 'rgba(0,0,0,0.04)',
+                : 'rgba(255,255,255,0.9)', // ✅ clean glass
 
             borderColor:
               theme.background === '#020617'
                 ? 'rgba(255,255,255,0.08)'
-                : 'rgba(0,0,0,0.08)',
+                : 'rgba(0,0,0,0.06)',
+
+            shadowColor: '#000',
+
+            shadowOpacity: theme.background === '#020617' ? 0.25 : 0.08, // ✅ soft light shadow
+
+            shadowRadius: 8,
+            elevation: theme.background === '#020617' ? 6 : 3,
 
             opacity,
             transform: [{ translateY }],
           },
         ]}
       >
-        <Image source={{ uri: item.image }} style={styles.avatar} />
+        <View style={{ position: 'relative' }}>
+          <Image source={{ uri: item.image }} style={styles.avatar} />
+
+          {/* 🟢 ONLINE DOT */}
+          <View
+            style={[
+              styles.onlineDotChat,
+              {
+                borderColor: theme.background,
+              },
+            ]}
+          />
+        </View>
 
         <View style={styles.flexOne}>
           <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
@@ -237,10 +256,21 @@ const ChatScreen = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {[1, 2, 3].map(i => (
                 <View key={i} style={styles.activeUser}>
-                  <Image
-                    source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
-                    style={styles.activeAvatar}
-                  />
+                  <View style={{ position: 'relative' }}>
+                    <Image
+                      source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
+                      style={styles.activeAvatar}
+                    />
+
+                    <View
+                      style={[
+                        styles.onlineDotActive,
+                        {
+                          borderColor: theme.background,
+                        },
+                      ]}
+                    />
+                  </View>
                 </View>
               ))}
             </ScrollView>
@@ -268,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 18,
     borderRadius: 18,
-    marginBottom: 18,
+    marginBottom: 10,
     borderWidth: 1,
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -292,13 +322,14 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '600',
     color: '#fff',
-    fontSize: 17,
+    fontSize: 16,
   },
 
   message: {
     color: '#fff',
     marginTop: 4,
     fontSize: 14,
+    opacity: 0.8,
   },
 
   rightSection: {
@@ -308,6 +339,7 @@ const styles = StyleSheet.create({
   time: {
     color: '#64748B',
     fontSize: 11,
+    opacity: 0.8,
   },
 
   unreadBadge: {
@@ -353,10 +385,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
     marginBottom: 12,
     marginTop: 5,
-    opacity: 0.5,
+    opacity: 0.7,
   },
 
   activeUser: {
@@ -371,10 +403,40 @@ const styles = StyleSheet.create({
     borderColor: '#8B5CF6',
 
     shadowColor: '#8B5CF6',
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.4,
     shadowRadius: 8,
   },
   listContent: {
     paddingBottom: 100,
+  },
+  onlineDotChat: {
+    position: 'absolute',
+    bottom: 0,
+    right: 16,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#22C55E',
+    borderWidth: 2,
+    borderColor: '#22C55E',
+    shadowColor: '#22C55E',
+    shadowOpacity: 0.9,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+    onlineDotActive: {
+    position: 'absolute',
+    bottom: 0,
+    right: 7,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#22C55E',
+    borderWidth: 2,
+    borderColor: '#22C55E',
+    shadowColor: '#22C55E',
+    shadowOpacity: 0.9,
+    shadowRadius: 6,
+    elevation: 4,
   },
 });
