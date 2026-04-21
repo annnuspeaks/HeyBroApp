@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import React, { useRef, useEffect, useContext } from 'react';
+import { StyleSheet, View, Animated, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatScreen from '../screens/ChatScreen';
@@ -12,17 +12,25 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
-const renderIcon = (name: string, focused: boolean, color: string) => {
-  // 🔥 animation value
-  const scale = new Animated.Value(focused ? 1.2 : 1);
+const AnimatedIcon = ({ name, focused, color }) => {
+  const scale = useRef(new Animated.Value(1)).current;
 
-  Animated.spring(scale, {
-    toValue: focused ? 1.2 : 1,
-    friction: 5,
-    useNativeDriver: true,
-  }).start();
+  useEffect(() => {
+    Animated.spring(scale, {
+      toValue: focused ? 1.2 : 1,
+      friction: 5,
+      useNativeDriver: true,
+    }).start();
+  }, [focused]);
 
   return (
+    <Pressable
+    style={({ pressed }) => [
+      {
+        transform: [{ scale: pressed ? 0.9 : 1 }],
+      },
+    ]}
+  >
     <Animated.View
       style={[
         styles.iconContainer,
@@ -39,6 +47,7 @@ const renderIcon = (name: string, focused: boolean, color: string) => {
 
       {focused && <View style={styles.activeDot} />}
     </Animated.View>
+  </Pressable>
   );
 };
 
@@ -84,7 +93,9 @@ const TabsWrapper = () => {
           if (route.name === 'Video') iconName = 'videocam';
           if (route.name === 'Profile') iconName = 'person';
 
-          return renderIcon(iconName, focused, color);
+          return (
+            <AnimatedIcon name={iconName} focused={focused} color={color} />
+          );
         },
       })}
     >
