@@ -12,7 +12,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
-const AnimatedIcon = ({ name, focused, color }) => {
+type IconProps = {
+  name: string;
+  focused: boolean;
+  color: string;
+};
+
+const AnimatedIcon = ({ name, focused, color }: IconProps) => {
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -21,33 +27,33 @@ const AnimatedIcon = ({ name, focused, color }) => {
       friction: 5,
       useNativeDriver: true,
     }).start();
-  }, [focused]);
+  }, [focused, scale]);
 
   return (
     <Pressable
-    style={({ pressed }) => [
-      {
-        transform: [{ scale: pressed ? 0.9 : 1 }],
-      },
-    ]}
-  >
-    <Animated.View
-      style={[
-        styles.iconContainer,
+      style={({ pressed }) => [
         {
-          transform: [{ scale }],
+          transform: [{ scale: pressed ? 0.9 : 1 }],
         },
       ]}
     >
-      <Icon
-        name={focused ? name : `${name}-outline`}
-        size={28}
-        color={focused ? '#8B5CF6' : color}
-      />
+      <Animated.View
+        style={[
+          styles.iconContainer,
+          {
+            transform: [{ scale }],
+          },
+        ]}
+      >
+        <Icon
+          name={focused ? name : `${name}-outline`}
+          size={28}
+          color={focused ? '#8B5CF6' : color}
+        />
 
-      {focused && <View style={styles.activeDot} />}
-    </Animated.View>
-  </Pressable>
+        {focused && <View style={styles.activeDot} />}
+      </Animated.View>
+    </Pressable>
   );
 };
 
