@@ -80,7 +80,8 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
       }}
       style={({ pressed }) => [
         {
-          transform: [{ scale: pressed ? 0.97 : 1 }], // 🔥 press shrink
+          transform: [{ scale: pressed ? 0.97 : 1 }], 
+          opacity: pressed ? 0.9 : 1,
         },
       ]}
     >
