@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 18,
-    maxWidth: '75%',
+    maxWidth: '100%',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     marginHorizontal: 10,
   },
   sendBtn: {
@@ -408,9 +408,9 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 10,
+    margin: 8,
     paddingHorizontal: 12,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderRadius: 30,
     borderWidth: 1,
     shadowColor: '#000',
