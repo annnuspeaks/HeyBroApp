@@ -174,7 +174,7 @@ const ChatScreen = () => {
       message: 'Kal milte hain 😊',
       time: '10:45 PM',
       unread: 2,
-      image: 'https://i.pravatar.cc/150?img=3',
+      image: 'https://i.pravatar.cc/150?img=10',
     },
     {
       id: '2',

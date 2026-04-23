@@ -11,17 +11,17 @@ import {
 import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+const messages = [
+  { id: '1', text: 'Hello bro 👋', sender: 'them' },
+  { id: '2', text: 'Hey! kya haal hai?', sender: 'me' },
+  { id: '3', text: 'Sab mast 🔥', sender: 'them' },
+];
 const ChatOpenScreen = ({ route, navigation }: any) => {
+  const flatListRef = React.useRef(null);
   const [message, setMessage] = React.useState('');
   const [chatData, setChatData] = React.useState(messages);
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
-
-  const messages = [
-    { id: '1', text: 'Hello bro 👋', sender: 'them' },
-    { id: '2', text: 'Hey! kya haal hai?', sender: 'me' },
-    { id: '3', text: 'Sab mast 🔥', sender: 'them' },
-  ];
 
   const renderMessage = ({ item }: any) => {
     const isMe = item.sender === 'me';
@@ -60,8 +60,12 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     };
 
     setChatData(prev => [...prev, newMsg]);
-
     setMessage('');
+
+    //
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 100);
   };
 
   return (
@@ -99,10 +103,19 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       </View>
 
       <FlatList
+        ref={ref => (flatListRef.current = ref)}
+        onContentSizeChange={() =>
+          flatListRef.current?.scrollToEnd({ animated: true })
+        }
         data={chatData}
         keyExtractor={item => item.id}
         renderItem={renderMessage}
         contentContainerStyle={styles.listContent}
+        ListEmptyComponent={() => (
+          <Text style={{ color: '#fff', textAlign: 'center' }}>
+            No messages
+          </Text>
+        )}
       />
 
       <View
@@ -129,16 +142,16 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           onSubmitEditing={handleSend}
           placeholderTextColor="#aaa"
           style={[styles.input, { color: theme.text }]}
-          
         />
 
-        {/* 🎤 Mic OR Send */}
         <TouchableOpacity style={styles.sendBtn} onPress={handleSend}>
-          <Icon
-            name={message.trim() ? 'send' : 'mic-outline'}
-            size={22}
-            color="#fff"
-          />
+          <View style={{ transform: [{ scale: message.trim() ? 1 : 0.95 }] }}>
+            <Icon
+              name={message.trim() ? 'send' : 'mic-outline'}
+              size={22}
+              color="#fff"
+            />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -188,6 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
+    activeOpacity: 0.7,
   },
   myMessage: {
     borderTopRightRadius: 4,
@@ -202,7 +216,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 80,
+    paddingBottom: 20,
   },
   timeText: {
     fontSize: 12,
@@ -228,7 +242,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 30,
     borderWidth: 1,
     shadowColor: '#000',
@@ -252,6 +266,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   otherText: {
-    color: '#000',
+    color: '#ccc',
   },
 });
