@@ -91,6 +91,8 @@ const OtpScreen = ({ navigation }: any) => {
                     ? '#7C3AED' // 🔥 active glow
                     : 'rgba(255,255,255,0.2)',
                   backgroundColor: 'rgba(255,255,255,0.05)',
+                  shadowColor: otp[index] ? '#7C3AED' : '#000',
+                  shadowOpacity: otp[index] ? 0.5 : 0.1,
                 },
               ]}
               keyboardType="number-pad"
@@ -148,14 +150,14 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 30,
+    gap: 12,
     marginBottom: 40,
   },
 
   otpBox: {
     width: 55,
     height: 60,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     textAlign: 'center',
     fontSize: 20,

@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 
   card: {
     padding: 22,
-    borderRadius: 24,
+    borderRadius: 16,
     borderWidth: 1,
     shadowColor: '#000',
     shadowOpacity: 0.3,
@@ -108,18 +108,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     letterSpacing: 1, // 🔥 premium feel
     textTransform: 'uppercase', // 🔥 modern look
-    opacity: 0.7,
+    opacity: 0.8,
+    fontWeight: '600',
   },
 
   input: {
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
     backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 14,
+    borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16, // 🔥 IMPORTANT FIX
     fontSize: 15,
     marginBottom: 30,
+    paddingLeft: 16,
   },
 
   button: {

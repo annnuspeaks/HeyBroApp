@@ -52,10 +52,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   React.useEffect(() => {
     Animated.spring(scaleAnim, {
       toValue: message.trim() ? 1 : 0.9,
-      friction: 4,
+      friction: 6,
       useNativeDriver: true,
     }).start();
   }, [message]);
+
   const [chatData, setChatData] = React.useState(messages);
   React.useEffect(() => {
     if (isTyping) {
@@ -97,8 +98,8 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       >
         <Animated.View
           style={{
-            transform: [{ scale: 0.95 }],
-            opacity: 0.8,
+            transform: [{ scale: scaleAnim }],
+            opacity: scaleAnim,
           }}
         >
           <View
@@ -301,11 +302,27 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         />
 
         <TouchableOpacity
-          activeOpacity={0.8} 
+          activeOpacity={0.8}
           style={styles.sendBtn}
           onPress={handleSend}
+          
+          onPressIn={() => {
+            Animated.spring(scaleAnim, {
+              toValue: 0.85,
+              useNativeDriver: true,
+            }).start();
+          }}
+
+          onPressOut={() => {
+            setIsRecording(false);
+
+            Animated.spring(scaleAnim, {
+              toValue: 1,
+              useNativeDriver: true,
+            }).start();
+          }}
+          
           onLongPress={() => setIsRecording(true)}
-          onPressOut={() => setIsRecording(false)}
         >
           <Animated.View
             style={{
@@ -353,7 +370,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 18,
-    maxWidth: '100%',
+    maxWidth: '75%',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -384,7 +401,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 20,
+    paddingBottom: 80,
   },
   timeText: {
     fontSize: 12,
@@ -414,10 +431,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 1,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 8,
-    elevation: 5,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    elevation: 2,
+    backgroundColor: 'rgba(255,255,255,0.06)',
   },
   alignRight: {
     justifyContent: 'flex-end',

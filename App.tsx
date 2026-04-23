@@ -14,7 +14,7 @@ const App = () => {
     
     <ThemeProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="OtpScreen">
+        <Stack.Navigator initialRouteName="LoginScreen">
           <Stack.Screen
             name="LoginScreen"
             component={LoginScreen}
