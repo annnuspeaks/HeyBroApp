@@ -6,6 +6,8 @@ import { ThemeProvider } from './src/theme/ThemeContext';
 import LoginScreen from './src/screens/LoginScreen';
 import OtpScreen from './src/screens/OtpScreen';
 import ChatOpenScreen from './src/screens/ChatOpenScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +38,18 @@ const App = () => {
           <Stack.Screen
             name="ChatOpen"
             component={ChatOpenScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
