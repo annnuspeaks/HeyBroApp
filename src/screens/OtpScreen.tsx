@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../theme/ThemeContext';
+import { ThemeContext } from '../theme/ThemeContext';
+// import { useTheme } from '../theme/ThemeContext';
 
 const OtpScreen = ({ navigation }) => {
-  const { theme } = useTheme();
+  const { theme } = useContext(ThemeContext);
 
   const [otp, setOtp] = useState(['', '', '', '']);
 
@@ -111,15 +112,17 @@ const styles = StyleSheet.create({
   },
 
   otpContainer: {
+    paddingTop: 60,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    gap: 30,
     marginBottom: 40,
   },
 
   otpBox: {
-    width: 60,
-    height: 65,
-    borderRadius: 16,
+    width: 55,
+    height: 60,
+    borderRadius: 14,
     borderWidth: 1,
     textAlign: 'center',
     fontSize: 20,
