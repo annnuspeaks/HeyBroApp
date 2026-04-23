@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 
@@ -13,7 +14,7 @@ const ProfileScreen = ({ navigation }: any) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const phone = '+91 9876543210';
   const [name, setName] = useState('Harshvardhan');
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing] = useState(false);
 
   const handleLogout = () => {
     navigation.replace('LoginScreen');
@@ -23,7 +24,7 @@ const ProfileScreen = ({ navigation }: any) => {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* 🔥 PROFILE HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => alert('Image picker later')}>
+        <TouchableOpacity onPress={() => Alert.alert('Image picker later')}>
           <Image
             source={{ uri: 'https://i.pravatar.cc/150?img=12' }}
             style={styles.avatar}
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
 
+
   header: {
     alignItems: 'center',
     marginBottom: 40,
@@ -148,4 +150,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 6,
   },
+  
 });
