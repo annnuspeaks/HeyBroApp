@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 // import { useTheme } from '../theme/ThemeContext';
@@ -13,6 +14,12 @@ const OtpScreen = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
 
   const [otp, setOtp] = useState(['', '', '', '']);
+  const scaleAnim = useRef([
+    new Animated.Value(1),
+    new Animated.Value(1),
+    new Animated.Value(1),
+    new Animated.Value(1),
+  ]).current;
 
   const inputs = useRef([]);
 
@@ -21,8 +28,30 @@ const OtpScreen = ({ navigation }) => {
     newOtp[index] = text;
     setOtp(newOtp);
 
+    // 🔥 SCALE ANIMATION
+    Animated.sequence([
+      Animated.timing(scaleAnim[index], {
+        toValue: 1.2,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim[index], {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // 🔥 NEXT INPUT
     if (text && index < 3) {
       inputs.current[index + 1].focus();
+    }
+
+    // 🔥 AUTO SUBMIT
+    if (newOtp.join('').length === 4) {
+      setTimeout(() => {
+        navigation.replace('MainTabs');
+      }, 300);
     }
   };
 
@@ -34,12 +63,9 @@ const OtpScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      
       {/* HEADER */}
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Verify OTP 🔐
-        </Text>
+        <Text style={[styles.title, { color: theme.text }]}>Verify OTP 🔐</Text>
         <Text style={[styles.subtitle, { color: theme.subText }]}>
           Enter the 4-digit code sent to your phone
         </Text>
@@ -48,26 +74,33 @@ const OtpScreen = ({ navigation }) => {
       {/* OTP BOXES */}
       <View style={styles.otpContainer}>
         {otp.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            style={[
-              styles.otpBox,
-              {
-                color: theme.text,
-                borderColor: 'rgba(255,255,255,0.2)',
-                backgroundColor: 'rgba(255,255,255,0.05)',
-              },
-            ]}
-            keyboardType="number-pad"
-            maxLength={1}
-            value={digit}
-            onChangeText={(text) => handleChange(text, index)}
-            onKeyPress={({ nativeEvent }) =>
-              nativeEvent.key === 'Backspace' &&
-              handleBackspace(digit, index)
-            }
-          />
+          <Animated.View
+            style={{
+              transform: [{ scale: scaleAnim[index] }],
+            }}
+          >
+            <TextInput
+              key={index}
+              ref={ref => (inputs.current[index] = ref)}
+              style={[
+                styles.otpBox,
+                {
+                  color: theme.text,
+                  borderColor: otp[index]
+                    ? '#7C3AED' // 🔥 active glow
+                    : 'rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                },
+              ]}
+              keyboardType="number-pad"
+              maxLength={1}
+              value={digit}
+              onChangeText={text => handleChange(text, index)}
+              onKeyPress={({ nativeEvent }) =>
+                nativeEvent.key === 'Backspace' && handleBackspace(digit, index)
+              }
+            />
+          </Animated.View>
         ))}
       </View>
 
@@ -83,7 +116,6 @@ const OtpScreen = ({ navigation }) => {
       <Text style={[styles.resend, { color: theme.subText }]}>
         Didn’t receive code? <Text style={styles.resendAction}>Resend</Text>
       </Text>
-
     </View>
   );
 };
@@ -126,6 +158,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: 'center',
     fontSize: 20,
+    shadowColor: '#17013d',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 4,
   },
 
   button: {
