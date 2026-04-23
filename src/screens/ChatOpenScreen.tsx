@@ -95,22 +95,29 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       <View
         style={[styles.messageRow, isMe ? styles.alignRight : styles.alignLeft]}
       >
-        <View
-          style={[
-            styles.messageBubble,
-            isMe ? styles.myMessage : styles.otherMessage,
-            isMe ? styles.myBubble : styles.otherBubble,
-          ]}
+        <Animated.View
+          style={{
+            transform: [{ scale: 0.95 }],
+            opacity: 0.8,
+          }}
         >
-          <Text
+          <View
             style={[
-              styles.messageText,
-              isMe ? styles.myText : styles.otherText,
+              styles.messageBubble,
+              isMe ? styles.myMessage : styles.otherMessage,
+              isMe ? styles.myBubble : styles.otherBubble,
             ]}
           >
-            {item.text}
-          </Text>
-        </View>
+            <Text
+              style={[
+                styles.messageText,
+                isMe ? styles.myText : styles.otherText,
+              ]}
+            >
+              {item.text}
+            </Text>
+          </View>
+        </Animated.View>
       </View>
     );
   };
@@ -147,6 +154,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       };
 
       setChatData(prev => [...prev, reply]);
+      setIsTyping(false);
     }, 1500);
   };
 
@@ -262,7 +270,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
       {isRecording && (
         <View style={styles.recordingContainer}>
-          <Text style={styles.recordingText}>🎤 Recording...</Text>
+          <Text style={styles.recordingText}>● Recording...</Text>
         </View>
       )}
 
@@ -409,6 +417,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
   alignRight: {
     justifyContent: 'flex-end',
@@ -457,6 +466,7 @@ const styles = StyleSheet.create({
   recordingText: {
     color: 'red',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: 1,
   },
 });
