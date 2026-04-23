@@ -8,9 +8,8 @@ import {
   Animated,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
-// import { useTheme } from '../theme/ThemeContext';
 
-const OtpScreen = ({ navigation }) => {
+const OtpScreen = ({ navigation }: any) => {
   const { theme } = useContext(ThemeContext);
 
   const [otp, setOtp] = useState(['', '', '', '']);
@@ -21,9 +20,9 @@ const OtpScreen = ({ navigation }) => {
     new Animated.Value(1),
   ]).current;
 
-  const inputs = useRef([]);
+  const inputs = useRef<Array<TextInput | null>>([]);
 
-  const handleChange = (text, index) => {
+  const handleChange = (text: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
@@ -44,7 +43,7 @@ const OtpScreen = ({ navigation }) => {
 
     // 🔥 NEXT INPUT
     if (text && index < 3) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
 
     // 🔥 AUTO SUBMIT
@@ -55,9 +54,9 @@ const OtpScreen = ({ navigation }) => {
     }
   };
 
-  const handleBackspace = (text, index) => {
+  const handleBackspace = (text: string, index: number) => {
     if (!text && index > 0) {
-      inputs.current[index - 1].focus();
+      inputs.current[index - 1]?.focus();
     }
   };
 
@@ -81,7 +80,9 @@ const OtpScreen = ({ navigation }) => {
           >
             <TextInput
               key={index}
-              ref={ref => (inputs.current[index] = ref)}
+              ref={ref => {
+                inputs.current[index] = ref;
+              }}
               style={[
                 styles.otpBox,
                 {

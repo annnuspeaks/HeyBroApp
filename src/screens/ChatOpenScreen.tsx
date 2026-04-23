@@ -18,7 +18,7 @@ const messages = [
   { id: '3', text: 'Sab mast 🔥', sender: 'them' },
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
-  const flatListRef = React.useRef(null);
+  const flatListRef = useRef<FlatList<any>>(null!);
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
@@ -88,7 +88,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
-  const renderMessage = ({ item }: any) => {
+  const renderMessage = ({ item }: { item: any }) => {
     const isMe = item.sender === 'me';
 
     return (
@@ -193,7 +193,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       </View>
 
       <FlatList
-        ref={ref => (flatListRef.current = ref)}
+        ref={flatListRef}
         onContentSizeChange={() =>
           flatListRef.current?.scrollToEnd({ animated: true })
         }
@@ -301,6 +301,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         />
 
         <TouchableOpacity
+          activeOpacity={0.8} 
           style={styles.sendBtn}
           onPress={handleSend}
           onLongPress={() => setIsRecording(true)}
@@ -369,7 +370,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    activeOpacity: 0.7,
   },
   myMessage: {
     borderTopRightRadius: 4,
