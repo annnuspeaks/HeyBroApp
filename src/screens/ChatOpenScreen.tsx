@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ const messages = [
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
   const flatListRef = React.useRef(null);
+  const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
   const [chatData, setChatData] = React.useState(messages);
   const { theme } = useContext(ThemeContext);
@@ -53,19 +54,36 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const handleSend = () => {
     if (message.trim() === '') return; // empty message ignore
 
+    // Create new message object
     const newMsg = {
       id: Date.now().toString(),
       text: message,
       sender: 'me',
     };
 
+    // Add new message to chat data
     setChatData(prev => [...prev, newMsg]);
     setMessage('');
 
-    //
+    // Scroll to bottom after a short delay to ensure the new message is rendered
     setTimeout(() => {
       flatListRef.current?.scrollToEnd({ animated: true });
     }, 100);
+
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+
+      // fake reply
+      const reply = {
+        id: Date.now().toString(),
+        text: 'Reply aa gaya 😎',
+        sender: 'them',
+      };
+
+      setChatData(prev => [...prev, reply]);
+    }, 1500);
   };
 
   return (
@@ -118,6 +136,14 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         )}
       />
 
+        {/* Typing indicator */}
+      {isTyping && (
+        <View style={styles.typingContainer}>
+          <View style={styles.typingBubble}>
+            <Text style={{ color: '#aaa' }}>Typing...</Text>
+          </View>
+        </View>
+      )}
       <View
         style={[
           styles.inputWrapper,
@@ -267,5 +293,18 @@ const styles = StyleSheet.create({
   },
   otherText: {
     color: '#ccc',
+  },
+
+  typingContainer: {
+    paddingHorizontal: 16,
+    marginTop: 6,
+  },
+
+  typingBubble: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
+    alignSelf: 'flex-start',
   },
 });
