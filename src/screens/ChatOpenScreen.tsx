@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Animated,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,9 +19,41 @@ const messages = [
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
   const flatListRef = React.useRef(null);
+  const dot1 = useRef(new Animated.Value(0)).current;
+  const dot2 = useRef(new Animated.Value(0)).current;
+  const dot3 = useRef(new Animated.Value(0)).current;
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
   const [chatData, setChatData] = React.useState(messages);
+
+  React.useEffect(() => {
+    if (isTyping) {
+      dot1.setValue(0);
+      dot2.setValue(0);
+      dot3.setValue(0);
+
+      Animated.loop(
+        Animated.stagger(150, [
+          Animated.timing(dot1, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(dot2, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(dot3, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    }
+  }, [isTyping]);
+
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
@@ -136,14 +169,66 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         )}
       />
 
-        {/* Typing indicator */}
       {isTyping && (
         <View style={styles.typingContainer}>
           <View style={styles.typingBubble}>
-            <Text style={{ color: '#aaa' }}>Typing...</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Animated.View
+                style={[
+                  styles.dot,
+                  {
+                    opacity: dot1,
+                    transform: [
+                      {
+                        translateY: dot1.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -4],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+
+              <Animated.View
+                style={[
+                  styles.dot,
+                  { marginHorizontal: 4 },
+                  {
+                    opacity: dot2,
+                    transform: [
+                      {
+                        translateY: dot2.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -4],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+
+              <Animated.View
+                style={[
+                  styles.dot,
+                  {
+                    opacity: dot3,
+                    transform: [
+                      {
+                        translateY: dot3.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -4],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </View>
           </View>
         </View>
       )}
+
       <View
         style={[
           styles.inputWrapper,
@@ -306,5 +391,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 14,
     alignSelf: 'flex-start',
+  },
+
+  dot: {
+    width: 6,
+    height: 6,
+    backgroundColor: '#aaa',
+    borderRadius: 3,
   },
 });
