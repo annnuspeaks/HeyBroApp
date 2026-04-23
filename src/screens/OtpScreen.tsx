@@ -13,6 +13,7 @@ const OtpScreen = ({ navigation }: any) => {
   const { theme } = useContext(ThemeContext);
 
   const [otp, setOtp] = useState(['', '', '', '']);
+  const [activeIndex, setActiveIndex] = useState(0);
   const scaleAnim = useRef([
     new Animated.Value(1),
     new Animated.Value(1),
@@ -21,6 +22,10 @@ const OtpScreen = ({ navigation }: any) => {
   ]).current;
 
   const inputs = useRef<Array<TextInput | null>>([]);
+
+  React.useEffect(() => {
+    inputs.current[0]?.focus();
+  }, []);
 
   const handleChange = (text: string, index: number) => {
     const newOtp = [...otp];
@@ -47,10 +52,10 @@ const OtpScreen = ({ navigation }: any) => {
     }
 
     // 🔥 AUTO SUBMIT
-    if (newOtp.join('').length === 4) {
+    if (newOtp.every(d => d !== '')) {
       setTimeout(() => {
         navigation.replace('MainTabs');
-      }, 300);
+      }, 400);
     }
   };
 
@@ -76,10 +81,15 @@ const OtpScreen = ({ navigation }: any) => {
           <Animated.View
             style={{
               transform: [{ scale: scaleAnim[index] }],
+              shadowColor: '#7C3AED',
+              shadowOpacity: activeIndex === index ? 0.6 : 0.1,
+              shadowRadius: activeIndex === index ? 12 : 4,
+              elevation: activeIndex === index ? 8 : 2,
             }}
           >
             <TextInput
               key={index}
+              onFocus={() => setActiveIndex(index)}
               ref={ref => {
                 inputs.current[index] = ref;
               }}
@@ -87,10 +97,17 @@ const OtpScreen = ({ navigation }: any) => {
                 styles.otpBox,
                 {
                   color: theme.text,
-                  borderColor: otp[index]
-                    ? '#7C3AED' // 🔥 active glow
-                    : 'rgba(255,255,255,0.2)',
-                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  borderColor:
+                    activeIndex === index
+                      ? '#7C3AED'
+                      : otp[index]
+                      ? '#7C3AED'
+                      : 'rgba(255,255,255,0.2)',
+
+                  backgroundColor:
+                    activeIndex === index
+                      ? 'rgba(124,58,237,0.15)'
+                      : 'rgba(255,255,255,0.05)',
                   shadowColor: otp[index] ? '#7C3AED' : '#000',
                   shadowOpacity: otp[index] ? 0.5 : 0.1,
                 },
@@ -109,6 +126,7 @@ const OtpScreen = ({ navigation }: any) => {
 
       {/* VERIFY BUTTON */}
       <TouchableOpacity
+        activeOpacity={0.8}
         style={styles.button}
         onPress={() => navigation.replace('MainTabs')}
       >
