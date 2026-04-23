@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }: any) => {
         ]}
       >
         <Text style={[styles.label, { color: theme.subText }]}>
-          Phone Number
+          PHONE NUMBER
         </Text>
 
         <TextInput
@@ -94,28 +94,32 @@ const styles = StyleSheet.create({
     padding: 22,
     borderRadius: 24,
     borderWidth: 1,
-
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 10 },
-
+    paddingVertical: 24,
+    paddingHorizontal: 20,
     elevation: 8, // android
   },
 
   label: {
-    fontSize: 13,
-    marginBottom: 6,
+    fontSize: 12,
+    marginBottom: 8,
+    letterSpacing: 1, // 🔥 premium feel
+    textTransform: 'uppercase', // 🔥 modern look
+    opacity: 0.7,
   },
 
   input: {
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
     backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16, // 🔥 IMPORTANT FIX
     fontSize: 15,
-    marginBottom: 16,
+    marginBottom: 30,
   },
 
   button: {
@@ -126,7 +130,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 6,
     padding: 14,
-    borderRadius: 14,
+    paddingVertical: 16,
+    borderRadius: 16,
     alignItems: 'center',
   },
 
