@@ -10,6 +10,7 @@ import { ThemeContext } from '../theme/ThemeContext';
 import ChatOpenScreen from '../screens/ChatOpenScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+
 const Tab = createBottomTabNavigator();
 
 type IconProps = {
