@@ -24,8 +24,39 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const dot3 = useRef(new Animated.Value(0)).current;
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
-  const [chatData, setChatData] = React.useState(messages);
 
+  const [isRecording, setIsRecording] = useState(false);
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  React.useEffect(() => {
+    if (isRecording) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.3,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    } else {
+      pulseAnim.setValue(1);
+    }
+  }, [isRecording]);
+
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  React.useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: message.trim() ? 1 : 0.9,
+      friction: 4,
+      useNativeDriver: true,
+    }).start();
+  }, [message]);
+  const [chatData, setChatData] = React.useState(messages);
   React.useEffect(() => {
     if (isTyping) {
       dot1.setValue(0);
@@ -229,6 +260,12 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         </View>
       )}
 
+      {isRecording && (
+        <View style={styles.recordingContainer}>
+          <Text style={styles.recordingText}>🎤 Recording...</Text>
+        </View>
+      )}
+
       <View
         style={[
           styles.inputWrapper,
@@ -255,14 +292,26 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           style={[styles.input, { color: theme.text }]}
         />
 
-        <TouchableOpacity style={styles.sendBtn} onPress={handleSend}>
-          <View style={{ transform: [{ scale: message.trim() ? 1 : 0.95 }] }}>
+        <TouchableOpacity
+          style={styles.sendBtn}
+          onPress={handleSend}
+          onLongPress={() => setIsRecording(true)}
+          onPressOut={() => setIsRecording(false)}
+        >
+          <Animated.View
+            style={{
+              transform: [{ scale: isRecording ? pulseAnim : scaleAnim }],
+              opacity: isRecording ? 1 : message.trim() ? 1 : 0.7,
+            }}
+          >
             <Icon
-              name={message.trim() ? 'send' : 'mic-outline'}
+              name={
+                isRecording ? 'mic' : message.trim() ? 'send' : 'mic-outline'
+              }
               size={22}
-              color="#fff"
+              color={isRecording ? 'red' : '#fff'}
             />
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </View>
     </View>
@@ -398,5 +447,16 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: '#aaa',
     borderRadius: 3,
+  },
+
+  recordingContainer: {
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+
+  recordingText: {
+    color: 'red',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
