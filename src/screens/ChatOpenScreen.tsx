@@ -40,12 +40,14 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
+
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
   const [replyTo, setReplyTo] = useState<any>(null);
   const [swipedMsgId, setSwipedMsgId] = useState<string | null>(null);
+  const [isScrollingToMsg, setIsScrollingToMsg] = useState(false);
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
-
   const [isRecording, setIsRecording] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -109,6 +111,27 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   }, [isTyping]);
 
   const { theme } = useContext(ThemeContext);
+  const scrollToMessage = (id: string) => {
+    const index = chatData.findIndex(msg => msg.id === id);
+
+    if (index !== -1) {
+      setIsScrollingToMsg(true);
+
+      flatListRef.current?.scrollToIndex({
+        index: index,
+        animated: true,
+        viewPosition: 0.5, 
+        viewOffset: 20,
+      });
+
+      setHighlightedId(id);
+
+      setTimeout(() => {
+        setHighlightedId(null);
+        setIsScrollingToMsg(false);
+      }, 1500);
+    }
+  };
   const { user } = route.params;
 
   const renderMessage = ({ item }: { item: any }) => {
@@ -161,16 +184,26 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       >
         {!isMe && (
           <>
-            <View style={[styles.messageBubble, styles.otherBubble]}>
+            <View
+              style={[
+                styles.messageBubble,
+                styles.otherBubble,
+                highlightedId === item.id && styles.highlightedMessage,
+              ]}
+            >
               {item.replyTo && (
-                <View style={styles.replyPreviewBox}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => scrollToMessage(item.replyTo.id)}
+                  style={styles.replyPreviewBox}
+                >
                   <Text style={styles.replyName}>
                     {item.replyTo?.sender === 'me' ? 'You' : user.name}
                   </Text>
                   <Text numberOfLines={1} style={styles.replyPreviewText}>
                     {item.replyTo?.text}
                   </Text>
-                </View>
+                </TouchableOpacity>
               )}
               <Text style={[styles.messageText, styles.otherText]}>
                 {item.text}
@@ -198,7 +231,13 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
               </Animated.View>
             )}
 
-            <View style={[styles.messageBubble, styles.myBubble]}>
+            <View
+              style={[
+                styles.messageBubble,
+                styles.myBubble,
+                highlightedId === item.id && styles.highlightedMessage,
+              ]}
+            >
               {item.replyTo && (
                 <View style={styles.replyPreviewBox}>
                   <Text style={styles.replyName}>
@@ -233,6 +272,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       sender: 'me',
       replyTo: replyTo
         ? {
+            id: replyTo.id,
             text: replyTo.text,
             sender: replyTo.sender,
           }
@@ -311,9 +351,25 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
       <FlatList
         ref={flatListRef}
-        onContentSizeChange={() =>
-          flatListRef.current?.scrollToEnd({ animated: true })
-        }
+        getItemLayout={(data, index) => ({
+          length: 80, // 👈 approx message height
+          offset: 80 * index,
+          index,
+        })}
+        onScrollToIndexFailed={info => {
+          setTimeout(() => {
+            flatListRef.current?.scrollToIndex({
+              index: info.index,
+              animated: true,
+              viewPosition: 0.5,
+            });
+          }, 500);
+        }}
+        onContentSizeChange={() => {
+          if (!isScrollingToMsg && !replyTo) {
+            flatListRef.current?.scrollToEnd({ animated: true });
+          }
+        }}
         data={chatData}
         keyExtractor={item => item.id}
         renderItem={renderMessage}
@@ -698,5 +754,10 @@ const styles = StyleSheet.create({
   replyPreviewText: {
     color: 'rgba(255,255,255,0.6)', // faded
     fontSize: 12,
+  },
+
+  highlightedMessage: {
+    borderWidth: 2,
+    borderColor: '#22C55E',
   },
 });
