@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   Animated,
+  PanResponder,
 } from 'react-native';
 import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -41,8 +42,10 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const dot3 = useRef(new Animated.Value(0)).current;
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
+  const [replyTo, setReplyTo] = useState<any>(null);
 
   const [isRecording, setIsRecording] = useState(false);
+
   const pulseAnim = useRef(new Animated.Value(1)).current;
   React.useEffect(() => {
     if (isRecording) {
@@ -106,11 +109,26 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
-  const renderMessage = ({ item }: { item: any }) => {
-    const isMe = item.sender === 'me';
+  const createPanResponder = (item: any) =>
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        return Math.abs(gesture.dx) > 20;
+      },
 
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dx > 60) {
+          // 👉 right swipe detected
+          setReplyTo(item);
+        }
+      },
+    });
+
+  const renderMessage = ({ item }: { item: any }) => {
+    const panResponder = createPanResponder(item);
+    const isMe = item.sender === 'me';
     return (
       <View
+        {...panResponder.panHandlers}
         style={[
           styles.messageRow,
           {
@@ -124,6 +142,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
             isMe ? styles.myBubble : styles.otherBubble,
           ]}
         >
+          {item.replyTo && (
+            <View style={styles.replyPreview}>
+              <Text style={styles.replyPreviewText}>{item.replyTo}</Text>
+            </View>
+          )}
           <Text
             style={[
               styles.messageText,
@@ -161,13 +184,12 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   };
 
   const handleSend = () => {
-    if (message.trim() === '') return; // empty message ignore
-
-    // Create new message object
+    if (message.trim() === '') return;
     const newMsg = {
       id: Date.now().toString(),
       text: message,
       sender: 'me',
+      replyTo: replyTo ? replyTo.text : null,
       time: new Date().toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -202,6 +224,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
       setChatData(prev => [...prev, reply]);
       setIsTyping(false);
+      setReplyTo(null);
     }, 1500);
   };
 
@@ -318,6 +341,21 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       {isRecording && (
         <View style={styles.recordingContainer}>
           <Text style={styles.recordingText}>● Recording...</Text>
+        </View>
+      )}
+
+      {replyTo && (
+        <View style={styles.replyBar}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.replyLabel}>Replying to</Text>
+            <Text numberOfLines={1} style={styles.replyText}>
+              {replyTo.text}
+            </Text>
+          </View>
+
+          <TouchableOpacity onPress={() => setReplyTo(null)}>
+            <Text style={styles.replyClose}>✕</Text>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -543,5 +581,42 @@ const styles = StyleSheet.create({
   tick: {
     fontSize: 12,
     color: '#aaa',
+  },
+  replyBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 4,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+
+  replyLabel: {
+    fontSize: 11,
+    color: '#aaa',
+  },
+
+  replyText: {
+    fontSize: 13,
+    color: '#fff',
+  },
+
+  replyClose: {
+    fontSize: 18,
+    color: '#aaa',
+    paddingHorizontal: 8,
+  },
+
+  replyPreview: {
+    borderLeftWidth: 3,
+    borderLeftColor: '#8B5CF6',
+    paddingLeft: 6,
+    marginBottom: 4,
+  },
+
+  replyPreviewText: {
+    fontSize: 12,
+    color: '#ccc',
   },
 });
