@@ -48,9 +48,9 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     }
   }, [isRecording]);
 
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const sendAnim = useRef(new Animated.Value(1)).current;
   React.useEffect(() => {
-    Animated.spring(scaleAnim, {
+    Animated.spring(sendAnim, {
       toValue: message.trim() ? 1 : 0.9,
       friction: 6,
       useNativeDriver: true,
@@ -94,31 +94,29 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
     return (
       <View
-        style={[styles.messageRow, isMe ? styles.alignRight : styles.alignLeft]}
+        style={[
+          styles.messageRow,
+          {
+            justifyContent: isMe ? 'flex-end' : 'flex-start',
+          },
+        ]}
       >
-        <Animated.View
-          style={{
-            transform: [{ scale: scaleAnim }],
-            opacity: scaleAnim,
-          }}
+        <View
+          style={[
+            styles.messageBubble,
+            isMe ? styles.myBubble : styles.otherBubble,
+          ]}
         >
-          <View
+          <Text
             style={[
-              styles.messageBubble,
-              isMe ? styles.myMessage : styles.otherMessage,
-              isMe ? styles.myBubble : styles.otherBubble,
+              styles.messageText,
+              isMe ? styles.myText : styles.otherText,
+              { flexWrap: 'wrap' }, // 🔥 safety fix
             ]}
           >
-            <Text
-              style={[
-                styles.messageText,
-                isMe ? styles.myText : styles.otherText,
-              ]}
-            >
-              {item.text}
-            </Text>
-          </View>
-        </Animated.View>
+            {item.text}
+          </Text>
+        </View>
       </View>
     );
   };
@@ -305,28 +303,25 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           activeOpacity={0.8}
           style={styles.sendBtn}
           onPress={handleSend}
-          
           onPressIn={() => {
-            Animated.spring(scaleAnim, {
+            Animated.spring(sendAnim, {
               toValue: 0.85,
               useNativeDriver: true,
             }).start();
           }}
-
           onPressOut={() => {
             setIsRecording(false);
 
-            Animated.spring(scaleAnim, {
+            Animated.spring(sendAnim, {
               toValue: 1,
               useNativeDriver: true,
             }).start();
           }}
-          
           onLongPress={() => setIsRecording(true)}
         >
           <Animated.View
             style={{
-              transform: [{ scale: isRecording ? pulseAnim : scaleAnim }],
+              transform: [{ scale: isRecording ? pulseAnim : sendAnim }],
               opacity: isRecording ? 1 : message.trim() ? 1 : 0.7,
             }}
           >
@@ -371,6 +366,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 18,
     maxWidth: '75%',
+    minWidth: 60,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -397,7 +393,7 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 15,
     fontWeight: '500',
-    lineHeight: 25,
+    lineHeight: 20,
   },
   listContent: {
     padding: 16,
@@ -421,6 +417,8 @@ const styles = StyleSheet.create({
   messageRow: {
     flexDirection: 'row',
     marginBottom: 10,
+    width: '100%',
+    justifyContent: 'flex-start',
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -436,12 +434,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
-  alignRight: {
-    justifyContent: 'flex-end',
-  },
-  alignLeft: {
-    justifyContent: 'flex-start',
-  },
+
   myBubble: {
     backgroundColor: '#8B5CF6',
   },

@@ -79,6 +79,7 @@ const OtpScreen = ({ navigation }: any) => {
       <View style={styles.otpContainer}>
         {otp.map((digit, index) => (
           <Animated.View
+            key={`otp-${index}`}
             style={{
               transform: [{ scale: scaleAnim[index] }],
               shadowColor: '#7C3AED',
