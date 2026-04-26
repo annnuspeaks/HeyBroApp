@@ -159,11 +159,19 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           },
         ]}
       >
-        {/* 🔥 RECEIVED MESSAGE */}
         {!isMe && (
           <>
-            {/* 💬 Bubble */}
             <View style={[styles.messageBubble, styles.otherBubble]}>
+              {item.replyTo && (
+                <View style={styles.replyPreviewBox}>
+                  <Text style={styles.replyName}>
+                    {item.replyTo?.sender === 'me' ? 'You' : user.name}
+                  </Text>
+                  <Text numberOfLines={1} style={styles.replyPreviewText}>
+                    {item.replyTo?.text}
+                  </Text>
+                </View>
+              )}
               <Text style={[styles.messageText, styles.otherText]}>
                 {item.text}
               </Text>
@@ -182,18 +190,25 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           </>
         )}
 
-        {/* 🔥 SENT MESSAGE */}
         {isMe && (
           <>
-            {/* 🔁 Arrow (left side of bubble) */}
             {swipedMsgId === item.id && (
               <Animated.View style={styles.arrowLeft}>
                 <Text style={styles.arrowText}>↩</Text>
               </Animated.View>
             )}
 
-            {/* 💬 Bubble */}
             <View style={[styles.messageBubble, styles.myBubble]}>
+              {item.replyTo && (
+                <View style={styles.replyPreviewBox}>
+                  <Text style={styles.replyName}>
+                    {item.replyTo?.sender === 'me' ? 'You' : user.name}
+                  </Text>
+                  <Text numberOfLines={1} style={styles.replyPreviewText}>
+                    {item.replyTo?.text}
+                  </Text>
+                </View>
+              )}
               <Text style={[styles.messageText, styles.myText]}>
                 {item.text}
               </Text>
@@ -216,7 +231,12 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       id: Date.now().toString(),
       text: message,
       sender: 'me',
-      replyTo: replyTo ? replyTo.text : null,
+      replyTo: replyTo
+        ? {
+            text: replyTo.text,
+            sender: replyTo.sender,
+          }
+        : null,
       time: new Date().toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -635,41 +655,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
 
-  replyPreview: {
+  arrowLeft: {
+    marginRight: 10, // 🔥 gap between arrow & bubble
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(139, 92, 246, 0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  arrowRight: {
+    marginLeft: 10, // 🔥 gap between bubble & arrow
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(139, 92, 246, 0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  arrowText: {
+    color: '#8B5CF6',
+    fontSize: 16,
+    fontWeight: 900,
+  },
+
+  replyPreviewBox: {
     borderLeftWidth: 3,
-    borderLeftColor: '#8B5CF6',
-    paddingLeft: 6,
-    marginBottom: 4,
+    borderLeftColor: '#22C55E', // 🟢 green
+    paddingLeft: 8,
+    marginBottom: 6,
+  },
+
+  replyName: {
+    color: '#22C55E',
+    fontWeight: '700',
+    fontSize: 12,
+    marginBottom: 2,
   },
 
   replyPreviewText: {
+    color: 'rgba(255,255,255,0.6)', // faded
     fontSize: 12,
-    color: '#ccc',
   },
-  
-  arrowLeft: {
-  marginRight: 10, // 🔥 gap between arrow & bubble
-  width: 30,
-  height: 30,
-  borderRadius: 15,
-  backgroundColor: 'rgba(139, 92, 246, 0.35)',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-
-arrowRight: {
-  marginLeft: 10, // 🔥 gap between bubble & arrow
-  width: 30,
-  height: 30,
-  borderRadius: 15,
-  backgroundColor: 'rgba(139, 92, 246, 0.35)',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-
-arrowText: {
-  color: '#8B5CF6',
-  fontSize: 16,
-  fontWeight: 900,
-},
 });
