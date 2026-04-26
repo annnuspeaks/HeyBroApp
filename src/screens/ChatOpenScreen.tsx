@@ -43,6 +43,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
   const [replyTo, setReplyTo] = useState<any>(null);
+  const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
 
   const [isRecording, setIsRecording] = useState(false);
 
@@ -124,18 +125,54 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     });
 
   const renderMessage = ({ item }: { item: any }) => {
-    const panResponder = createPanResponder(item);
+    if (!translateXMap[item.id]) {
+      translateXMap[item.id] = new Animated.Value(0);
+    }
+
+    const translateX = translateXMap[item.id];
+    const panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        return Math.abs(gesture.dx) > 10;
+      },
+
+      onPanResponderMove: (_, gesture) => {
+        // 👉 only right swipe allow
+        if (gesture.dx > 0) {
+          translateX.setValue(Math.min(gesture.dx, 80)); // limit
+        }
+      },
+
+      onPanResponderRelease: (_, gesture) => {
+        if (gesture.dx > 60) {
+          // 👉 trigger reply
+          setReplyTo(item);
+        }
+
+        // 🔥 bounce back animation
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+          friction: 5,
+        }).start();
+      },
+    });
     const isMe = item.sender === 'me';
     return (
-      <View
+      <Animated.View
         {...panResponder.panHandlers}
         style={[
           styles.messageRow,
           {
+            transform: [{ translateX }],
+            opacity: translateX.interpolate({
+              inputRange: [0, 80],
+              outputRange: [1, 0.85],
+            }),
             justifyContent: isMe ? 'flex-end' : 'flex-start',
           },
         ]}
       >
+        {!isMe && <Text style={styles.replyHint}>↩</Text>}
         <View
           style={[
             styles.messageBubble,
@@ -179,7 +216,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
             )}
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -618,5 +655,12 @@ const styles = StyleSheet.create({
   replyPreviewText: {
     fontSize: 12,
     color: '#ccc',
+  },
+  replyHint: {
+    position: 'absolute',
+    left: -20,
+    top: '40%',
+    color: '#8B5CF6',
+    fontSize: 16,
   },
 });
