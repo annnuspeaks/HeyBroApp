@@ -156,82 +156,56 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           {
             justifyContent: isMe ? 'flex-end' : 'flex-start',
             transform: [{ translateX }],
-            opacity: translateX.interpolate({
-              inputRange: [0, 100],
-              outputRange: [1, 0.85],
-              extrapolate: 'clamp',
-            }),
           },
         ]}
       >
-        {swipedMsgId === item.id && (
-          <Animated.Text
-            style={[
-              styles.replyHint,
-              {
-                opacity: translateX.interpolate({
-                  inputRange: [10, 40],
-                  outputRange: [0, 1],
-                  extrapolate: 'clamp',
-                }),
-                transform: [
-                  {
-                    scale: translateX.interpolate({
-                      inputRange: [10, 40],
-                      outputRange: [0.5, 1],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                ],
-              },
-            ]}
-          >
-            ↩
-          </Animated.Text>
-        )}
-        <View
-          style={[
-            styles.messageBubble,
-            isMe ? styles.myBubble : styles.otherBubble,
-          ]}
-        >
-          {item.replyTo && (
-            <View style={styles.replyPreview}>
-              <Text style={styles.replyPreviewText}>{item.replyTo}</Text>
-            </View>
-          )}
-          <Text
-            style={[
-              styles.messageText,
-              isMe ? styles.myText : styles.otherText,
-              { flexWrap: 'wrap' },
-            ]}
-          >
-            {item.text}
-          </Text>
-
-          {/* 🔥 TIME + TICKS */}
-          <View style={styles.metaContainer}>
-            <Text style={styles.timeTextMsg}>{item.time}</Text>
-
-            {isMe && (
-              <Text
-                style={[
-                  styles.tick,
-                  {
-                    color: item.status === 'seen' ? '#60A5FA' : '#aaa',
-                  },
-                ]}
-              >
-                {item.status === 'sent'
-                  ? '✓'
-                  : item.status === 'delivered'
-                  ? '✓✓'
-                  : '✓✓'}
+        {/* 🔥 RECEIVED MESSAGE */}
+        {!isMe && (
+          <>
+            {/* 💬 Bubble */}
+            <View style={[styles.messageBubble, styles.otherBubble]}>
+              <Text style={[styles.messageText, styles.otherText]}>
+                {item.text}
               </Text>
+
+              <View style={styles.metaContainer}>
+                <Text style={styles.timeTextMsg}>{item.time}</Text>
+              </View>
+            </View>
+
+            {/* 🔁 Arrow (right side of bubble) */}
+            {swipedMsgId === item.id && (
+              <Animated.View style={styles.arrowRight}>
+                <Text style={styles.arrowText}>↩</Text>
+              </Animated.View>
             )}
-          </View>
-        </View>
+          </>
+        )}
+
+        {/* 🔥 SENT MESSAGE */}
+        {isMe && (
+          <>
+            {/* 🔁 Arrow (left side of bubble) */}
+            {swipedMsgId === item.id && (
+              <Animated.View style={styles.arrowLeft}>
+                <Text style={styles.arrowText}>↩</Text>
+              </Animated.View>
+            )}
+
+            {/* 💬 Bubble */}
+            <View style={[styles.messageBubble, styles.myBubble]}>
+              <Text style={[styles.messageText, styles.myText]}>
+                {item.text}
+              </Text>
+
+              <View style={styles.metaContainer}>
+                <Text style={styles.timeTextMsg}>{item.time}</Text>
+
+                <Text style={styles.tick}>✓✓</Text>
+              </View>
+            </View>
+          </>
+        )}
       </Animated.View>
     );
   };
@@ -502,7 +476,7 @@ const styles = StyleSheet.create({
   },
   messageBubble: {
     paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingHorizontal: 18,
     borderRadius: 18,
     maxWidth: '75%',
     minWidth: 60,
@@ -672,11 +646,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#ccc',
   },
-  replyHint: {
-    position: 'absolute',
-    left: 0,
-    top: '35%',
-    color: '#8B5CF6',
-    fontSize: 16,
-  },
+  
+  arrowLeft: {
+  marginRight: 10, // 🔥 gap between arrow & bubble
+  width: 30,
+  height: 30,
+  borderRadius: 15,
+  backgroundColor: 'rgba(139, 92, 246, 0.35)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+arrowRight: {
+  marginLeft: 10, // 🔥 gap between bubble & arrow
+  width: 30,
+  height: 30,
+  borderRadius: 15,
+  backgroundColor: 'rgba(139, 92, 246, 0.35)',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+arrowText: {
+  color: '#8B5CF6',
+  fontSize: 16,
+  fontWeight: 900,
+},
 });
