@@ -13,9 +13,26 @@ import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const messages = [
-  { id: '1', text: 'Hello bro 👋', sender: 'them' },
-  { id: '2', text: 'Hey! kya haal hai?', sender: 'me' },
-  { id: '3', text: 'Sab mast 🔥', sender: 'them' },
+  {
+    id: '1',
+    text: 'Hello bro 👋',
+    sender: 'them',
+    time: '10:40 PM',
+    status: 'seen', // sent | delivered | seen
+  },
+  {
+    id: '2',
+    text: 'Hey! kya haal hai?',
+    sender: 'me',
+    time: '10:41 PM',
+    status: 'seen',
+  },
+  {
+    id: '3',
+    text: 'Sab mast 🔥',
+    sender: 'them',
+    time: '10:42 PM',
+  },
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
   const flatListRef = useRef<FlatList<any>>(null!);
@@ -111,11 +128,33 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
             style={[
               styles.messageText,
               isMe ? styles.myText : styles.otherText,
-              { flexWrap: 'wrap' }, // 🔥 safety fix
+              { flexWrap: 'wrap' },
             ]}
           >
             {item.text}
           </Text>
+
+          {/* 🔥 TIME + TICKS */}
+          <View style={styles.metaContainer}>
+            <Text style={styles.timeTextMsg}>{item.time}</Text>
+
+            {isMe && (
+              <Text
+                style={[
+                  styles.tick,
+                  {
+                    color: item.status === 'seen' ? '#60A5FA' : '#aaa',
+                  },
+                ]}
+              >
+                {item.status === 'sent'
+                  ? '✓'
+                  : item.status === 'delivered'
+                  ? '✓✓'
+                  : '✓✓'}
+              </Text>
+            )}
+          </View>
         </View>
       </View>
     );
@@ -129,6 +168,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       id: Date.now().toString(),
       text: message,
       sender: 'me',
+      time: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      status: 'sent',
     };
 
     // Add new message to chat data
@@ -150,6 +194,10 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         id: Date.now().toString(),
         text: 'Reply aa gaya 😎',
         sender: 'them',
+        time: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       };
 
       setChatData(prev => [...prev, reply]);
@@ -478,5 +526,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     letterSpacing: 1,
+  },
+  metaContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+
+  timeTextMsg: {
+    fontSize: 10,
+    color: '#aaa',
+    marginRight: 4,
+  },
+
+  tick: {
+    fontSize: 12,
+    color: '#aaa',
   },
 });
