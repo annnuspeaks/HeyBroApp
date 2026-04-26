@@ -43,6 +43,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = React.useState('');
   const [replyTo, setReplyTo] = useState<any>(null);
+  const [swipedMsgId, setSwipedMsgId] = useState<string | null>(null);
   const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
 
   const [isRecording, setIsRecording] = useState(false);
@@ -110,20 +111,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const { theme } = useContext(ThemeContext);
   const { user } = route.params;
 
-  const createPanResponder = (item: any) =>
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gesture) => {
-        return Math.abs(gesture.dx) > 20;
-      },
-
-      onPanResponderRelease: (_, gesture) => {
-        if (gesture.dx > 60) {
-          // 👉 right swipe detected
-          setReplyTo(item);
-        }
-      },
-    });
-
   const renderMessage = ({ item }: { item: any }) => {
     if (!translateXMap[item.id]) {
       translateXMap[item.id] = new Animated.Value(0);
@@ -136,19 +123,22 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       },
 
       onPanResponderMove: (_, gesture) => {
-        // 👉 only right swipe allow
         if (gesture.dx > 0) {
-          translateX.setValue(Math.min(gesture.dx, 80)); // limit
+          translateX.setValue(Math.min(gesture.dx, 80));
+
+          if (gesture.dx > 20) {
+            setSwipedMsgId(item.id);
+          }
         }
       },
 
       onPanResponderRelease: (_, gesture) => {
         if (gesture.dx > 60) {
-          // 👉 trigger reply
           setReplyTo(item);
         }
 
-        // 🔥 bounce back animation
+        setSwipedMsgId(null);
+
         Animated.spring(translateX, {
           toValue: 0,
           useNativeDriver: true,
@@ -156,6 +146,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         }).start();
       },
     });
+
     const isMe = item.sender === 'me';
     return (
       <Animated.View
@@ -163,16 +154,41 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         style={[
           styles.messageRow,
           {
+            justifyContent: isMe ? 'flex-end' : 'flex-start',
             transform: [{ translateX }],
             opacity: translateX.interpolate({
-              inputRange: [0, 80],
+              inputRange: [0, 100],
               outputRange: [1, 0.85],
+              extrapolate: 'clamp',
             }),
-            justifyContent: isMe ? 'flex-end' : 'flex-start',
           },
         ]}
       >
-        {!isMe && <Text style={styles.replyHint}>↩</Text>}
+        {swipedMsgId === item.id && (
+          <Animated.Text
+            style={[
+              styles.replyHint,
+              {
+                opacity: translateX.interpolate({
+                  inputRange: [10, 40],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp',
+                }),
+                transform: [
+                  {
+                    scale: translateX.interpolate({
+                      inputRange: [10, 40],
+                      outputRange: [0.5, 1],
+                      extrapolate: 'clamp',
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            ↩
+          </Animated.Text>
+        )}
         <View
           style={[
             styles.messageBubble,
@@ -658,8 +674,8 @@ const styles = StyleSheet.create({
   },
   replyHint: {
     position: 'absolute',
-    left: -20,
-    top: '40%',
+    left: 0,
+    top: '35%',
     color: '#8B5CF6',
     fontSize: 16,
   },
