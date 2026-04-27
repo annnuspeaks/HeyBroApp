@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -15,28 +15,28 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const messages = [
   {
-    id: '1',
+    id: Date.now().toString(),
     text: 'Hello bro 👋',
     sender: 'them',
     time: '10:40 PM',
-    status: 'seen', // sent | delivered | seen
+    status: 'seen',
   },
   {
-    id: '2',
+    id: (Date.now() + 1).toString(),
     text: 'Hey! kya haal hai?',
     sender: 'me',
     time: '10:41 PM',
     status: 'seen',
   },
   {
-    id: '3',
+    id: (Date.now() + 2).toString(),
     text: 'Sab mast 🔥',
     sender: 'them',
     time: '10:42 PM',
   },
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
-  const flatListRef = useRef<FlatList<any>>(null!);
+  const flatListRef = useRef<any>(null);
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
@@ -114,33 +114,27 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const scrollToMessage = (id: string) => {
     const index = chatData.findIndex(msg => msg.id === id);
 
-    if (index !== -1) {
-      setIsScrollingToMsg(true);
+    if (index === -1 || !flatListRef.current) return;
 
-      flatListRef.current?.scrollToIndex({
-        index: index,
-        animated: true,
-        viewPosition: 0.5, 
-        viewOffset: 20,
-      });
+    setIsScrollingToMsg(true);
 
-      setHighlightedId(id);
+    flatListRef.current.scrollToIndex({
+      index,
+      animated: true,
+      viewPosition: 0.5,
+    });
 
-      setTimeout(() => {
-        setHighlightedId(null);
-        setIsScrollingToMsg(false);
-      }, 1500);
-    }
+    setHighlightedId(id);
+
+    setTimeout(() => {
+      setHighlightedId(null);
+      setIsScrollingToMsg(false);
+    }, 1500);
   };
   const { user } = route.params;
 
-  const renderMessage = ({ item }: { item: any }) => {
-    if (!translateXMap[item.id]) {
-      translateXMap[item.id] = new Animated.Value(0);
-    }
-
-    const translateX = translateXMap[item.id];
-    const panResponder = PanResponder.create({
+  const createPanResponder = (item: any, translateX: Animated.Value) =>
+    PanResponder.create({
       onMoveShouldSetPanResponder: (_, gesture) => {
         return Math.abs(gesture.dx) > 10;
       },
@@ -170,99 +164,111 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       },
     });
 
-    const isMe = item.sender === 'me';
-    return (
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={[
-          styles.messageRow,
-          {
-            justifyContent: isMe ? 'flex-end' : 'flex-start',
-            transform: [{ translateX }],
-          },
-        ]}
-      >
-        {!isMe && (
-          <>
-            <View
-              style={[
-                styles.messageBubble,
-                styles.otherBubble,
-                highlightedId === item.id && styles.highlightedMessage,
-              ]}
-            >
-              {item.replyTo && (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => scrollToMessage(item.replyTo.id)}
-                  style={styles.replyPreviewBox}
-                >
-                  <Text style={styles.replyName}>
-                    {item.replyTo?.sender === 'me' ? 'You' : user.name}
-                  </Text>
-                  <Text numberOfLines={1} style={styles.replyPreviewText}>
-                    {item.replyTo?.text}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              <Text style={[styles.messageText, styles.otherText]}>
-                {item.text}
-              </Text>
+  const renderMessage = useCallback(
+    ({ item }: { item: any }) => {
+      const translateX =
+        translateXMap[item.id] ||
+        (translateXMap[item.id] = new Animated.Value(0));
 
-              <View style={styles.metaContainer}>
-                <Text style={styles.timeTextMsg}>{item.time}</Text>
-              </View>
-            </View>
+      const panResponder = createPanResponder(item, translateX);
 
-            {/* 🔁 Arrow (right side of bubble) */}
-            {swipedMsgId === item.id && (
-              <Animated.View style={styles.arrowRight}>
-                <Text style={styles.arrowText}>↩</Text>
-              </Animated.View>
-            )}
-          </>
-        )}
+      const isMe = item.sender === 'me';
+      return (
+        <Animated.View
+          {...panResponder.panHandlers}
+          style={[
+            styles.messageRow,
+            {
+              justifyContent: isMe ? 'flex-end' : 'flex-start',
+              transform: [{ translateX }],
+            },
+          ]}
+        >
+          {!isMe && (
+            <>
+              <View
+                style={[
+                  styles.messageBubble,
+                  styles.otherBubble,
+                  highlightedId === item.id && styles.highlightedMessage,
+                ]}
+              >
+                {item.replyTo && (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      item.replyTo?.id && scrollToMessage(item.replyTo.id)
+                    }
+                    style={styles.replyPreviewBox}
+                  >
+                    <Text style={styles.replyName}>
+                      {item.replyTo?.sender === 'me' ? 'You' : user.name}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.replyPreviewText}>
+                      {item.replyTo?.text}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <Text style={[styles.messageText, styles.otherText]}>
+                  {item.text}
+                </Text>
 
-        {isMe && (
-          <>
-            {swipedMsgId === item.id && (
-              <Animated.View style={styles.arrowLeft}>
-                <Text style={styles.arrowText}>↩</Text>
-              </Animated.View>
-            )}
-
-            <View
-              style={[
-                styles.messageBubble,
-                styles.myBubble,
-                highlightedId === item.id && styles.highlightedMessage,
-              ]}
-            >
-              {item.replyTo && (
-                <View style={styles.replyPreviewBox}>
-                  <Text style={styles.replyName}>
-                    {item.replyTo?.sender === 'me' ? 'You' : user.name}
-                  </Text>
-                  <Text numberOfLines={1} style={styles.replyPreviewText}>
-                    {item.replyTo?.text}
-                  </Text>
+                <View style={styles.metaContainer}>
+                  <Text style={styles.timeTextMsg}>{item.time}</Text>
                 </View>
-              )}
-              <Text style={[styles.messageText, styles.myText]}>
-                {item.text}
-              </Text>
-
-              <View style={styles.metaContainer}>
-                <Text style={styles.timeTextMsg}>{item.time}</Text>
-
-                <Text style={styles.tick}>✓✓</Text>
               </View>
-            </View>
-          </>
-        )}
-      </Animated.View>
-    );
-  };
+
+              {/* 🔁 Arrow (right side of bubble) */}
+              {swipedMsgId === item.id && (
+                <Animated.View style={styles.arrowRight}>
+                  <Text style={styles.arrowText}>↩</Text>
+                </Animated.View>
+              )}
+            </>
+          )}
+
+          {isMe && (
+            <>
+              {swipedMsgId === item.id && (
+                <Animated.View style={styles.arrowLeft}>
+                  <Text style={styles.arrowText}>↩</Text>
+                </Animated.View>
+              )}
+
+              <View
+                style={[
+                  styles.messageBubble,
+                  styles.myBubble,
+                  highlightedId === item.id && styles.highlightedMessage,
+                ]}
+              >
+                {item.replyTo && (
+                  <View style={styles.replyPreviewBox}>
+                    <Text style={styles.replyName}>
+                      {item.replyTo?.sender === 'me' ? 'You' : user.name}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.replyPreviewText}>
+                      {item.replyTo?.text}
+                    </Text>
+                  </View>
+                )}
+                <Text style={[styles.messageText, styles.myText]}>
+                  {item.text}
+                </Text>
+
+                <View style={styles.metaContainer}>
+                  <Text style={styles.timeTextMsg}>{item.time}</Text>
+
+                  <Text style={styles.tick}>✓✓</Text>
+                </View>
+              </View>
+            </>
+          )}
+        </Animated.View>
+      );
+    },
+    [swipedMsgId, highlightedId, replyTo, user.name],
+  );
 
   const handleSend = () => {
     if (message.trim() === '') return;
@@ -351,11 +357,16 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
       <FlatList
         ref={flatListRef}
-        getItemLayout={(data, index) => ({
-          length: 80, // 👈 approx message height
-          offset: 80 * index,
-          index,
-        })}
+        data={chatData}
+        extraData={`${swipedMsgId || ''}-${highlightedId || ''}`}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderMessage}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        onContentSizeChange={() => {
+          if (!isScrollingToMsg) return;
+        }}
         onScrollToIndexFailed={info => {
           setTimeout(() => {
             flatListRef.current?.scrollToIndex({
@@ -363,16 +374,8 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
               animated: true,
               viewPosition: 0.5,
             });
-          }, 500);
+          }, 300);
         }}
-        onContentSizeChange={() => {
-          if (!isScrollingToMsg && !replyTo) {
-            flatListRef.current?.scrollToEnd({ animated: true });
-          }
-        }}
-        data={chatData}
-        keyExtractor={item => item.id}
-        renderItem={renderMessage}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={() => (
           <Text style={{ color: '#fff', textAlign: 'center' }}>
