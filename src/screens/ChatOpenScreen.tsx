@@ -37,6 +37,7 @@ const messages = [
 ];
 const ChatOpenScreen = ({ route, navigation }: any) => {
   const flatListRef = useRef<any>(null);
+  const messageRefs = useRef<{ [key: string]: any }>({});
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
@@ -45,7 +46,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const [message, setMessage] = React.useState('');
   const [replyTo, setReplyTo] = useState<any>(null);
   const [swipedMsgId, setSwipedMsgId] = useState<string | null>(null);
-  const [isScrollingToMsg, setIsScrollingToMsg] = useState(false);
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
   const [isRecording, setIsRecording] = useState(false);
@@ -112,25 +112,33 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
   const { theme } = useContext(ThemeContext);
   const scrollToMessage = (id: string) => {
-    const index = chatData.findIndex(msg => msg.id === id);
+    const ref = messageRefs.current[id];
 
-    if (index === -1 || !flatListRef.current) return;
+    if (!ref || !flatListRef.current) return;
+    const listNode = flatListRef.current?.getNativeScrollRef?.();
 
-    setIsScrollingToMsg(true);
+    if (!listNode) return;
 
-    flatListRef.current.scrollToIndex({
-      index,
-      animated: true,
-      viewPosition: 0.5,
-    });
+    ref.measureLayout(
+      listNode,
+      (x: number, y: number) => {
+        flatListRef.current.scrollToOffset({
+          offset: y - 100,
+          animated: true,
+        });
 
-    setHighlightedId(id);
+        setHighlightedId(id);
 
-    setTimeout(() => {
-      setHighlightedId(null);
-      setIsScrollingToMsg(false);
-    }, 1500);
+        setTimeout(() => {
+          setHighlightedId(null);
+        }, 1500);
+      },
+      () => {
+        console.log('measure failed');
+      },
+    );
   };
+
   const { user } = route.params;
 
   const createPanResponder = (item: any, translateX: Animated.Value) =>
@@ -175,6 +183,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       const isMe = item.sender === 'me';
       return (
         <Animated.View
+          ref={ref => {
+            if (ref) {
+              messageRefs.current[item.id] = ref;
+            }
+          }}
           {...panResponder.panHandlers}
           style={[
             styles.messageRow,
@@ -218,7 +231,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
                 </View>
               </View>
 
-              {/* 🔁 Arrow (right side of bubble) */}
               {swipedMsgId === item.id && (
                 <Animated.View style={styles.arrowRight}>
                   <Text style={styles.arrowText}>↩</Text>
@@ -290,11 +302,9 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
       status: 'sent',
     };
 
-    // Add new message to chat data
     setChatData(prev => [...prev, newMsg]);
     setMessage('');
 
-    // Scroll to bottom after a short delay to ensure the new message is rendered
     setTimeout(() => {
       flatListRef.current?.scrollToEnd({ animated: true });
     }, 100);
@@ -304,7 +314,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
     setTimeout(() => {
       setIsTyping(false);
 
-      // fake reply
       const reply = {
         id: Date.now().toString(),
         text: 'Reply aa gaya 😎',
@@ -323,9 +332,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* 🔥 HEADER */}
       <View style={[styles.header, { borderBottomColor: theme.border }]}>
-        {/* 🔥 LEFT SECTION (back + avatar + name) */}
         <View style={styles.leftSection}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" size={24} color={theme.text} />
@@ -343,7 +350,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           </View>
         </View>
 
-        {/* 🔥 RIGHT SECTION (icons) */}
         <View style={styles.rightIcons}>
           <TouchableOpacity style={styles.iconBtn}>
             <Icon name="call-outline" size={22} color={theme.text} />
@@ -364,18 +370,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}
-        onContentSizeChange={() => {
-          if (!isScrollingToMsg) return;
-        }}
-        onScrollToIndexFailed={info => {
-          setTimeout(() => {
-            flatListRef.current?.scrollToIndex({
-              index: info.index,
-              animated: true,
-              viewPosition: 0.5,
-            });
-          }, 300);
-        }}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={() => (
           <Text style={{ color: '#fff', textAlign: 'center' }}>
@@ -481,7 +475,6 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           <Icon name="happy-outline" size={22} color={theme.text} />
         </TouchableOpacity>
 
-        {/* ✍️ Input */}
         <TextInput
           placeholder="Type message..."
           value={message}
@@ -538,7 +531,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // 🔥 IMPORTANT
+    justifyContent: 'space-between',
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderBottomWidth: 1,
@@ -715,7 +708,7 @@ const styles = StyleSheet.create({
   },
 
   arrowLeft: {
-    marginRight: 10, // 🔥 gap between arrow & bubble
+    marginRight: 10,
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -725,7 +718,7 @@ const styles = StyleSheet.create({
   },
 
   arrowRight: {
-    marginLeft: 10, // 🔥 gap between bubble & arrow
+    marginLeft: 10,
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -742,7 +735,7 @@ const styles = StyleSheet.create({
 
   replyPreviewBox: {
     borderLeftWidth: 3,
-    borderLeftColor: '#22C55E', // 🟢 green
+    borderLeftColor: '#22C55E',
     paddingLeft: 8,
     marginBottom: 6,
   },
@@ -755,7 +748,7 @@ const styles = StyleSheet.create({
   },
 
   replyPreviewText: {
-    color: 'rgba(255,255,255,0.6)', // faded
+    color: 'rgba(255,255,255,0.6)',
     fontSize: 12,
   },
 
