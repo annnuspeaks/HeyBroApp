@@ -1,11 +1,9 @@
 import React, {
-  useContext,
   useEffect,
   useRef,
 } from 'react';
 
 import {
-  View,
   Text,
   StyleSheet,
   Image,
@@ -17,12 +15,9 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {ThemeContext} from '../theme/ThemeContext';
-
 const {width} = Dimensions.get('window');
 
 const CallingScreen = ({route}: any) => {
-  const {theme} = useContext(ThemeContext);
 
   const {user} = route.params;
 

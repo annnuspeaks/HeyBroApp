@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { ThemeContext } from '../theme/ThemeContext';
 
+
 const CallItem = ({ item, index, theme, navigation }: any) => {
   const translateY = useRef(new Animated.Value(30)).current;
 
@@ -134,6 +135,8 @@ const VoiceScreen = () => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const toggleAnim = useRef(new Animated.Value(0)).current;
+
   const [activeTab, setActiveTab] = useState<'All' | 'Missed'>('All');
 
   useEffect(() => {
@@ -143,6 +146,16 @@ const VoiceScreen = () => {
       useNativeDriver: true,
     }).start();
   }, []);
+
+  useEffect(() => {
+    Animated.spring(toggleAnim, {
+      toValue: activeTab === 'All' ? 0 : 1,
+      useNativeDriver: true,
+
+      friction: 8,
+      tension: 70,
+    }).start();
+  }, [activeTab]);
 
   const recentCalls = [
     {
@@ -280,44 +293,58 @@ const VoiceScreen = () => {
             <Icon name="call" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
-        <View style={styles.segmentContainer}>
-          <TouchableOpacity
-            style={[
-              styles.segmentButton,
-
-              activeTab === 'All' && styles.activeSegment,
-            ]}
-            onPress={() => setActiveTab('All')}
-          >
-            <Text
+        <View style={styles.segmentOuter}>
+          <View style={styles.segmentContainer}>
+            <Animated.View
               style={[
-                styles.segmentText,
+                styles.activePill,
 
-                activeTab === 'All' && styles.activeSegmentText,
+                {
+                  backgroundColor: activeTab === 'All' ? '#25D366' : '#EF4444',
+
+                  transform: [
+                    {
+                      translateX: toggleAnim.interpolate({
+                        inputRange: [0, 1],
+
+                        outputRange: [0, 78],
+                      }),
+                    },
+                  ],
+                },
               ]}
+            />
+
+            <TouchableOpacity
+              style={styles.segmentButton}
+              onPress={() => setActiveTab('All')}
             >
-              All
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.segmentText,
 
-          <TouchableOpacity
-            style={[
-              styles.segmentButton,
+                  activeTab === 'All' && styles.activeSegmentText,
+                ]}
+              >
+                All
+              </Text>
+            </TouchableOpacity>
 
-              activeTab === 'Missed' && styles.activeSegment,
-            ]}
-            onPress={() => setActiveTab('Missed')}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-
-                activeTab === 'Missed' && styles.activeSegmentText,
-              ]}
+            <TouchableOpacity
+              style={styles.segmentButton}
+              onPress={() => setActiveTab('Missed')}
             >
-              Missed
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.segmentText,
+
+                  activeTab === 'Missed' && styles.activeSegmentText,
+                ]}
+              >
+                Missed
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <FlatList
@@ -453,28 +480,46 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
+  segmentOuter: {
+    alignItems: 'center',
+
+    marginBottom: 22,
+  },
+
   segmentContainer: {
+    width: 170,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.06)',
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 16,
-    padding: 4,
-    marginBottom: 20,
+    position: 'relative',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+
+  activePill: {
+    position: 'absolute',
+    width: 85,
+    height: 38,
+    borderRadius: 19,
+    top: 3,
+    left: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
 
   segmentButton: {
     flex: 1,
-    paddingVertical: 10,
-    borderRadius: 12,
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  activeSegment: {
-    backgroundColor: '#25D366',
+    zIndex: 2,
   },
 
   segmentText: {
     color: '#94A3B8',
-
+    fontSize: 14,
     fontWeight: '600',
   },
 
