@@ -1,8 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 import {
   View,
@@ -17,25 +13,14 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {ThemeContext} from '../theme/ThemeContext';
+import { ThemeContext } from '../theme/ThemeContext';
 
-import FloatingThemeToggle from '../components/FloatingThemeToggle';
+const CallItem = ({ item, index, theme, navigation }: any) => {
+  const translateY = useRef(new Animated.Value(30)).current;
 
-const CallItem = ({
-  item,
-  index,
-  theme,
-  navigation,
-}: any) => {
-  const translateY = useRef(
-    new Animated.Value(30),
-  ).current;
-
-  const opacity = useRef(
-    new Animated.Value(0),
-  ).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -62,11 +47,12 @@ const CallItem = ({
           user: item,
         })
       }
-      style={({pressed}) => [
+      style={({ pressed }) => [
         {
-          transform: [{scale: pressed ? 0.98 : 1}],
+          transform: [{ scale: pressed ? 0.98 : 1 }],
         },
-      ]}>
+      ]}
+    >
       <Animated.View
         style={[
           styles.callCard,
@@ -82,81 +68,55 @@ const CallItem = ({
                 : 'rgba(0,0,0,0.06)',
 
             opacity,
-            transform: [{translateY}],
+            transform: [{ translateY }],
           },
-        ]}>
-        <View style={{position: 'relative'}}>
-          <Image
-            source={{uri: item.image}}
-            style={styles.avatar}
-          />
+        ]}
+      >
+        <View style={{ position: 'relative' }}>
+          <Image source={{ uri: item.image }} style={styles.avatar} />
 
           <View
             style={[
               styles.onlineDot,
               {
-                backgroundColor: item.online
-                  ? '#22C55E'
-                  : '#64748B',
+                backgroundColor: item.online ? '#22C55E' : '#64748B',
               },
             ]}
           />
         </View>
 
-        <View style={{flex: 1}}>
-          <Text style={[styles.name, {color: theme.text}]}>
-            {item.name}
-          </Text>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
 
           <View style={styles.row}>
             <Icon
               name={
-                item.type === 'Missed'
-                  ? 'call-outline'
-                  : 'arrow-up-outline'
+                item.type === 'Missed' ? 'call-outline' : 'arrow-up-outline'
               }
               size={14}
-              color={
-                item.type === 'Missed'
-                  ? '#EF4444'
-                  : '#22C55E'
-              }
+              color={item.type === 'Missed' ? '#EF4444' : '#22C55E'}
             />
 
-            <Text
-              style={[
-                styles.callType,
-                {color: theme.subText},
-              ]}>
+            <Text style={[styles.callType, { color: theme.subText }]}>
               {item.type}
             </Text>
           </View>
         </View>
 
-        <View style={{alignItems: 'flex-end'}}>
-          <Text
-            style={[
-              styles.time,
-              {color: theme.subText},
-            ]}>
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text style={[styles.time, { color: theme.subText }]}>
             {item.time}
           </Text>
 
           <TouchableOpacity
             style={styles.smallCallButton}
             onPress={() =>
-              navigation.navigate(
-                'CallingScreen',
-                {
-                  user: item,
-                },
-              )
-            }>
-            <Icon
-              name="call"
-              size={18}
-              color="#fff"
-            />
+              navigation.navigate('CallingScreen', {
+                user: item,
+              })
+            }
+          >
+            <Icon name="call" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -167,11 +127,9 @@ const CallItem = ({
 const VoiceScreen = () => {
   const navigation = useNavigation<any>();
 
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
-  const fadeAnim = useRef(
-    new Animated.Value(0),
-  ).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -217,29 +175,30 @@ const VoiceScreen = () => {
         {
           backgroundColor: theme.background,
         },
-      ]}>
-      <FloatingThemeToggle />
-
+      ]}
+    >
       <Animated.View
         style={{
           opacity: fadeAnim,
           flex: 1,
-        }}>
-        <Text
-          style={[
-            styles.header,
-            {color: theme.text},
-          ]}>
-          Calls
-        </Text>
+        }}
+      >
+        <Text style={[styles.header, { color: theme.text }]}>Calls</Text>
 
-        <Text
-          style={[
-            styles.subHeader,
-            {color: theme.subText},
-          ]}>
-          Recent voice activity
-        </Text>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={[styles.subHeader, { color: theme.subText }]}>
+              Recent voice activity
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.topCallButton}
+            onPress={() => navigation.navigate('ContactsScreen')}
+          >
+            <Icon name="call" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
 
         <FlatList
           data={recentCalls}
@@ -248,7 +207,7 @@ const VoiceScreen = () => {
           contentContainerStyle={{
             paddingBottom: 120,
           }}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <CallItem
               item={item}
               index={index}
@@ -260,16 +219,9 @@ const VoiceScreen = () => {
 
         <TouchableOpacity
           style={styles.fab}
-          onPress={() =>
-            navigation.navigate(
-              'ContactsScreen',
-            )
-          }>
-          <Icon
-            name="call"
-            size={26}
-            color="#fff"
-          />
+          onPress={() => navigation.navigate('ContactsScreen')}
+        >
+          <Icon name="call" size={26} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -359,20 +311,24 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 
-  fab: {
-    position: 'absolute',
-    bottom: 30,
-    right: 10,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 22,
+  },
+
+  topCallButton: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#22C55E',
     justifyContent: 'center',
     alignItems: 'center',
 
     shadowColor: '#22C55E',
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 6,
   },
 });
