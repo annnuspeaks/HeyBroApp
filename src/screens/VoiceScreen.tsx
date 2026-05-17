@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -105,7 +105,10 @@ const CallItem = ({ item, index, theme, navigation }: any) => {
 
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={[styles.time, { color: theme.subText }]}>
-            {item.time}
+            {new Date(item.timestamp).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
           </Text>
 
           <TouchableOpacity
@@ -131,6 +134,8 @@ const VoiceScreen = () => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const [activeTab, setActiveTab] = useState<'All' | 'Missed'>('All');
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -144,29 +149,105 @@ const VoiceScreen = () => {
       id: '1',
       name: 'Shreya Ji',
       type: 'Incoming',
-      time: 'Today, 10:42 PM',
       online: true,
+      timestamp: new Date(),
       image: 'https://i.pravatar.cc/150?img=10',
     },
 
     {
       id: '2',
       name: 'Rohan',
-      type: 'Outgoing',
-      time: 'Today, 7:12 PM',
+      type: 'Missed',
       online: false,
+      timestamp: new Date('2026-05-17'),
       image: 'https://i.pravatar.cc/150?img=11',
     },
 
     {
       id: '3',
-      name: 'Aaditya',
-      type: 'Missed',
-      time: 'Yesterday',
+      name: 'Rowling Patton',
+      type: 'Incoming',
       online: true,
-      image: 'https://i.pravatar.cc/150?img=12',
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=13',
+    },
+
+    {
+      id: '4',
+      name: 'Ishmriti Chhetri',
+      type: 'Missed',
+      online: true,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=19',
+    },
+
+    {
+      id: '5',
+      name: 'Aham Deshwal',
+      type: 'Outgoing',
+      online: true,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=31',
+    },
+
+    {
+      id: '6',
+      name: 'Trupti Sethi',
+      type: 'Incoming',
+      online: true,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=25',
     },
   ];
+
+  const filteredCalls =
+    activeTab === 'Missed'
+      ? recentCalls.filter(item => item.type === 'Missed')
+      : recentCalls;
+
+  const getGroupLabel = (date: Date) => {
+    const today = new Date();
+
+    const yesterday = new Date();
+
+    yesterday.setDate(today.getDate() - 1);
+
+    const input = new Date(date);
+
+    if (input.toDateString() === today.toDateString()) {
+      return 'Today';
+    }
+
+    if (input.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+
+    const diff = (today.getTime() - input.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (diff < 7) {
+      return input.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+    }
+
+    return input.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const groupedCalls = filteredCalls.reduce((groups: any, item) => {
+    const label = getGroupLabel(item.timestamp);
+
+    if (!groups[label]) {
+      groups[label] = [];
+    }
+
+    groups[label].push(item);
+
+    return groups;
+  }, {});
 
   return (
     <View
@@ -199,25 +280,70 @@ const VoiceScreen = () => {
             <Icon name="call" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
+        <View style={styles.segmentContainer}>
+          <TouchableOpacity
+            style={[
+              styles.segmentButton,
+
+              activeTab === 'All' && styles.activeSegment,
+            ]}
+            onPress={() => setActiveTab('All')}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+
+                activeTab === 'All' && styles.activeSegmentText,
+              ]}
+            >
+              All
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.segmentButton,
+
+              activeTab === 'Missed' && styles.activeSegment,
+            ]}
+            onPress={() => setActiveTab('Missed')}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+
+                activeTab === 'Missed' && styles.activeSegmentText,
+              ]}
+            >
+              Missed
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <FlatList
-          data={recentCalls}
-          keyExtractor={item => item.id}
+          data={Object.keys(groupedCalls)}
+          keyExtractor={item => item}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{ height: 2 }} />}
           contentContainerStyle={{
             paddingBottom: 120,
           }}
-          renderItem={({ item, index }) => (
-            <CallItem
-              item={item}
-              index={index}
-              theme={theme}
-              navigation={navigation}
-            />
+          renderItem={({ item: section }) => (
+            <View>
+              <Text style={styles.groupLabel}>{section}</Text>
+
+              {groupedCalls[section].map((call: any, index: number) => (
+                <CallItem
+                  key={call.id}
+                  item={call}
+                  index={index}
+                  theme={theme}
+                  navigation={navigation}
+                />
+              ))}
+            </View>
           )}
         />
-
       </Animated.View>
     </View>
   );
@@ -321,10 +447,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#25D366',
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#25D366',
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4,
+  },
+
+  segmentContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 16,
+    padding: 4,
+    marginBottom: 20,
+  },
+
+  segmentButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  activeSegment: {
+    backgroundColor: '#25D366',
+  },
+
+  segmentText: {
+    color: '#94A3B8',
+
+    fontWeight: '600',
+  },
+
+  activeSegmentText: {
+    color: '#fff',
+  },
+
+  groupLabel: {
+    color: '#94A3B8',
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 10,
+    marginTop: 12,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });
