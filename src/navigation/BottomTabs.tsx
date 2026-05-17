@@ -65,21 +65,32 @@ const TabsWrapper = () => {
           return (
             <Pressable
               {...props}
-              android_ripple={{
-                color: 'rgba(139,92,246,0.12)',
-                borderless: false,
-              }}
               onPress={e => {
                 HapticFeedback.trigger('selection');
 
                 props.onPress?.(e);
               }}
-              style={[
+              style={({ pressed }) => [
                 props.style,
+
                 {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
+
+                  borderRadius: 18,
+
+                  opacity: pressed ? 0.72 : 1,
+
+                  backgroundColor: pressed
+                    ? 'rgba(139,92,246,0.08)'
+                    : 'transparent',
+
+                  transform: [
+                    {
+                      scale: pressed ? 0.96 : 1,
+                    },
+                  ],
                 },
               ]}
             />
@@ -151,8 +162,9 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 70,
-    height: 50,
+    width: 74,
+    height: 54,
+    borderRadius: 18,
   },
 
   dot: {
