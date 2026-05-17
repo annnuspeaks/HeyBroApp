@@ -183,10 +183,10 @@ const VoiceScreen = () => {
           flex: 1,
         }}
       >
-        <Text style={[styles.header, { color: theme.text }]}>Calls</Text>
-
         <View style={styles.headerRow}>
           <View>
+            <Text style={[styles.header, { color: theme.text }]}>Calls</Text>
+
             <Text style={[styles.subHeader, { color: theme.subText }]}>
               Recent voice activity
             </Text>
@@ -196,7 +196,7 @@ const VoiceScreen = () => {
             style={styles.topCallButton}
             onPress={() => navigation.navigate('ContactsScreen')}
           >
-            <Icon name="call" size={20} color="#fff" />
+            <Icon name="call" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
 
@@ -204,6 +204,7 @@ const VoiceScreen = () => {
           data={recentCalls}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{ height: 2 }} />}
           contentContainerStyle={{
             paddingBottom: 120,
           }}
@@ -217,12 +218,6 @@ const VoiceScreen = () => {
           )}
         />
 
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => navigation.navigate('ContactsScreen')}
-        >
-          <Icon name="call" size={26} color="#fff" />
-        </TouchableOpacity>
       </Animated.View>
     </View>
   );
@@ -234,7 +229,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 14,
-    paddingTop: 20,
+    paddingTop: 12,
   },
 
   header: {
@@ -244,7 +239,7 @@ const styles = StyleSheet.create({
 
   subHeader: {
     marginTop: 5,
-    marginBottom: 25,
+    marginBottom: 0,
     fontSize: 14,
     opacity: 0.7,
   },
@@ -252,9 +247,10 @@ const styles = StyleSheet.create({
   callCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     borderRadius: 22,
-    marginBottom: 14,
+    marginBottom: 10,
     borderWidth: 1,
   },
 
@@ -301,11 +297,11 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 20,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#25D366',
     justifyContent: 'center',
     alignItems: 'center',
 
-    shadowColor: '#22C55E',
+    shadowColor: '#25D366',
     shadowOpacity: 0.4,
     shadowRadius: 8,
     elevation: 5,
@@ -315,20 +311,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: 18,
   },
 
   topCallButton: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#22C55E',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#25D366',
     justifyContent: 'center',
     alignItems: 'center',
 
-    shadowColor: '#22C55E',
-    shadowOpacity: 0.45,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowColor: '#25D366',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });
