@@ -10,7 +10,6 @@ import { ThemeContext } from '../theme/ThemeContext';
 import ChatOpenScreen from '../screens/ChatOpenScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
 const Tab = createBottomTabNavigator();
 
 type IconProps = {
@@ -31,38 +30,22 @@ const AnimatedIcon = ({ name, focused, color }: IconProps) => {
   }, [focused, scale]);
 
   return (
-    <Pressable
-      android_ripple={{
-        color: 'rgba(139,92,246,0.25)', // 🔥 ripple
-        borderless: true,
-      }}
-      onPress={() => {
-        const HapticFeedback = require('react-native-haptic-feedback').default;
-        HapticFeedback.trigger('selection'); // 🔥 tab vibration
-      }}
-      style={({ pressed }) => [
+    <Animated.View
+      style={[
+        styles.iconContainer,
         {
-          transform: [{ scale: pressed ? 0.9 : 1 }],
+          transform: [{ scale }],
         },
       ]}
     >
-      <Animated.View
-        style={[
-          styles.iconContainer,
-          {
-            transform: [{ scale }],
-          },
-        ]}
-      >
-        <Icon
-          name={focused ? name : `${name}-outline`}
-          size={28}
-          color={focused ? '#8B5CF6' : color}
-        />
+      <Icon
+        name={focused ? name : `${name}-outline`}
+        size={28}
+        color={focused ? '#8B5CF6' : color}
+      />
 
-        {focused && <View style={styles.activeDot} />}
-      </Animated.View>
-    </Pressable>
+      {focused && <View style={styles.activeDot} />}
+    </Animated.View>
   );
 };
 
@@ -75,11 +58,39 @@ const TabsWrapper = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarButton: props => {
+          const HapticFeedback =
+            require('react-native-haptic-feedback').default;
+
+          return (
+            <Pressable
+              {...props}
+              android_ripple={{
+                color: 'rgba(139,92,246,0.12)',
+                borderless: false,
+              }}
+              onPress={e => {
+                HapticFeedback.trigger('selection');
+
+                props.onPress?.(e);
+              }}
+              style={[
+                props.style,
+                {
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}
+            />
+          );
+        },
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#8B5CF6',
         tabBarInactiveTintColor:
           theme.background === '#020617' ? theme.subText : '#6B7280',
         tabBarStyle: {
+          overflow: 'hidden',
           position: 'absolute',
           marginHorizontal: 15,
           bottom: 15,
@@ -140,6 +151,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: 70,
+    height: 50,
   },
 
   dot: {
