@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1014443022149",
+    "project_id": "heybro-app",
+    "storage_bucket": "heybro-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014443022149:android:0100ee03608df58d0bd02c",
+        "android_client_info": {
+          "package_name": "com.heybroapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyT1yiHs0D1uBnbNnkQ4viZHksS-CSHrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

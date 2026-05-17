@@ -8,6 +8,8 @@ import OtpScreen from './src/screens/OtpScreen';
 import ChatOpenScreen from './src/screens/ChatOpenScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import ContactsScreen from './src/screens/ContactsScreen';
+import CallingScreen from './src/screens/CallingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +54,19 @@ const App = () => {
             component={ProfileScreen}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="ContactsScreen"
+            component={ContactsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="CallingScreen"
+            component={CallingScreen}
+            options={{ headerShown: false }}
+          />
+
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
