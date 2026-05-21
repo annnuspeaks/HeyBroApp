@@ -25,6 +25,8 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [swapped, setSwapped] = useState(false);
 
+  const [expanded, setExpanded] = useState(false);
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const controlsAnim = useRef(new Animated.Value(0)).current;
@@ -35,10 +37,15 @@ const VideoCallScreen = ({ route }: any) => {
 
   const pan = useRef(
     new Animated.ValueXY({
-      x: width - 140,
-      y: 90,
+      x: width - 150,
+      y: 110,
     }),
   ).current;
+
+  const lastPosition = useRef({
+    x: width - 150,
+    y: 110,
+  });
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -59,6 +66,18 @@ const VideoCallScreen = ({ route }: any) => {
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
 
+    onPanResponderGrant: () => {
+      pan.setOffset({
+        x: lastPosition.current.x,
+        y: lastPosition.current.y,
+      });
+
+      pan.setValue({
+        x: 0,
+        y: 0,
+      });
+    },
+
     onPanResponderMove: Animated.event(
       [
         null,
@@ -71,6 +90,38 @@ const VideoCallScreen = ({ route }: any) => {
         useNativeDriver: false,
       },
     ),
+
+    onPanResponderRelease: (e, gesture) => {
+      pan.flattenOffset();
+
+      let finalX = lastPosition.current.x + gesture.dx;
+
+      let finalY = lastPosition.current.y + gesture.dy;
+
+      // SNAP CORNERS
+
+      const snapX = finalX < width / 2 ? 20 : width - 140;
+
+      const snapY = finalY < height / 2 ? 100 : height - 260;
+
+      Animated.spring(pan, {
+        toValue: {
+          x: snapX,
+          y: snapY,
+        },
+
+        friction: 7,
+
+        tension: 50,
+
+        useNativeDriver: false,
+      }).start();
+
+      lastPosition.current = {
+        x: snapX,
+        y: snapY,
+      };
+    },
   });
 
   const toggleControls = () => {
@@ -149,6 +200,18 @@ const VideoCallScreen = ({ route }: any) => {
     lastTap = now;
   };
 
+  const toggleExpand = () => {
+    setExpanded(prev => !prev);
+
+    Animated.spring(miniScale, {
+      toValue: expanded ? 1 : 1.18,
+
+      friction: 6,
+
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View style={styles.container}>
       {/* REMOTE VIDEO */}
@@ -198,7 +261,11 @@ const VideoCallScreen = ({ route }: any) => {
         ]}
       >
         <TouchableWithoutFeedback
-          onPress={toggleControls}
+          onPress={() => {
+            toggleControls();
+
+            toggleExpand();
+          }}
           onPressOut={handleDoubleTap}
         >
           <ImageBackground
@@ -302,10 +369,23 @@ const styles = StyleSheet.create({
 
   miniSelfView: {
     position: 'absolute',
+
     width: 120,
     height: 180,
-    borderRadius: 18,
+
+    borderRadius: 22,
+
     overflow: 'hidden',
+
+    shadowColor: '#000',
+
+    shadowOpacity: 0.35,
+
+    shadowRadius: 10,
+
+    elevation: 10,
+
+    backgroundColor: '#111',
   },
 
   fullSelfView: {
@@ -317,13 +397,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'flex-end',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.12)',
   },
 
   controlsOverlay: {
     padding: 14,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: 'rgba(15,23,42,0.72)',
   },
 
   controlBtn: {
