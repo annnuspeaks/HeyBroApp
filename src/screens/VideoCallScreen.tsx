@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -13,34 +9,29 @@ import {
   TouchableOpacity,
   ImageBackground,
   PanResponder,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const { width, height } =
-  Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const VideoCallScreen = ({
-  route,
-}: any) => {
+const VideoCallScreen = ({ route }: any) => {
   const { user } = route.params;
 
-  const [connected, setConnected] =
-    useState(false);
+  const [connected, setConnected] = useState(false);
 
-  const [showControls, setShowControls] =
-    useState(false);
+  const [showControls, setShowControls] = useState(false);
 
-  const [swapped, setSwapped] =
-    useState(false);
+  const [swapped, setSwapped] = useState(false);
 
-  const fadeAnim = useRef(
-    new Animated.Value(0),
-  ).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const miniScale = useRef(
-    new Animated.Value(1),
-  ).current;
+  const controlsAnim = useRef(new Animated.Value(0)).current;
+
+  const miniScale = useRef(new Animated.Value(1)).current;
+
+  const controlsTimeout = useRef<any>(null);
 
   const pan = useRef(
     new Animated.ValueXY({
@@ -65,37 +56,97 @@ const VideoCallScreen = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const panResponder =
-    PanResponder.create({
-      onMoveShouldSetPanResponder:
-        () => true,
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
 
-      onPanResponderMove:
-        Animated.event(
-          [
-            null,
-            {
-              dx: pan.x,
-              dy: pan.y,
-            },
-          ],
-          {
-            useNativeDriver: false,
-          },
-        ),
-    });
+    onPanResponderMove: Animated.event(
+      [
+        null,
+        {
+          dx: pan.x,
+          dy: pan.y,
+        },
+      ],
+      {
+        useNativeDriver: false,
+      },
+    ),
+  });
 
   const toggleControls = () => {
-    setShowControls(prev => !prev);
+    const nextState = !showControls;
 
-    Animated.spring(miniScale, {
-      toValue: showControls ? 1 : 1.08,
+    setShowControls(nextState);
+
+    Animated.timing(controlsAnim, {
+      toValue: nextState ? 1 : 0,
+
+      duration: 250,
+
       useNativeDriver: true,
     }).start();
+
+    Animated.spring(miniScale, {
+      toValue: nextState ? 1.08 : 1,
+
+      useNativeDriver: true,
+    }).start();
+
+    // auto hide
+
+    if (controlsTimeout.current) {
+      clearTimeout(controlsTimeout.current);
+    }
+
+    if (nextState) {
+      controlsTimeout.current = setTimeout(() => {
+        setShowControls(false);
+
+        Animated.timing(controlsAnim, {
+          toValue: 0,
+
+          duration: 250,
+
+          useNativeDriver: true,
+        }).start();
+
+        Animated.spring(miniScale, {
+          toValue: 1,
+
+          useNativeDriver: true,
+        }).start();
+      }, 3000);
+    }
   };
 
   const swapVideos = () => {
-    setSwapped(prev => !prev);
+    Animated.spring(miniScale, {
+      toValue: 0.92,
+
+      useNativeDriver: true,
+    }).start(() => {
+      setSwapped(prev => !prev);
+
+      Animated.spring(miniScale, {
+        toValue: 1,
+
+        friction: 5,
+
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  let lastTap = 0;
+
+  const handleDoubleTap = () => {
+    const now = Date.now();
+
+    if (now - lastTap < 300) {
+      swapVideos();
+    }
+
+    lastTap = now;
   };
 
   return (
@@ -105,25 +156,21 @@ const VideoCallScreen = ({
       <TouchableOpacity
         activeOpacity={1}
         style={styles.fullscreenVideo}
-        onPress={() =>
-          setShowControls(false)
-        }>
+        onPress={() => setShowControls(false)}
+      >
         <ImageBackground
           source={{
             uri: user.image,
           }}
           style={styles.remoteVideo}
-          blurRadius={connected ? 0 : 10}>
+          blurRadius={connected ? 0 : 10}
+        >
           {!connected && (
             <View style={styles.callingOverlay}>
-              <Text style={styles.name}>
-                {user.name}
-              </Text>
+              <Text style={styles.name}>{user.name}</Text>
 
               <Text style={styles.status}>
-                {user.online
-                  ? 'Ringing...'
-                  : 'Calling...'}
+                {user.online ? 'Ringing...' : 'Calling...'}
               </Text>
             </View>
           )}
@@ -135,9 +182,7 @@ const VideoCallScreen = ({
       <Animated.View
         {...panResponder.panHandlers}
         style={[
-          swapped
-            ? styles.fullSelfView
-            : styles.miniSelfView,
+          swapped ? styles.fullSelfView : styles.miniSelfView,
 
           {
             transform: [
@@ -150,76 +195,70 @@ const VideoCallScreen = ({
 
             opacity: fadeAnim,
           },
-        ]}>
-        <TouchableOpacity
-          activeOpacity={0.95}
+        ]}
+      >
+        <TouchableWithoutFeedback
           onPress={toggleControls}
-          onLongPress={swapVideos}>
+          onPressOut={handleDoubleTap}
+        >
           <ImageBackground
             source={{
               uri: 'https://i.pravatar.cc/300',
             }}
             style={styles.selfVideo}
             imageStyle={{
-              borderRadius:
-                swapped ? 0 : 18,
-            }}>
-            {showControls && (
-              <Animated.View
-                style={styles.controlsOverlay}>
-                <TouchableOpacity
-                  style={styles.controlBtn}>
-                  <Icon
-                    name="mic-off"
-                    size={22}
-                    color="#fff"
-                  />
-                </TouchableOpacity>
+              borderRadius: swapped ? 0 : 18,
+            }}
+          >
+            <Animated.View
+              pointerEvents={showControls ? 'auto' : 'none'}
+              style={[
+                styles.controlsOverlay,
 
-                <TouchableOpacity
-                  style={styles.controlBtn}>
-                  <Icon
-                    name="camera-reverse"
-                    size={22}
-                    color="#fff"
-                  />
-                </TouchableOpacity>
+                {
+                  opacity: controlsAnim,
+                },
+              ]}
+            >
+              <TouchableOpacity style={styles.controlBtn}>
+                <Icon name="mic-off" size={22} color="#fff" />
+              </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={[
-                    styles.controlBtn,
-                    {
-                      backgroundColor:
-                        '#EF4444',
-                    },
-                  ]}>
-                  <Icon
-                    name="call"
-                    size={22}
-                    color="#fff"
-                    style={{
-                      transform: [
-                        {
-                          rotate:
-                            '135deg',
-                        },
-                      ],
-                    }}
-                  />
-                </TouchableOpacity>
-              </Animated.View>
-            )}
+              <TouchableOpacity style={styles.controlBtn}>
+                <Icon name="camera-reverse" size={22} color="#fff" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.controlBtn,
+                  {
+                    backgroundColor: '#EF4444',
+                  },
+                ]}
+              >
+                <Icon
+                  name="call"
+                  size={22}
+                  color="#fff"
+                  style={{
+                    transform: [
+                      {
+                        rotate: '135deg',
+                      },
+                    ],
+                  }}
+                />
+              </TouchableOpacity>
+            </Animated.View>
           </ImageBackground>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </Animated.View>
 
       {/* CALL TIMER */}
 
       {connected && (
         <View style={styles.timerContainer}>
-          <Text style={styles.timer}>
-            00:12
-          </Text>
+          <Text style={styles.timer}>00:12</Text>
         </View>
       )}
     </View>
@@ -284,16 +323,14 @@ const styles = StyleSheet.create({
     padding: 14,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    backgroundColor:
-      'rgba(0,0,0,0.45)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
 
   controlBtn: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor:
-      'rgba(255,255,255,0.15)',
+    backgroundColor: 'rgba(255,255,255,0.15)',
 
     justifyContent: 'center',
     alignItems: 'center',
@@ -304,8 +341,7 @@ const styles = StyleSheet.create({
     top: 60,
     alignSelf: 'center',
 
-    backgroundColor:
-      'rgba(0,0,0,0.45)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
 
     paddingHorizontal: 16,
     paddingVertical: 8,
