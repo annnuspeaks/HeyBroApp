@@ -7,18 +7,21 @@ import {
   Dimensions,
   Animated,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
   ImageBackground,
   PanResponder,
   TouchableWithoutFeedback,
 } from 'react-native';
+
+import { mediaDevices, RTCView } from 'react-native-webrtc';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
 const VideoCallScreen = ({ route }: any) => {
-  const { user } = route.params;
-
+  const user = route?.params?.user;
   const [connected, setConnected] = useState(false);
 
   const [showControls, setShowControls] = useState(false);
@@ -26,6 +29,8 @@ const VideoCallScreen = ({ route }: any) => {
   const [swapped, setSwapped] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
+
+  const [localStream, setLocalStream] = useState<any>(null);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -47,12 +52,43 @@ const VideoCallScreen = ({ route }: any) => {
     y: 110,
   });
 
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      ]);
+    }
+  };
+
+  const setupLocalStream = async () => {
+    try {
+      await requestPermissions();
+
+      const stream = await mediaDevices.getUserMedia({
+        audio: true,
+
+        video: {
+          facingMode: 'user',
+
+          frameRate: 30,
+        },
+      });
+
+      setLocalStream(stream);
+    } catch (err) {
+      console.log('STREAM ERROR', err);
+    }
+  };
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 400,
       useNativeDriver: true,
     }).start();
+    setupLocalStream();
 
     // simulate pickup
 
@@ -60,7 +96,13 @@ const VideoCallScreen = ({ route }: any) => {
       setConnected(true);
     }, 4000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+
+      if (localStream) {
+        localStream.getTracks().forEach((track: any) => track.stop());
+      }
+    };
   }, []);
 
   const panResponder = PanResponder.create({
@@ -221,23 +263,57 @@ const VideoCallScreen = ({ route }: any) => {
         style={styles.fullscreenVideo}
         onPress={() => setShowControls(false)}
       >
-        <ImageBackground
-          source={{
-            uri: user.image,
-          }}
-          style={styles.remoteVideo}
-          blurRadius={connected ? 0 : 10}
-        >
-          {!connected && (
-            <View style={styles.callingOverlay}>
-              <Text style={styles.name}>{user.name}</Text>
-
-              <Text style={styles.status}>
-                {user.online ? 'Ringing...' : 'Calling...'}
-              </Text>
-            </View>
+        <View style={styles.selfVideo}>
+          {localStream && (
+            <RTCView
+              streamURL={localStream.toURL()}
+              style={styles.rtcVideo}
+              objectFit="cover"
+              mirror
+            />
           )}
-        </ImageBackground>
+
+          <Animated.View
+            pointerEvents={showControls ? 'auto' : 'none'}
+            style={[
+              styles.controlsOverlay,
+
+              {
+                opacity: controlsAnim,
+              },
+            ]}
+          >
+            <TouchableOpacity style={styles.controlBtn}>
+              <Icon name="mic-off" size={22} color="#fff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.controlBtn}>
+              <Icon name="camera-reverse" size={22} color="#fff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.controlBtn,
+                {
+                  backgroundColor: '#EF4444',
+                },
+              ]}
+            >
+              <Icon
+                name="call"
+                size={22}
+                color="#fff"
+                style={{
+                  transform: [
+                    {
+                      rotate: '135deg',
+                    },
+                  ],
+                }}
+              />
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </TouchableOpacity>
 
       {/* LOCAL VIDEO */}
@@ -389,7 +465,7 @@ const styles = StyleSheet.create({
   },
 
   fullSelfView: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 20,
   },
 
@@ -434,5 +510,10 @@ const styles = StyleSheet.create({
   timer: {
     color: '#fff',
     fontWeight: '600',
+  },
+
+  rtcVideo: {
+    width: '100%',
+    height: '100%',
   },
 });
