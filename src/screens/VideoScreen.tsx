@@ -161,7 +161,7 @@ const VideoScreen = () => {
             ]}
             onPress={() =>
               navigation.navigate(
-                'VideoCallScreen',
+                'IncomingVideoCallScreen',
                 {
                   user: item,
                 },
