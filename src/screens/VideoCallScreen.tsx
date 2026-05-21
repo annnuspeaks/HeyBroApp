@@ -106,7 +106,9 @@ const VideoCallScreen = ({ route }: any) => {
   }, []);
 
   const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: (_, gesture) => {
+      return Math.abs(gesture.dx) > 8 || Math.abs(gesture.dy) > 8;
+    },
 
     onPanResponderGrant: () => {
       pan.setOffset({
@@ -261,11 +263,12 @@ const VideoCallScreen = ({ route }: any) => {
       <TouchableOpacity
         activeOpacity={1}
         style={styles.fullscreenVideo}
-        onPress={() => setShowControls(false)}
+        onPress={toggleControls}
       >
         <View style={styles.selfVideo}>
           {localStream && (
             <RTCView
+              pointerEvents="none"
               streamURL={localStream.toURL()}
               style={styles.rtcVideo}
               objectFit="cover"
