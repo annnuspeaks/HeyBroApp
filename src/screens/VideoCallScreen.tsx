@@ -86,7 +86,7 @@ const VideoCallScreen = ({ route }: any) => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 400,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start();
     setupLocalStream();
 
@@ -184,7 +184,7 @@ const VideoCallScreen = ({ route }: any) => {
     Animated.spring(miniScale, {
       toValue: nextState ? 1.08 : 1,
 
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start();
 
     // auto hide
@@ -208,7 +208,7 @@ const VideoCallScreen = ({ route }: any) => {
         Animated.spring(miniScale, {
           toValue: 1,
 
-          useNativeDriver: true,
+          useNativeDriver: false,
         }).start();
       }, 3000);
     }
@@ -218,7 +218,7 @@ const VideoCallScreen = ({ route }: any) => {
     Animated.spring(miniScale, {
       toValue: 0.92,
 
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(() => {
       setSwapped(prev => !prev);
 
@@ -227,7 +227,7 @@ const VideoCallScreen = ({ route }: any) => {
 
         friction: 5,
 
-        useNativeDriver: true,
+        useNativeDriver: false,
       }).start();
     });
   };
@@ -252,7 +252,7 @@ const VideoCallScreen = ({ route }: any) => {
 
       friction: 6,
 
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start();
   };
 
@@ -334,7 +334,9 @@ const VideoCallScreen = ({ route }: any) => {
                 scale: miniScale,
               },
             ],
+          },
 
+          {
             opacity: fadeAnim,
           },
         ]}
