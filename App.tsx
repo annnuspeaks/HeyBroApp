@@ -10,6 +10,8 @@ import EditProfileScreen from './src/screens/EditProfileScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ContactsScreen from './src/screens/ContactsScreen';
 import CallingScreen from './src/screens/CallingScreen';
+import VideoScreen from './src/screens/VideoScreen';
+import VideoCallScreen from './src/screens/VideoCallScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +66,18 @@ const App = () => {
           <Stack.Screen
             name="CallingScreen"
             component={CallingScreen}
+            options={{ headerShown: false }}
+          />
+          
+          <Stack.Screen
+            name="VideoScreen"
+            component={VideoScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="VideoCallScreen"
+            component={VideoCallScreen}
             options={{ headerShown: false }}
           />
 
