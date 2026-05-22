@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
+  Easing,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
@@ -13,6 +14,8 @@ import {
   PanResponder,
   TouchableWithoutFeedback,
 } from 'react-native';
+
+import { BlurView } from '@react-native-community/blur';
 
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 
@@ -184,7 +187,9 @@ const VideoCallScreen = ({ route }: any) => {
     Animated.timing(controlsAnim, {
       toValue: nextState ? 1 : 0,
 
-      duration: 250,
+      duration: 260,
+
+      easing: Easing.out(Easing.exp),
 
       useNativeDriver: true,
     }).start();
@@ -208,7 +213,9 @@ const VideoCallScreen = ({ route }: any) => {
         Animated.timing(controlsAnim, {
           toValue: 0,
 
-          duration: 250,
+          duration: 260,
+
+          easing: Easing.out(Easing.exp),
 
           useNativeDriver: true,
         }).start();
@@ -274,8 +281,6 @@ const VideoCallScreen = ({ route }: any) => {
 
   const toggleSpeaker = () => {
     setIsSpeakerOn(prev => !prev);
-
-    // future backend/audio routing yaha hoga
   };
 
   const switchCamera = () => {
@@ -321,21 +326,72 @@ const VideoCallScreen = ({ route }: any) => {
               mirror
             />
           )}
+        </View>
+      </TouchableOpacity>
 
-          <Animated.View
-            pointerEvents={showControls ? 'auto' : 'none'}
-            style={[
-              styles.controlsOverlay,
+      <Animated.View
+        pointerEvents="box-none"
+        style={[
+          styles.controlsOverlay,
+          {
+            opacity: controlsAnim,
 
+            transform: [
               {
-                opacity: controlsAnim,
+                translateY: controlsAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [40, 0],
+                }),
               },
-            ]}
-          >
-            <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
+              {
+                scale: controlsAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.92, 1],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <BlurView
+          style={styles.blurDock}
+          blurType="dark"
+          blurAmount={22}
+          reducedTransparencyFallbackColor="rgba(15,15,15,0.92)"
+        >
+          <View style={styles.controlsRow}>
+            <TouchableOpacity
+              style={[
+                styles.controlBtn,
+
+                isMuted && {
+                  backgroundColor: 'rgba(239,68,68,0.22)',
+                  borderColor: 'rgba(239,68,68,0.4)',
+
+                  shadowColor: '#EF4444',
+                },
+
+                isMuted && styles.controlBtnActive,
+              ]}
+              onPress={toggleMute}
+            >
               <Icon name={isMuted ? 'mic-off' : 'mic'} size={22} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.controlBtn} onPress={toggleVideo}>
+            <TouchableOpacity
+              style={[
+                styles.controlBtn,
+
+                isVideoOff && {
+                  backgroundColor: 'rgba(245,158,11,0.22)',
+                  borderColor: 'rgba(245,158,11,0.45)',
+
+                  shadowColor: '#F59E0B',
+                },
+
+                isVideoOff && styles.controlBtnActive,
+              ]}
+              onPress={toggleVideo}
+            >
               <Icon
                 name={isVideoOff ? 'videocam-off' : 'videocam'}
                 size={22}
@@ -345,7 +401,21 @@ const VideoCallScreen = ({ route }: any) => {
             <TouchableOpacity style={styles.controlBtn} onPress={switchCamera}>
               <Icon name="camera-reverse" size={22} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.controlBtn} onPress={toggleSpeaker}>
+            <TouchableOpacity
+              style={[
+                styles.controlBtn,
+
+                isSpeakerOn && {
+                  backgroundColor: 'rgba(34,197,94,0.18)',
+                  borderColor: 'rgba(34,197,94,0.4)',
+
+                  shadowColor: '#22C55E',
+                },
+
+                isSpeakerOn && styles.controlBtnActive,
+              ]}
+              onPress={toggleSpeaker}
+            >
               <Icon
                 name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
                 size={22}
@@ -368,10 +438,10 @@ const VideoCallScreen = ({ route }: any) => {
                   transform: [{ rotate: '135deg' }],
                 }}
               />
-            </TouchableOpacity>{' '}
-          </Animated.View>
-        </View>
-      </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+        </BlurView>
+      </Animated.View>
 
       {/* LOCAL VIDEO */}
 
@@ -396,85 +466,20 @@ const VideoCallScreen = ({ route }: any) => {
         ]}
       >
         <TouchableWithoutFeedback
-          onPress={() => {
-            toggleControls();
-
-            toggleExpand();
-          }}
+          onPress={toggleExpand}
           onPressOut={handleDoubleTap}
         >
-          <ImageBackground
-            source={{
-              uri: 'https://i.pravatar.cc/300',
-            }}
-            style={styles.selfVideo}
-            imageStyle={{
-              borderRadius: swapped ? 0 : 18,
-            }}
-          >
-            <Animated.View
-              pointerEvents={showControls ? 'auto' : 'none'}
-              style={[
-                styles.controlsOverlay,
-
-                {
-                  opacity: controlsAnim,
-                },
-              ]}
-            >
-              <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
-                <Icon
-                  name={isMuted ? 'mic-off' : 'mic'}
-                  size={22}
-                  color="#fff"
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.controlBtn} onPress={toggleVideo}>
-                <Icon
-                  name={isVideoOff ? 'videocam-off' : 'videocam'}
-                  size={22}
-                  color="#fff"
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.controlBtn}
-                onPress={switchCamera}
-              >
-                <Icon name="camera-reverse" size={22} color="#fff" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.controlBtn}
-                onPress={toggleSpeaker}
-              >
-                <Icon
-                  name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
-                  size={22}
-                  color="#fff"
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.controlBtn,
-                  {
-                    backgroundColor: '#EF4444',
-                  },
-                ]}
-              >
-                <Icon
-                  name="call"
-                  size={22}
-                  color="#fff"
-                  style={{
-                    transform: [{ rotate: '135deg' }],
-                  }}
-                />
-              </TouchableOpacity>
-            </Animated.View>
-          </ImageBackground>
+          <View style={styles.selfVideo}>
+            {localStream && (
+              <RTCView
+                pointerEvents="none"
+                streamURL={localStream.toURL()}
+                style={styles.rtcVideo}
+                objectFit="cover"
+                mirror
+              />
+            )}
+          </View>
         </TouchableWithoutFeedback>
       </Animated.View>
 
@@ -526,22 +531,14 @@ const styles = StyleSheet.create({
 
   miniSelfView: {
     position: 'absolute',
-
     width: 120,
     height: 180,
-
     borderRadius: 22,
-
     overflow: 'hidden',
-
     shadowColor: '#000',
-
     shadowOpacity: 0.35,
-
     shadowRadius: 10,
-
     elevation: 10,
-
     backgroundColor: '#111',
   },
 
@@ -559,33 +556,46 @@ const styles = StyleSheet.create({
   },
 
   controlsOverlay: {
-    padding: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    backgroundColor: 'rgba(15,23,42,0.72)',
+    position: 'absolute',
+    bottom: 18,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   controlBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: 'rgba(18,18,18,0.72)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+
+  controlBtnActive: {
+    shadowOpacity: 0.9,
+    shadowRadius: 18,
+    elevation: 18,
+    transform: [{ scale: 1.08 }],
   },
 
   timerContainer: {
     position: 'absolute',
     top: 60,
     alignSelf: 'center',
-
     backgroundColor: 'rgba(0,0,0,0.45)',
-
     paddingHorizontal: 16,
     paddingVertical: 8,
-
     borderRadius: 20,
   },
 
@@ -597,5 +607,38 @@ const styles = StyleSheet.create({
   rtcVideo: {
     width: '100%',
     height: '100%',
+  },
+
+  blurDock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: width * 0.78,
+    maxWidth: 520,
+    minWidth: 300,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 36,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 18,
+  },
+
+  controlsRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    zIndex: 999,
+    elevation: 999,
   },
 });
