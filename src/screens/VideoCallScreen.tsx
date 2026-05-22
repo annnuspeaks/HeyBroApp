@@ -32,6 +32,14 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [localStream, setLocalStream] = useState<any>(null);
 
+  const [isMuted, setIsMuted] = useState(false);
+
+  const [isSpeakerOn, setIsSpeakerOn] = useState(true);
+
+  const [isVideoOff, setIsVideoOff] = useState(false);
+
+  const [isFrontCamera, setIsFrontCamera] = useState(true);
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const controlsAnim = useRef(new Animated.Value(0)).current;
@@ -244,6 +252,44 @@ const VideoCallScreen = ({ route }: any) => {
     lastTap = now;
   };
 
+  const toggleMute = () => {
+    if (!localStream) return;
+
+    localStream.getAudioTracks().forEach((track: any) => {
+      track.enabled = isMuted;
+    });
+
+    setIsMuted(!isMuted);
+  };
+
+  const toggleVideo = () => {
+    if (!localStream) return;
+
+    localStream.getVideoTracks().forEach((track: any) => {
+      track.enabled = isVideoOff;
+    });
+
+    setIsVideoOff(!isVideoOff);
+  };
+
+  const toggleSpeaker = () => {
+    setIsSpeakerOn(prev => !prev);
+
+    // future backend/audio routing yaha hoga
+  };
+
+  const switchCamera = () => {
+    if (!localStream) return;
+
+    localStream.getVideoTracks().forEach((track: any) => {
+      if (track._switchCamera) {
+        track._switchCamera();
+      }
+    });
+
+    setIsFrontCamera(prev => !prev);
+  };
+
   const toggleExpand = () => {
     setExpanded(prev => !prev);
 
@@ -286,14 +332,26 @@ const VideoCallScreen = ({ route }: any) => {
               },
             ]}
           >
-            <TouchableOpacity style={styles.controlBtn}>
-              <Icon name="mic-off" size={22} color="#fff" />
+            <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
+              <Icon name={isMuted ? 'mic-off' : 'mic'} size={22} color="#fff" />
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.controlBtn}>
+            <TouchableOpacity style={styles.controlBtn} onPress={toggleVideo}>
+              <Icon
+                name={isVideoOff ? 'videocam-off' : 'videocam'}
+                size={22}
+                color="#fff"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.controlBtn} onPress={switchCamera}>
               <Icon name="camera-reverse" size={22} color="#fff" />
             </TouchableOpacity>
-
+            <TouchableOpacity style={styles.controlBtn} onPress={toggleSpeaker}>
+              <Icon
+                name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
+                size={22}
+                color="#fff"
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.controlBtn,
@@ -307,14 +365,10 @@ const VideoCallScreen = ({ route }: any) => {
                 size={22}
                 color="#fff"
                 style={{
-                  transform: [
-                    {
-                      rotate: '135deg',
-                    },
-                  ],
+                  transform: [{ rotate: '135deg' }],
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity>{' '}
           </Animated.View>
         </View>
       </TouchableOpacity>
@@ -368,12 +422,38 @@ const VideoCallScreen = ({ route }: any) => {
                 },
               ]}
             >
-              <TouchableOpacity style={styles.controlBtn}>
-                <Icon name="mic-off" size={22} color="#fff" />
+              <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
+                <Icon
+                  name={isMuted ? 'mic-off' : 'mic'}
+                  size={22}
+                  color="#fff"
+                />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.controlBtn}>
+              <TouchableOpacity style={styles.controlBtn} onPress={toggleVideo}>
+                <Icon
+                  name={isVideoOff ? 'videocam-off' : 'videocam'}
+                  size={22}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.controlBtn}
+                onPress={switchCamera}
+              >
                 <Icon name="camera-reverse" size={22} color="#fff" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.controlBtn}
+                onPress={toggleSpeaker}
+              >
+                <Icon
+                  name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
+                  size={22}
+                  color="#fff"
+                />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -389,11 +469,7 @@ const VideoCallScreen = ({ route }: any) => {
                   size={22}
                   color="#fff"
                   style={{
-                    transform: [
-                      {
-                        rotate: '135deg',
-                      },
-                    ],
+                    transform: [{ rotate: '135deg' }],
                   }}
                 />
               </TouchableOpacity>
@@ -485,7 +561,8 @@ const styles = StyleSheet.create({
   controlsOverlay: {
     padding: 14,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
+    gap: 10,
     backgroundColor: 'rgba(15,23,42,0.72)',
   },
 
