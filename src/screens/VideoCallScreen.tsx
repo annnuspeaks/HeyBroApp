@@ -318,7 +318,7 @@ const VideoCallScreen = ({ route }: any) => {
         onPress={toggleControls}
       >
         <View style={styles.selfVideo}>
-          {localStream && (
+          {!isVideoOff && localStream ? (
             <RTCView
               pointerEvents="none"
               streamURL={localStream.toURL()}
@@ -326,6 +326,27 @@ const VideoCallScreen = ({ route }: any) => {
               objectFit="cover"
               mirror
             />
+          ) : (
+            <View style={styles.videoOffContainer}>
+              <View style={styles.videoOffContent}>
+                {user?.image ? (
+                  <Animated.Image
+                    source={{ uri: user.image }}
+                    style={styles.videoOffRealAvatar}
+                  />
+                ) : (
+                  <View style={styles.videoOffAvatar}>
+                    <Icon name="person" size={75} color="#fff" />
+                  </View>
+                )}
+
+                <Text style={styles.videoOffName}>
+                  {user?.name || 'Unknown User'}
+                </Text>
+
+                <Text style={styles.videoOffText}>Camera is switched off</Text>
+              </View>
+            </View>
           )}
         </View>
       </TouchableOpacity>
@@ -662,4 +683,49 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#000',
   },
+
+  videoOffContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#000',
+},
+
+videoOffContent: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 80,
+},
+
+videoOffAvatar: {
+  width: 150,
+  height: 150,
+  borderRadius: 100,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(124,58,237,0.22)',
+  borderWidth: 1.5,
+  borderColor: 'rgba(255,255,255,0.08)',
+},
+
+videoOffRealAvatar: {
+  width: 150,
+  height: 150,
+  borderRadius: 100,
+},
+
+videoOffName: {
+  marginTop: 22,
+  color: '#fff',
+  fontSize: 30,
+  fontWeight: '700',
+  letterSpacing: 0.5,
+},
+
+videoOffText: {
+  marginTop: 10,
+  color: 'rgba(255,255,255,0.55)',
+  fontSize: 17,
+  fontWeight: '500',
+},
 });
