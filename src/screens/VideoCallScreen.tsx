@@ -32,7 +32,7 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [localStream, setLocalStream] = useState<any>(null);
 
-  const [remoteStream, setRemoteStream] = useState<any>(null);
+  const [remoteStream] = useState<any>(null);
 
   // fake remote stream for testing
   const displayRemoteStream = remoteStream || localStream;
@@ -43,7 +43,7 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [isVideoOff, setIsVideoOff] = useState(false);
 
-  const [isFrontCamera, setIsFrontCamera] = useState(true);
+  const [, setIsFrontCamera] = useState(true);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -252,18 +252,6 @@ const VideoCallScreen = ({ route }: any) => {
     });
   };
 
-  let lastTap = 0;
-
-  const handleDoubleTap = () => {
-    const now = Date.now();
-
-    if (now - lastTap < 300) {
-      swapVideos();
-    }
-
-    lastTap = now;
-  };
-
   const toggleMute = () => {
     if (!localStream) return;
 
@@ -299,7 +287,7 @@ const VideoCallScreen = ({ route }: any) => {
       });
 
       setIsFrontCamera(prev => !prev);
-    } catch (error) {
+    } catch  {
       console.log('Switch camera skipped');
     }
   };
