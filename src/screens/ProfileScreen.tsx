@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -7,11 +8,12 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  Linking,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
 
@@ -53,12 +55,45 @@ const menuItems2 = [
   },
 ];
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation, route }: any) {
+  const [profile, setProfile] = useState({
+    name: 'Harshvardhan',
+
+    phone: '+91 9876543210',
+
+    bio: '',
+
+    website: '',
+
+    image: 'https://i.pravatar.cc/300',
+
+    gender: '',
+
+    qualification: '',
+
+    dob: '',
+
+    email: '',
+  });
+
+  useEffect(() => {
+    if (route?.params?.updatedProfile) {
+      setProfile(route.params.updatedProfile);
+    }
+  }, [route?.params?.updatedProfile]);
+
   const renderItem = (item: any, isLogout = false) => (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={styles.menuItem}>
-      
+      style={styles.menuItem}
+      onPress={() => {
+        if (item.title === 'Edit Profile') {
+          navigation.navigate('EditProfile', {
+            profile: profile,
+          });
+        }
+      }}
+    >
       <View style={styles.leftRow}>
         <Ionicons
           name={item.icon}
@@ -69,10 +104,12 @@ export default function ProfileScreen() {
         <Text
           style={[
             styles.menuText,
+
             isLogout && {
               color: '#ff3b30',
             },
-          ]}>
+          ]}
+        >
           {item.title}
         </Text>
       </View>
@@ -93,33 +130,51 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: 140,
-        }}>
-        
-        {/* PROFILE SECTION */}
+        }}
+      >
+        {/* PROFILE */}
 
         <View style={styles.profileContainer}>
           <Image
             source={{
-              uri: 'https://i.pravatar.cc/300',
+              uri: profile.image,
             }}
             style={styles.avatar}
           />
 
-          <Text style={styles.name}>
-            Harshvardhan
-          </Text>
+          <Text style={styles.name}>{profile.name}</Text>
 
-          <Text style={styles.number}>
-            +91 9876543210
-          </Text>
+          <Text style={styles.number}>{profile.phone}</Text>
+
+          {/* BIO */}
+
+          {!!profile.bio && (
+            <View style={styles.bioBox}>
+              <Text style={styles.bioText}>“{profile.bio}”</Text>
+            </View>
+          )}
+
+          {/* WEBSITE */}
+
+          {!!profile.website && (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.websiteContainer}
+              onPress={() => Linking.openURL(profile.website)}
+            >
+              <Ionicons name="globe-outline" size={18} color="#C084FC" />
+
+              <Text numberOfLines={1} style={styles.website}>
+                {profile.website}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* SETTINGS GROUP */}
+        {/* SETTINGS */}
 
         <View style={styles.card}>
-          <Text style={styles.groupTitle}>
-            Settings
-          </Text>
+          <Text style={styles.groupTitle}>Settings</Text>
 
           {menuItems1.map((item, index) => (
             <View key={index}>
@@ -174,6 +229,8 @@ const styles = StyleSheet.create({
 
     marginTop: height * 0.06,
     marginBottom: 35,
+
+    paddingHorizontal: 20,
   },
 
   avatar: {
@@ -183,6 +240,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
 
     marginBottom: 18,
+
+    borderWidth: 2,
+    borderColor: '#7C3AED',
   },
 
   name: {
@@ -198,6 +258,63 @@ const styles = StyleSheet.create({
     marginTop: 8,
 
     fontSize: isTablet ? 20 : 16,
+  },
+
+  bioBox: {
+    marginTop: 18,
+
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+
+    borderRadius: 18,
+
+    backgroundColor: 'rgba(124,58,237,0.14)',
+
+    borderWidth: 1,
+    borderColor: 'rgba(124,58,237,0.35)',
+
+    maxWidth: width * 0.8,
+  },
+
+  bioText: {
+    color: '#E9D5FF',
+
+    fontSize: 15,
+
+    textAlign: 'center',
+
+    fontStyle: 'italic',
+
+    lineHeight: 24,
+  },
+
+  websiteContainer: {
+    marginTop: 18,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+
+    borderRadius: 16,
+
+    backgroundColor: 'rgba(168,85,247,0.14)',
+
+    borderWidth: 1,
+    borderColor: 'rgba(192,132,252,0.28)',
+  },
+
+  website: {
+    color: '#E9D5FF',
+
+    fontSize: 14,
+
+    fontWeight: '700',
+
+    marginLeft: 10,
+
+    letterSpacing: 0.5,
   },
 
   card: {

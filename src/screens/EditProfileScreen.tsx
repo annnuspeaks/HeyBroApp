@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -8,151 +9,273 @@ import {
   ScrollView,
   Image,
   Alert,
+  Dimensions,
 } from 'react-native';
 
-const EditProfileScreen = ({ navigation }: any) => {
+import DatePicker from 'react-native-date-picker';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const { width, height } = Dimensions.get('window');
+
+const isTablet = width >= 768;
+
+const EditProfileScreen = ({ navigation, route }: any) => {
+  const oldProfile = route?.params?.profile;
+
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [form, setForm] = useState({
-    name: 'Harshvardhan',
-    phone: '+91 9876543210',
-    age: '',
-    gender: '',
-    qualification: '',
-    bio: '',
-    dob: '',
-    email: '',
-    website: '',
-    image: 'https://i.pravatar.cc/150?img=12',
+    name: oldProfile?.name || 'Harshvardhan',
+
+    phone: oldProfile?.phone || '+91 9876543210',
+
+    gender: oldProfile?.gender || '',
+
+    qualification: oldProfile?.qualification || '',
+
+    bio: oldProfile?.bio || '',
+
+    dob: oldProfile?.dob || '',
+
+    email: oldProfile?.email || '',
+
+    website: oldProfile?.website || '',
+
+    image: oldProfile?.image || 'https://i.pravatar.cc/300',
   });
 
   const handleChange = (key: string, value: string) => {
-    setForm({ ...form, [key]: value });
+    setForm({
+      ...form,
+      [key]: value,
+    });
   };
 
   const handleSave = () => {
-    if (!form.name || !form.phone) {
-      Alert.alert('Name & Phone are required');
-      return;
-    }
-
-    navigation.goBack();
+    navigation.navigate('Profile', {
+      updatedProfile: form,
+    });
   };
 
   return (
-    <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.card}>
-            {/* PROFILE IMAGE */}
-            <TouchableOpacity
-              style={styles.imageContainer}
-              onPress={() => Alert.alert('Image picker later')}
-            >
-              <Image source={{ uri: form.image }} style={styles.avatar} />
-              <Text style={styles.changePhoto}>Change Photo</Text>
-            </TouchableOpacity>
+    <View style={styles.container}>
+      {/* BACK BUTTON */}
 
-            {/* INPUT FIELDS */}
-            {/* NAME */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Name*</Text>
-              <TextInput
-                value={form.name}
-                onChangeText={text => handleChange('name', text)}
-                style={styles.input}
-              />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back" size={24} color="#fff" />
+      </TouchableOpacity>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 120,
+        }}
+      >
+        <View style={styles.card}>
+          {/* PROFILE IMAGE */}
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.imageContainer}
+            onPress={() =>
+              Alert.alert('Image Upload', 'Backend ke sath later add krenge 🙂')
+            }
+          >
+            <Image
+              source={{
+                uri: form.image,
+              }}
+              style={styles.avatar}
+            />
+
+            <View style={styles.cameraBadge}>
+              <Ionicons name="camera" size={18} color="#fff" />
             </View>
 
-            {/* PHONE */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Phone*</Text>
-              <TextInput
-                value={form.phone}
-                keyboardType="phone-pad"
-                onChangeText={text => handleChange('phone', text)}
-                style={styles.input}
-              />
-            </View>
+            <Text style={styles.changePhoto}>Change Photo</Text>
+          </TouchableOpacity>
 
-            {/* GENDER */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Gender</Text>
-              <View style={styles.radioRow}>
-                {['Male', 'Female', 'Other'].map(g => (
-                  <TouchableOpacity
-                    key={g}
+          {/* NAME */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Name</Text>
+
+            <TextInput
+              value={form.name}
+              placeholder="Enter name"
+              placeholderTextColor="rgba(255,255,255,0.35)"
+              onChangeText={text => handleChange('name', text)}
+              style={styles.input}
+            />
+          </View>
+
+          {/* PHONE */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Phone Number</Text>
+
+            <TextInput
+              editable={false}
+              value={form.phone}
+              style={[
+                styles.input,
+                {
+                  opacity: 0.55,
+                },
+              ]}
+            />
+          </View>
+
+          {/* GENDER */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Gender</Text>
+
+            <View style={styles.genderRow}>
+              {['Male', 'Female', 'Other'].map(item => (
+                <TouchableOpacity
+                  key={item}
+                  activeOpacity={0.8}
+                  onPress={() => handleChange('gender', item)}
+                  style={[
+                    styles.genderButton,
+
+                    form.gender === item && styles.genderButtonActive,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.radio,
-                      form.gender === g && styles.radioActive,
+                      styles.genderText,
+
+                      form.gender === item && {
+                        color: '#fff',
+                      },
                     ]}
-                    onPress={() => handleChange('gender', g)}
                   >
-                    <Text style={styles.radioText}>{g}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
+          </View>
 
-            {/* DOB */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Date of Birth</Text>
-              <TouchableOpacity
-                style={styles.input}
-                onPress={() => Alert.alert('Date picker next')}
+          {/* DOB */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Date of Birth</Text>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => setOpenDatePicker(true)}
+              style={styles.input}
+            >
+              <Text
+                style={{
+                  color: form.dob ? '#fff' : 'rgba(255,255,255,0.35)',
+                }}
               >
-                <Text style={{ color: form.dob ? '#fff' : '#888' }}>
-                  {form.dob || 'Select Date'}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                {form.dob || 'Select Date'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-            {/* QUALIFICATION */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Qualification</Text>
-              <TextInput
-                value={form.qualification}
-                onChangeText={text => handleChange('qualification', text)}
-                style={styles.input}
-              />
-            </View>
+          {/* QUALIFICATION */}
 
-            {/* EMAIL */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                value={form.email}
-                keyboardType="email-address"
-                onChangeText={text => handleChange('email', text)}
-                style={styles.input}
-              />
-            </View>
+          <View style={styles.field}>
+            <Text style={styles.label}>Qualification</Text>
 
-            {/* WEBSITE */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Website</Text>
-              <TextInput
-                value={form.website}
-                onChangeText={text => handleChange('website', text)}
-                style={styles.input}
-              />
-            </View>
+            <TextInput
+              value={form.qualification}
+              placeholder="Your qualification"
+              placeholderTextColor="rgba(255,255,255,0.35)"
+              onChangeText={text => handleChange('qualification', text)}
+              style={styles.input}
+            />
+          </View>
 
-            {/* BIO */}
-            <View style={styles.field}>
-              <Text style={styles.label}>Bio</Text>
-              <TextInput
-                value={form.bio}
-                multiline
-                onChangeText={text => handleChange('bio', text)}
-                style={[styles.input, { height: 100 }]}
-              />
-            </View>
+          {/* EMAIL */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Email</Text>
+
+            <TextInput
+              value={form.email}
+              keyboardType="email-address"
+              placeholder="example@gmail.com"
+              placeholderTextColor="rgba(255,255,255,0.35)"
+              onChangeText={text => handleChange('email', text)}
+              style={styles.input}
+            />
+          </View>
+
+          {/* WEBSITE */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Website</Text>
+
+            <TextInput
+              value={form.website}
+              placeholder="https://yourwebsite.com"
+              placeholderTextColor="rgba(255,255,255,0.35)"
+              onChangeText={text => handleChange('website', text)}
+              style={styles.input}
+            />
+          </View>
+
+          {/* BIO */}
+
+          <View style={styles.field}>
+            <Text style={styles.label}>Bio</Text>
+
+            <TextInput
+              multiline
+              value={form.bio}
+              placeholder="Write something unique..."
+              placeholderTextColor="rgba(255,255,255,0.35)"
+              onChangeText={text => handleChange('bio', text)}
+              style={[styles.input, styles.bioInput]}
+            />
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-        <Text style={styles.saveText}>Save</Text>
+
+      <DatePicker
+        modal
+        mode="date"
+        open={openDatePicker}
+        date={selectedDate}
+        maximumDate={new Date()}
+        onConfirm={date => {
+          setOpenDatePicker(false);
+
+          setSelectedDate(date);
+
+          const formatted = date.toLocaleDateString('en-GB');
+
+          handleChange('dob', formatted);
+        }}
+        onCancel={() => {
+          setOpenDatePicker(false);
+        }}
+      />
+
+      {/* SAVE BUTTON */}
+
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.saveButton}
+        onPress={handleSave}
+      >
+        <Text style={styles.saveText}>Save Changes</Text>
       </TouchableOpacity>
-    </>
+    </View>
   );
 };
 
@@ -160,105 +283,176 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    paddingVertical: 30,
-    backgroundColor: '#020617',
+    flex: 1,
+
+    backgroundColor: '#020826',
   },
 
-  content: {
-    width: '100%',
-    maxWidth: 500, // 🔥 center form
+  backButton: {
+    position: 'absolute',
+
+    top: 45,
+    left: 20,
+
+    zIndex: 999,
+
+    width: 46,
+    height: 46,
+
+    borderRadius: 23,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+
+  card: {
+    marginTop: 90,
+
+    width: '88%',
     alignSelf: 'center',
-    padding: 20,
+
+    borderRadius: 34,
+
+    padding: 24,
+
+    backgroundColor: 'rgba(255,255,255,0.08)',
+
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
 
   imageContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+
+    marginBottom: 35,
   },
 
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: isTablet ? 140 : 110,
+    height: isTablet ? 140 : 110,
+
+    borderRadius: 100,
+  },
+
+  cameraBadge: {
+    position: 'absolute',
+
+    right: width * 0.34,
+    bottom: 28,
+
+    width: 34,
+    height: 34,
+
+    borderRadius: 20,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: '#7C3AED',
   },
 
   changePhoto: {
-    marginTop: 8,
-    color: '#7C3AED',
+    marginTop: 12,
+
+    color: '#C084FC',
+
+    fontSize: 16,
+    fontWeight: '600',
   },
 
   field: {
-    marginBottom: 16,
+    marginBottom: 22,
   },
 
   label: {
-    marginBottom: 6,
-    color: '#aaa',
+    color: 'rgba(255,255,255,0.7)',
+
+    marginBottom: 10,
+
+    fontSize: 15,
   },
 
   input: {
+    minHeight: 58,
+
+    borderRadius: 18,
+
+    paddingHorizontal: 18,
+
+    color: '#fff',
+
+    fontSize: 16,
+
+    justifyContent: 'center',
+
+    backgroundColor: 'rgba(255,255,255,0.05)',
+
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    color: '#fff',
+    borderColor: 'rgba(255,255,255,0.08)',
   },
 
-  button: {
-    marginTop: 20,
-    backgroundColor: '#7C3AED',
-    padding: 14,
-    borderRadius: 14,
-    alignItems: 'center',
+  bioInput: {
+    minHeight: 120,
+
+    paddingTop: 18,
+
+    textAlignVertical: 'top',
   },
 
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  saveBtn: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: '#7C3AED',
-    padding: 16,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-
-  saveText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  radioRow: {
+  genderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
 
-  radio: {
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#555',
-    width: '30%',
+  genderButton: {
+    width: '31%',
+
+    height: 54,
+
+    borderRadius: 16,
+
+    justifyContent: 'center',
     alignItems: 'center',
+
+    backgroundColor: 'rgba(255,255,255,0.05)',
+
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
 
-  radioActive: {
+  genderButtonActive: {
     backgroundColor: '#7C3AED',
   },
 
-  radioText: {
-    color: '#fff',
+  genderText: {
+    color: 'rgba(255,255,255,0.6)',
+
+    fontWeight: '600',
   },
-  card: {
-    width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.04)',
-    borderRadius: 20,
-    padding: 16,
+
+  saveButton: {
+    position: 'absolute',
+
+    bottom: 24,
+    left: 20,
+    right: 20,
+
+    height: 64,
+
+    borderRadius: 22,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: '#7C3AED',
+  },
+
+  saveText: {
+    color: '#fff',
+
+    fontSize: 18,
+    fontWeight: '700',
   },
 });
