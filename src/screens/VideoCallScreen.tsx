@@ -321,13 +321,39 @@ const VideoCallScreen = ({ route }: any) => {
         onPress={toggleControls}
       >
         <View style={styles.selfVideo}>
-          {remoteStream && (
-            <RTCView
-              pointerEvents="none"
-              streamURL={remoteStream.toURL()}
-              style={styles.rtcVideo}
-              objectFit="cover"
-            />
+          {swapped ? (
+            !isVideoOff && localStream ? (
+              <RTCView
+                pointerEvents="none"
+                streamURL={localStream.toURL()}
+                style={styles.rtcVideo}
+                objectFit="cover"
+                mirror
+              />
+            ) : (
+              <View style={styles.videoOffContainer}>
+                <View style={styles.videoOffContent}>
+                  <View style={styles.videoOffAvatar}>
+                    <Icon name="person" size={60} color="#fff" />
+                  </View>
+
+                  <Text style={styles.videoOffName}>You</Text>
+
+                  <Text style={styles.videoOffText}>
+                    Camera is switched off
+                  </Text>
+                </View>
+              </View>
+            )
+          ) : (
+            remoteStream && (
+              <RTCView
+                pointerEvents="none"
+                streamURL={remoteStream.toURL()}
+                style={styles.rtcVideo}
+                objectFit="cover"
+              />
+            )
           )}
 
           <View style={styles.remoteUserBadge}>
@@ -476,13 +502,27 @@ const VideoCallScreen = ({ route }: any) => {
           },
         ]}
       >
-        <TouchableWithoutFeedback
-          onPress={toggleExpand}
-          onPressOut={handleDoubleTap}
-        >
+        <TouchableWithoutFeedback onPress={swapVideos} onLongPress={toggleExpand} delayLongPress={300}>
           <View style={styles.selfVideo}>
             <View style={styles.videoClipper}>
-              {!isVideoOff && localStream ? (
+              {swapped ? (
+                remoteStream ? (
+                  <>
+                    <RTCView
+                      pointerEvents="none"
+                      streamURL={remoteStream.toURL()}
+                      style={styles.rtcVideo}
+                      objectFit="cover"
+                    />
+
+                    <View style={styles.youBadge}>
+                      <Text style={styles.youBadgeText}>
+                        {user?.name || 'Remote User'}
+                      </Text>
+                    </View>
+                  </>
+                ) : null
+              ) : !isVideoOff && localStream ? (
                 <>
                   <RTCView
                     pointerEvents="none"
