@@ -1,144 +1,139 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
+
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
+  Dimensions,
   TouchableOpacity,
-  Animated,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { ThemeContext } from '../theme/ThemeContext';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import LinearGradient from 'react-native-linear-gradient';
+
+const { width, height } = Dimensions.get('window');
+
+const isTablet = width >= 768;
+const isLandscape = width > height;
 
 const OtpScreen = ({ navigation }: any) => {
-  const { theme } = useContext(ThemeContext);
-
   const [otp, setOtp] = useState(['', '', '', '']);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const scaleAnim = useRef([
-    new Animated.Value(1),
-    new Animated.Value(1),
-    new Animated.Value(1),
-    new Animated.Value(1),
-  ]).current;
 
-  const inputs = useRef<Array<TextInput | null>>([]);
+  const inputRefs = useRef<any[]>([]);
 
-  React.useEffect(() => {
-    inputs.current[0]?.focus();
-  }, []);
+  const handleOtpChange = (text: string, index: number) => {
+    const cleaned = text.replace(/[^0-9]/g, '');
 
-  const handleChange = (text: string, index: number) => {
-    const newOtp = [...otp];
-    newOtp[index] = text;
-    setOtp(newOtp);
-
-    // 🔥 SCALE ANIMATION
-    Animated.sequence([
-      Animated.timing(scaleAnim[index], {
-        toValue: 1.2,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim[index], {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    // 🔥 NEXT INPUT
-    if (text && index < 3) {
-      inputs.current[index + 1]?.focus();
+    if (!cleaned && cleaned !== '') {
+      return;
     }
 
-    // 🔥 AUTO SUBMIT
-    if (newOtp.every(d => d !== '')) {
-      setTimeout(() => {
-        navigation.replace('MainTabs');
-      }, 400);
+    const updatedOtp = [...otp];
+    updatedOtp[index] = cleaned;
+
+    setOtp(updatedOtp);
+
+    if (cleaned && index < 3) {
+      inputRefs.current[index + 1]?.focus();
+    }
+
+    if (updatedOtp.join('').length === 4) {
+      navigation.replace('MainTabs');
     }
   };
 
-  const handleBackspace = (text: string, index: number) => {
-    if (!text && index > 0) {
-      inputs.current[index - 1]?.focus();
-    }
-  };
+  const isOtpComplete = otp.join('').length === 4;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Verify OTP 🔐</Text>
-        <Text style={[styles.subtitle, { color: theme.subText }]}>
-          Enter the 4-digit code sent to your phone
-        </Text>
-      </View>
+    <LinearGradient
+      colors={['#090B2A', '#1A145C', '#2A0A52']}
+      style={styles.container}
+    >
+      {/* Floating Spheres */}
 
-      {/* OTP BOXES */}
-      <View style={styles.otpContainer}>
-        {otp.map((digit, index) => (
-          <Animated.View
-            key={`otp-${index}`}
-            style={{
-              transform: [{ scale: scaleAnim[index] }],
-              shadowColor: '#7C3AED',
-              shadowOpacity: activeIndex === index ? 0.6 : 0.1,
-              shadowRadius: activeIndex === index ? 12 : 4,
-              elevation: activeIndex === index ? 8 : 2,
-            }}
+      <View style={styles.sphereTop} />
+      <View style={styles.sphereLeft} />
+      <View style={styles.sphereBottom} />
+
+      <KeyboardAvoidingView
+        style={styles.centerContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <View
+          style={[
+            styles.card,
+            {
+              width: isLandscape ? (isTablet ? '52%' : '70%') : '88%',
+            },
+          ]}
+        >
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
           >
-            <TextInput
-              key={index}
-              onFocus={() => setActiveIndex(index)}
-              ref={ref => {
-                inputs.current[index] = ref;
-              }}
-              style={[
-                styles.otpBox,
-                {
-                  color: theme.text,
-                  borderColor:
-                    activeIndex === index
-                      ? '#7C3AED'
-                      : otp[index]
-                      ? '#7C3AED'
-                      : 'rgba(255,255,255,0.2)',
+            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
 
-                  backgroundColor:
-                    activeIndex === index
-                      ? 'rgba(124,58,237,0.15)'
-                      : 'rgba(255,255,255,0.05)',
-                  shadowColor: otp[index] ? '#7C3AED' : '#000',
-                  shadowOpacity: otp[index] ? 0.5 : 0.1,
+          <Text style={styles.appName}>HeyBro</Text>
+
+          <Text style={styles.title}>VERIFY OTP</Text>
+
+          <Text style={styles.subtitle}>
+            Enter the 4 digit OTP sent to your phone
+          </Text>
+
+          <View style={styles.otpContainer}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={ref => (inputRefs.current[index] = ref)}
+                value={digit}
+                onChangeText={text => handleOtpChange(text, index)}
+                keyboardType="number-pad"
+                maxLength={1}
+                style={[styles.otpInput, digit && styles.activeOtpInput]}
+                placeholder="•"
+                placeholderTextColor="rgba(255,255,255,0.25)"
+              />
+            ))}
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            disabled={!isOtpComplete}
+            onPress={() => navigation.replace('MainTabs')}
+            style={[
+              styles.button,
+              {
+                backgroundColor: isOtpComplete
+                  ? '#A020F0'
+                  : 'rgba(255,255,255,0.15)',
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                {
+                  opacity: isOtpComplete ? 1 : 0.5,
                 },
               ]}
-              keyboardType="number-pad"
-              maxLength={1}
-              value={digit}
-              onChangeText={text => handleChange(text, index)}
-              onKeyPress={({ nativeEvent }) =>
-                nativeEvent.key === 'Backspace' && handleBackspace(digit, index)
-              }
-            />
-          </Animated.View>
-        ))}
-      </View>
+            >
+              Verify
+            </Text>
+          </TouchableOpacity>
 
-      {/* VERIFY BUTTON */}
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={styles.button}
-        onPress={() => navigation.replace('MainTabs')}
-      >
-        <Text style={styles.buttonText}>Verify</Text>
-      </TouchableOpacity>
-
-      {/* RESEND */}
-      <Text style={[styles.resend, { color: theme.subText }]}>
-        Didn’t receive code? <Text style={styles.resendAction}>Resend</Text>
-      </Text>
-    </View>
+          <TouchableOpacity activeOpacity={0.7}>
+            <Text style={styles.resendText}>Resend OTP</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 
@@ -147,72 +142,142 @@ export default OtpScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 100,
   },
 
-  header: {
-    marginBottom: 40,
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 34,
+    paddingHorizontal: 30,
+    paddingVertical: 40,
+    overflow: 'hidden',
+  },
+
+  appName: {
+    color: '#FFFFFF',
+    fontSize: isTablet ? 42 : 34,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 14,
   },
 
   title: {
-    fontSize: 28,
-    fontWeight: '700',
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: isTablet ? 34 : 28,
+    letterSpacing: 4,
+    fontWeight: '300',
+    textAlign: 'center',
+    marginBottom: 14,
   },
 
   subtitle: {
-    marginTop: 6,
-    fontSize: 14,
-  },
-
-  otpContainer: {
-    paddingTop: 60,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 12,
+    color: 'rgba(255,255,255,0.55)',
+    textAlign: 'center',
+    fontSize: isTablet ? 18 : 14,
     marginBottom: 40,
   },
 
-  otpBox: {
-    width: 55,
-    height: 60,
-    borderRadius: 16,
-    borderWidth: 1,
+  otpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 35,
+  },
+
+  otpInput: {
+    width: isTablet ? 78 : 62,
+    height: isTablet ? 78 : 62,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    color: '#FFFFFF',
     textAlign: 'center',
-    fontSize: 20,
-    shadowColor: '#17013d',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 1 },
-    elevation: 4,
+    fontSize: isTablet ? 28 : 22,
+    marginHorizontal: 6,
+  },
+
+  activeOtpInput: {
+    borderWidth: 1.5,
+    borderColor: '#C026FF',
+    shadowColor: '#C026FF',
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
   },
 
   button: {
-    backgroundColor: '#7C3AED',
-    paddingVertical: 16,
-    borderRadius: 16,
+    height: isTablet ? 64 : 56,
+    borderRadius: 18,
+    justifyContent: 'center',
     alignItems: 'center',
-
-    shadowColor: '#7C3AED',
+    marginBottom: 24,
+    shadowColor: '#A020F0',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
     shadowOpacity: 0.5,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    shadowRadius: 16,
   },
 
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: isTablet ? 20 : 17,
     fontWeight: '600',
   },
 
-  resend: {
-    marginTop: 20,
+  resendText: {
     textAlign: 'center',
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: isTablet ? 17 : 14,
   },
 
-  resendAction: {
-    color: '#7C3AED',
-    fontWeight: '600',
+  sphereTop: {
+    position: 'absolute',
+    width: 280,
+    height: 280,
+    borderRadius: 200,
+    backgroundColor: '#C026FF',
+    top: -50,
+    right: 80,
+    opacity: 0.95,
+  },
+
+  sphereLeft: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 105,
+    backgroundColor: '#A000FF',
+    left: -50,
+    top: 280,
+  },
+
+  sphereBottom: {
+    position: 'absolute',
+    width: 270,
+    height: 270,
+    borderRadius: 140,
+    backgroundColor: '#B000FF',
+    right: -70,
+    bottom: -40,
+  },
+
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
   },
 });

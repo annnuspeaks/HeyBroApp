@@ -63,7 +63,7 @@ const LoginScreen = ({navigation}: any) => {
 
           <Text style={styles.loginText}>LOGIN</Text>
 
-          <Text style={styles.label}>Phone Number</Text>
+          <Text style={styles.label}>PHONE NUMBER</Text>
 
           <TextInput
             value={phone}
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 14,
+    fontFamily: 'ClashDisplay-Bold',
   },
 
   loginText: {
@@ -168,7 +169,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#A020F0',
     shadowOffset: {
       width: 0,
@@ -176,8 +176,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 16,
-
-    elevation: 12,
   },
 
   buttonText: {
@@ -192,11 +190,9 @@ const styles = StyleSheet.create({
     height: 220,
     borderRadius: 110,
     backgroundColor: '#C026FF',
-
     top: -40,
     alignSelf: 'center',
-
-    opacity: 0.95,
+    opacity: 0.85,
   },
 
   sphereLeft: {
@@ -205,19 +201,18 @@ const styles = StyleSheet.create({
     height: 170,
     borderRadius: 100,
     backgroundColor: '#A000FF',
-
-    left: -50,
+    left: -20,
     bottom: 180,
+    opacity: 0.85,
   },
 
   sphereBottom: {
     position: 'absolute',
-    width: 220,
-    height: 220,
-    borderRadius: 120,
+    width: 320,
+    height: 320,
+    borderRadius: 220,
     backgroundColor: '#B000FF',
-
-    right: -60,
+    right: -65,
     bottom: -20,
   },
 });
