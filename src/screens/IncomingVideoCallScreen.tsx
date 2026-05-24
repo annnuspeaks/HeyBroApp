@@ -212,7 +212,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
 
           tension: 90,
 
-          useNativeDriver: false,
+          useNativeDriver: true,
         }).start();
       },
     });
