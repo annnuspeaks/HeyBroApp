@@ -470,15 +470,17 @@ const VideoCallScreen = ({ route }: any) => {
           onPressOut={handleDoubleTap}
         >
           <View style={styles.selfVideo}>
-            {localStream && (
-              <RTCView
-                pointerEvents="none"
-                streamURL={localStream.toURL()}
-                style={styles.rtcVideo}
-                objectFit="cover"
-                mirror
-              />
-            )}
+            <View style={styles.videoClipper}>
+              {localStream && (
+                <RTCView
+                  pointerEvents="none"
+                  streamURL={localStream.toURL()}
+                  style={styles.rtcVideo}
+                  objectFit="cover"
+                  mirror
+                />
+              )}
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>
@@ -531,14 +533,18 @@ const styles = StyleSheet.create({
 
   miniSelfView: {
     position: 'absolute',
+
     width: 120,
     height: 180,
+
     borderRadius: 22,
-    overflow: 'hidden',
+
     shadowColor: '#000',
     shadowOpacity: 0.35,
     shadowRadius: 10,
+
     elevation: 10,
+
     backgroundColor: '#111',
   },
 
@@ -553,6 +559,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     borderWidth: 1.5,
     borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 22,
+    overflow: 'hidden',
+    backgroundColor: '#000',
   },
 
   controlsOverlay: {
@@ -605,33 +614,34 @@ const styles = StyleSheet.create({
   },
 
   rtcVideo: {
-    width: '100%',
-    height: '100%',
+    width: '101%',
+    height: '101%',
   },
 
-  blurDock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    width: width * 0.78,
-    maxWidth: 520,
-    minWidth: 300,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 36,
-    backgroundColor: 'rgba(255,255,255,0.04)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
-    elevation: 18,
-  },
+  // blurDock: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   alignSelf: 'center',
+  //   width: width * 0.52,
+  //   minWidth: 360,
+  //   maxWidth: 500,
+  //   paddingHorizontal: 20,
+  //   paddingVertical: 12,
+  //   borderRadius: 40,
+  //   overflow: 'hidden',
+  //   backgroundColor: 'rgba(18,18,18,0.55)',
+  //   borderWidth: 1,
+  //   borderColor: 'rgba(255,255,255,0.08)',
+  //   shadowColor: '#000',
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 8,
+  //   },
+  //   shadowOpacity: 0.28,
+  //   shadowRadius: 18,
+  //   elevation: 18,
+  // },
 
   controlsRow: {
     width: '100%',
@@ -640,5 +650,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     zIndex: 999,
     elevation: 999,
+    paddingVertical: 8,
+  },
+
+  videoClipper: {
+    flex: 1,
+    borderRadius: 22,
+    overflow: 'hidden',
+    backgroundColor: '#000',
   },
 });
