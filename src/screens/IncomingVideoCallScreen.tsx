@@ -51,11 +51,8 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
         console.log('RINGTONE ERROR => ', error);
         return;
       }
-
       ringtone.setVolume(1);
-
       ringtone.setNumberOfLoops(-1);
-
       ringtone.play(success => {
         console.log('RINGTONE PLAYING => ', success);
       });
@@ -219,9 +216,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   };
 
   const acceptPan = createPanResponder(acceptDrag, acceptCall);
-
   const rejectPan = createPanResponder(rejectDrag, rejectCall);
-
   const messagePan = createPanResponder(messageDrag, openChat);
 
   return (
