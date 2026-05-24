@@ -55,9 +55,11 @@ const EditProfileScreen = ({ navigation, route }: any) => {
   };
 
   const handleSave = () => {
-    navigation.navigate('Profile', {
-      updatedProfile: form,
-    });
+    navigation.goBack();
+
+    setTimeout(() => {
+      route.params?.onGoBack?.(form);
+    }, 100);
   };
 
   return (

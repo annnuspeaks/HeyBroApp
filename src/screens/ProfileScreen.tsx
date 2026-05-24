@@ -90,6 +90,10 @@ export default function ProfileScreen({ navigation, route }: any) {
         if (item.title === 'Edit Profile') {
           navigation.navigate('EditProfile', {
             profile: profile,
+
+            onGoBack: (updatedProfile: any) => {
+              setProfile(updatedProfile);
+            },
           });
         }
       }}
