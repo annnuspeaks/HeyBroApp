@@ -32,6 +32,8 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [localStream, setLocalStream] = useState<any>(null);
 
+  const [remoteStream, setRemoteStream] = useState<any>(null);
+
   const [isMuted, setIsMuted] = useState(false);
 
   const [isSpeakerOn, setIsSpeakerOn] = useState(true);
@@ -85,6 +87,7 @@ const VideoCallScreen = ({ route }: any) => {
       });
 
       setLocalStream(stream);
+      setRemoteStream(stream);
     } catch (err) {
       console.log('STREAM ERROR', err);
     }
@@ -318,36 +321,20 @@ const VideoCallScreen = ({ route }: any) => {
         onPress={toggleControls}
       >
         <View style={styles.selfVideo}>
-          {!isVideoOff && localStream ? (
+          {remoteStream && (
             <RTCView
               pointerEvents="none"
-              streamURL={localStream.toURL()}
+              streamURL={remoteStream.toURL()}
               style={styles.rtcVideo}
               objectFit="cover"
-              mirror
             />
-          ) : (
-            <View style={styles.videoOffContainer}>
-              <View style={styles.videoOffContent}>
-                {user?.image ? (
-                  <Animated.Image
-                    source={{ uri: user.image }}
-                    style={styles.videoOffRealAvatar}
-                  />
-                ) : (
-                  <View style={styles.videoOffAvatar}>
-                    <Icon name="person" size={75} color="#fff" />
-                  </View>
-                )}
-
-                <Text style={styles.videoOffName}>
-                  {user?.name || 'Unknown User'}
-                </Text>
-
-                <Text style={styles.videoOffText}>Camera is switched off</Text>
-              </View>
-            </View>
           )}
+
+          <View style={styles.remoteUserBadge}>
+            <Text style={styles.remoteUserText}>
+              {user?.name || 'Remote User'}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
 
@@ -495,14 +482,30 @@ const VideoCallScreen = ({ route }: any) => {
         >
           <View style={styles.selfVideo}>
             <View style={styles.videoClipper}>
-              {localStream && (
-                <RTCView
-                  pointerEvents="none"
-                  streamURL={localStream.toURL()}
-                  style={styles.rtcVideo}
-                  objectFit="cover"
-                  mirror
-                />
+              {!isVideoOff && localStream ? (
+                <>
+                  <RTCView
+                    pointerEvents="none"
+                    streamURL={localStream.toURL()}
+                    style={styles.rtcVideo}
+                    objectFit="cover"
+                    mirror
+                  />
+
+                  <View style={styles.youBadge}>
+                    <Text style={styles.youBadgeText}>You</Text>
+                  </View>
+                </>
+              ) : (
+                <View style={styles.selfOffContainer}>
+                  <View style={styles.selfOffAvatar}>
+                    <Icon name="person" size={28} color="#fff" />
+                  </View>
+
+                  <Text style={styles.youText}>You</Text>
+
+                  <Text style={styles.selfOffText}>Camera Off</Text>
+                </View>
               )}
             </View>
           </View>
@@ -642,31 +645,6 @@ const styles = StyleSheet.create({
     height: '101%',
   },
 
-  // blurDock: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   alignSelf: 'center',
-  //   width: width * 0.52,
-  //   minWidth: 360,
-  //   maxWidth: 500,
-  //   paddingHorizontal: 20,
-  //   paddingVertical: 12,
-  //   borderRadius: 40,
-  //   overflow: 'hidden',
-  //   backgroundColor: 'rgba(18,18,18,0.55)',
-  //   borderWidth: 1,
-  //   borderColor: 'rgba(255,255,255,0.08)',
-  //   shadowColor: '#000',
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 8,
-  //   },
-  //   shadowOpacity: 0.28,
-  //   shadowRadius: 18,
-  //   elevation: 18,
-  // },
-
   controlsRow: {
     width: '75%',
     flexDirection: 'row',
@@ -685,47 +663,108 @@ const styles = StyleSheet.create({
   },
 
   videoOffContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#000',
-},
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
 
-videoOffContent: {
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginBottom: 80,
-},
+  videoOffContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 80,
+  },
 
-videoOffAvatar: {
-  width: 150,
-  height: 150,
-  borderRadius: 100,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'rgba(124,58,237,0.22)',
-  borderWidth: 1.5,
-  borderColor: 'rgba(255,255,255,0.08)',
-},
+  videoOffAvatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(124,58,237,0.22)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
 
-videoOffRealAvatar: {
-  width: 150,
-  height: 150,
-  borderRadius: 100,
-},
+  videoOffRealAvatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+  },
 
-videoOffName: {
-  marginTop: 22,
-  color: '#fff',
-  fontSize: 30,
-  fontWeight: '700',
-  letterSpacing: 0.5,
-},
+  videoOffName: {
+    marginTop: 22,
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
 
-videoOffText: {
-  marginTop: 10,
-  color: 'rgba(255,255,255,0.55)',
-  fontSize: 17,
-  fontWeight: '500',
-},
+  videoOffText: {
+    marginTop: 10,
+    color: 'rgba(255,255,255,0.55)',
+    fontSize: 17,
+    fontWeight: '500',
+  },
+
+  remoteUserBadge: {
+    position: 'absolute',
+    top: 18,
+    left: 18,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 18,
+  },
+
+  remoteUserText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+
+  youBadge: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+
+  youBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+
+  selfOffContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#111',
+  },
+
+  selfOffAvatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(124,58,237,0.25)',
+  },
+
+  selfOffText: {
+    color: 'rgba(255,255,255,0.7)',
+    marginTop: 6,
+    fontSize: 11,
+  },
+
+  youText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 8,
+  },
 });
