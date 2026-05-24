@@ -12,19 +12,13 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-
 import Sound from 'react-native-sound';
-
 import Icon from 'react-native-vector-icons/Ionicons';
-
 const { width, height } = Dimensions.get('window');
-
 const isPortrait = height > width;
-
 const BUTTON_SIZE = isPortrait ? width * 0.12 : height * 0.11;
-
 const AVATAR_SIZE = isPortrait ? width * 0.27 : height * 0.24;
-
+const DRAG_LIMIT = -70;
 const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   const { user } = route.params;
 
@@ -33,11 +27,8 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const glowAnim = useRef(new Animated.Value(0.45)).current;
-
   const pulseAnim = useRef(new Animated.Value(1)).current;
-
   const arrowAnim = useRef(new Animated.Value(0)).current;
-
   const islandAnim = useRef(new Animated.Value(1)).current;
 
   // =========================
@@ -45,9 +36,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const acceptDrag = useRef(new Animated.ValueXY()).current;
-
   const rejectDrag = useRef(new Animated.ValueXY()).current;
-
   const messageDrag = useRef(new Animated.ValueXY()).current;
 
   // =========================
@@ -57,22 +46,28 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     Sound.setCategory('Playback');
 
-    const ringtone = new Sound('ringtone.mp3', Sound.MAIN_BUNDLE, error => {
+    const ringtone = new Sound('ringtone', Sound.MAIN_BUNDLE, error => {
       if (error) {
-        console.log(error);
+        console.log('RINGTONE ERROR => ', error);
         return;
       }
 
+      ringtone.setVolume(1);
+
       ringtone.setNumberOfLoops(-1);
 
-      ringtone.play();
+      ringtone.play(success => {
+        console.log('RINGTONE PLAYING => ', success);
+      });
     });
 
-    Vibration.vibrate([0, 1200, 800], true);
+    Vibration.vibrate([0, 1000, 700], true);
 
     return () => {
-      ringtone.stop();
-      ringtone.release();
+      ringtone.stop(() => {
+        ringtone.release();
+      });
+
       Vibration.cancel();
     };
   }, []);
@@ -134,12 +129,12 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
           Animated.sequence([
             Animated.timing(arrowAnim, {
               toValue: -10,
-              duration: 900,
+              duration: 1000,
               easing: Easing.out(Easing.ease),
               useNativeDriver: true,
             }),
 
-            Animated.delay(250),
+            Animated.delay(400),
 
             Animated.timing(arrowAnim, {
               toValue: 0,
@@ -176,40 +171,47 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const createPanResponder = (animatedValue: any, action: () => void) => {
-    let triggered = false;
+    let hapticTriggered = false;
 
     return PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
 
       onPanResponderMove: (_, gesture) => {
-        const limitedY = Math.max(gesture.dy, -70);
+        const limitedY = Math.max(gesture.dy, DRAG_LIMIT);
 
         animatedValue.setValue({
           x: 0,
           y: limitedY,
         });
 
-        if (limitedY <= -70 && !triggered) {
-          Vibration.vibrate(40);
-          triggered = true;
+        if (limitedY <= DRAG_LIMIT && !hapticTriggered) {
+          Vibration.vibrate(35);
+
+          hapticTriggered = true;
         }
 
-        if (limitedY > -70) {
-          triggered = false;
+        if (limitedY > DRAG_LIMIT) {
+          hapticTriggered = false;
         }
       },
 
       onPanResponderRelease: (_, gesture) => {
-        if (gesture.dy < -70) {
-          Vibration.vibrate(70);
+        if (gesture.dy <= DRAG_LIMIT) {
+          Vibration.vibrate(60);
 
           action();
         }
 
         Animated.spring(animatedValue, {
-          toValue: { x: 0, y: 0 },
+          toValue: {
+            x: 0,
+            y: 0,
+          },
+
           friction: 5,
+
           tension: 90,
+
           useNativeDriver: false,
         }).start();
       },
@@ -229,8 +231,6 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      {/* OVERLAY */}
-
       <View style={styles.overlay}>
         {/* DYNAMIC ISLAND */}
 
@@ -303,7 +303,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
               >
                 <Icon
                   name="call"
-                  size={24}
+                  size={35}
                   color="#fff"
                   style={{
                     transform: [
@@ -322,7 +322,15 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
           <Animated.View
             {...acceptPan.panHandlers}
             style={{
-              transform: acceptDrag.getTranslateTransform(),
+              transform: [
+                ...acceptDrag.getTranslateTransform(),
+                {
+                  translateY: arrowAnim.interpolate({
+                    inputRange: [-10, 0],
+                    outputRange: [-10, 0],
+                  }),
+                },
+              ],
             }}
           >
             <View style={styles.buttonWrapper}>
@@ -340,14 +348,12 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   },
                 ]}
               >
-                <Icon name="chevron-up" size={18} color="#fff" />
-
                 <Icon
                   name="chevron-up"
-                  size={18}
+                  size={20}
                   color="#fff"
                   style={{
-                    marginTop: -1,
+                    opacity: 0.05,
                   }}
                 />
 
@@ -357,6 +363,37 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   color="#fff"
                   style={{
                     marginTop: -1,
+                    opacity: 0.15,
+                  }}
+                />
+
+                <Icon
+                  name="chevron-up"
+                  size={18}
+                  color="#fff"
+                  style={{
+                    marginTop: -1,
+                    opacity: 0.35,
+                  }}
+                />
+
+                <Icon
+                  name="chevron-up"
+                  size={18}
+                  color="#fff"
+                  style={{
+                    marginTop: -1,
+                    opacity: 0.55,
+                  }}
+                />
+
+                <Icon
+                  name="chevron-up"
+                  size={18}
+                  color="#fff"
+                  style={{
+                    marginTop: -1,
+                    opacity: 0.75,
                   }}
                 />
               </Animated.View>
@@ -462,8 +499,8 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: AVATAR_SIZE + 30,
-    height: AVATAR_SIZE + 30,
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
     borderRadius: 999,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.15)',
@@ -494,7 +531,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     marginBottom: isPortrait ? 70 : 35,
   },
 
@@ -503,8 +540,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: BUTTON_SIZE - 15,
-    height: BUTTON_SIZE - 15,
+    width: BUTTON_SIZE - 10,
+    height: BUTTON_SIZE - 10,
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
@@ -512,7 +549,7 @@ const styles = StyleSheet.create({
   },
 
   arrowsContainer: {
-    marginBottom: 10,
+    marginBottom: 8,
     alignItems: 'center',
   },
 });
