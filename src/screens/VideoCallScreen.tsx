@@ -353,94 +353,87 @@ const VideoCallScreen = ({ route }: any) => {
           },
         ]}
       >
-        <BlurView
-          style={styles.blurDock}
-          blurType="dark"
-          blurAmount={22}
-          reducedTransparencyFallbackColor="rgba(15,15,15,0.92)"
-        >
-          <View style={styles.controlsRow}>
-            <TouchableOpacity
-              style={[
-                styles.controlBtn,
+        <View style={styles.controlsRow}>
+          <TouchableOpacity
+            style={[
+              styles.controlBtn,
 
-                isMuted && {
-                  backgroundColor: 'rgba(239,68,68,0.22)',
-                  borderColor: 'rgba(239,68,68,0.4)',
+              isMuted && {
+                backgroundColor: 'rgba(239,68,68,0.22)',
+                borderColor: 'rgba(239,68,68,0.4)',
 
-                  shadowColor: '#EF4444',
-                },
+                shadowColor: '#EF4444',
+              },
 
-                isMuted && styles.controlBtnActive,
-              ]}
-              onPress={toggleMute}
-            >
-              <Icon name={isMuted ? 'mic-off' : 'mic'} size={22} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.controlBtn,
+              isMuted && styles.controlBtnActive,
+            ]}
+            onPress={toggleMute}
+          >
+            <Icon name={isMuted ? 'mic-off' : 'mic'} size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.controlBtn,
 
-                isVideoOff && {
-                  backgroundColor: 'rgba(245,158,11,0.22)',
-                  borderColor: 'rgba(245,158,11,0.45)',
+              isVideoOff && {
+                backgroundColor: 'rgba(245,158,11,0.22)',
+                borderColor: 'rgba(245,158,11,0.45)',
 
-                  shadowColor: '#F59E0B',
-                },
+                shadowColor: '#F59E0B',
+              },
 
-                isVideoOff && styles.controlBtnActive,
-              ]}
-              onPress={toggleVideo}
-            >
-              <Icon
-                name={isVideoOff ? 'videocam-off' : 'videocam'}
-                size={22}
-                color="#fff"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.controlBtn} onPress={switchCamera}>
-              <Icon name="camera-reverse" size={22} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.controlBtn,
+              isVideoOff && styles.controlBtnActive,
+            ]}
+            onPress={toggleVideo}
+          >
+            <Icon
+              name={isVideoOff ? 'videocam-off' : 'videocam'}
+              size={22}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.controlBtn} onPress={switchCamera}>
+            <Icon name="camera-reverse" size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.controlBtn,
 
-                isSpeakerOn && {
-                  backgroundColor: 'rgba(34,197,94,0.18)',
-                  borderColor: 'rgba(34,197,94,0.4)',
+              isSpeakerOn && {
+                backgroundColor: 'rgba(34,197,94,0.18)',
+                borderColor: 'rgba(34,197,94,0.4)',
 
-                  shadowColor: '#22C55E',
-                },
+                shadowColor: '#22C55E',
+              },
 
-                isSpeakerOn && styles.controlBtnActive,
-              ]}
-              onPress={toggleSpeaker}
-            >
-              <Icon
-                name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
-                size={22}
-                color="#fff"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.controlBtn,
-                {
-                  backgroundColor: '#EF4444',
-                },
-              ]}
-            >
-              <Icon
-                name="call"
-                size={22}
-                color="#fff"
-                style={{
-                  transform: [{ rotate: '135deg' }],
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        </BlurView>
+              isSpeakerOn && styles.controlBtnActive,
+            ]}
+            onPress={toggleSpeaker}
+          >
+            <Icon
+              name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
+              size={22}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.controlBtn,
+              {
+                backgroundColor: '#EF4444',
+              },
+            ]}
+          >
+            <Icon
+              name="call"
+              size={22}
+              color="#fff"
+              style={{
+                transform: [{ rotate: '135deg' }],
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </Animated.View>
 
       {/* LOCAL VIDEO */}
@@ -573,9 +566,9 @@ const styles = StyleSheet.create({
   },
 
   controlBtn: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: 65,
+    height: 65,
+    borderRadius: 32,
     backgroundColor: 'rgba(18,18,18,0.72)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -644,10 +637,10 @@ const styles = StyleSheet.create({
   // },
 
   controlsRow: {
-    width: '100%',
+    width: '75%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     zIndex: 999,
     elevation: 999,
     paddingVertical: 8,
