@@ -10,12 +10,9 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
-  ImageBackground,
   PanResponder,
   TouchableWithoutFeedback,
 } from 'react-native';
-
-import { BlurView } from '@react-native-community/blur';
 
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 

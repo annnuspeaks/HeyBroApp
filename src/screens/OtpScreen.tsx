@@ -91,7 +91,11 @@ const OtpScreen = ({ navigation }: any) => {
             {otp.map((digit, index) => (
               <TextInput
                 key={index}
-                ref={ref => (inputRefs.current[index] = ref)}
+                ref={ref => {
+                  if (ref) {
+                    inputRefs.current[index] = ref;
+                  }
+                }}
                 value={digit}
                 onChangeText={text => handleOtpChange(text, index)}
                 keyboardType="number-pad"

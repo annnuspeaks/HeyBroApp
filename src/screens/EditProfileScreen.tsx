@@ -16,7 +16,7 @@ import DatePicker from 'react-native-date-picker';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const isTablet = width >= 768;
 
