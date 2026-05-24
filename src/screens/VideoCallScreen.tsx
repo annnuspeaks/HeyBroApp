@@ -14,6 +14,8 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,6 +23,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const { width, height } = Dimensions.get('window');
 
 const VideoCallScreen = ({ route }: any) => {
+  const navigation = useNavigation<any>();
   const user = route?.params?.user;
   const [connected, setConnected] = useState(false);
 
@@ -287,7 +290,7 @@ const VideoCallScreen = ({ route }: any) => {
       });
 
       setIsFrontCamera(prev => !prev);
-    } catch  {
+    } catch {
       console.log('Switch camera skipped');
     }
   };
@@ -302,6 +305,23 @@ const VideoCallScreen = ({ route }: any) => {
 
       useNativeDriver: false,
     }).start();
+  };
+
+  const endCall = () => {
+    try {
+      // stop all local tracks
+      if (localStream) {
+        localStream.getTracks().forEach((track: any) => {
+          track.stop();
+        });
+      }
+
+      // go back
+      navigation.goBack();
+    } catch (err) {
+      console.log('END CALL ERROR', err);
+      navigation.goBack();
+    }
   };
 
   return (
@@ -456,6 +476,7 @@ const VideoCallScreen = ({ route }: any) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={endCall}
             style={[
               styles.controlBtn,
               {
