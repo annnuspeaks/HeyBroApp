@@ -347,7 +347,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   size={18}
                   color="#fff"
                   style={{
-                    marginTop: -10,
+                    marginTop: -1,
                   }}
                 />
 
@@ -356,7 +356,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   size={18}
                   color="#fff"
                   style={{
-                    marginTop: -10,
+                    marginTop: -1,
                   }}
                 />
               </Animated.View>
@@ -386,7 +386,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   },
                 ]}
               >
-                <Icon name="videocam" size={24} color="#fff" />
+                <Icon name="videocam" size={35} color="#fff" />
               </Animated.View>
             </View>
           </Animated.View>
@@ -408,7 +408,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                   },
                 ]}
               >
-                <Icon name="chatbubble" size={22} color="#111" />
+                <Icon name="chatbubble" size={35} color="#111" />
               </View>
             </View>
           </Animated.View>
@@ -433,51 +433,37 @@ const styles = StyleSheet.create({
 
   dynamicIsland: {
     marginTop: isPortrait ? 22 : 10,
-
     backgroundColor: 'rgba(0,0,0,0.70)',
-
     paddingHorizontal: 18,
-
     paddingVertical: 10,
-
     borderRadius: 999,
-
     flexDirection: 'row',
-
     alignItems: 'center',
-
     gap: 8,
   },
 
   islandDot: {
     width: 8,
-
     height: 8,
-
     borderRadius: 999,
-
     backgroundColor: '#8B5CF6',
   },
 
   islandText: {
     color: '#fff',
-
     fontSize: 13,
-
     fontWeight: '600',
   },
 
   centerContainer: {
     flex: 1,
-
     justifyContent: 'center',
-
     alignItems: 'center',
   },
 
   avatar: {
-    width: AVATAR_SIZE + 20,
-    height: AVATAR_SIZE + 20,
+    width: AVATAR_SIZE + 30,
+    height: AVATAR_SIZE + 30,
     borderRadius: 999,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.15)',
