@@ -34,6 +34,9 @@ const VideoCallScreen = ({ route }: any) => {
 
   const [remoteStream, setRemoteStream] = useState<any>(null);
 
+  // fake remote stream for testing
+  const displayRemoteStream = remoteStream || localStream;
+
   const [isMuted, setIsMuted] = useState(false);
 
   const [isSpeakerOn, setIsSpeakerOn] = useState(true);
@@ -87,7 +90,9 @@ const VideoCallScreen = ({ route }: any) => {
       });
 
       setLocalStream(stream);
-      setRemoteStream(stream);
+
+      // DO NOT assign local stream as remote stream
+      // real remote stream will come from socket/webrtc later
     } catch (err) {
       console.log('STREAM ERROR', err);
     }
@@ -347,11 +352,11 @@ const VideoCallScreen = ({ route }: any) => {
                 <Text style={styles.selfOffText}>Camera Off</Text>
               </View>
             )
-          ) : remoteStream ? (
+          ) : displayRemoteStream ? (
             <>
               <RTCView
                 pointerEvents="none"
-                streamURL={remoteStream.toURL()}
+                streamURL={displayRemoteStream.toURL()}
                 style={styles.rtcVideo}
                 objectFit="cover"
               />
@@ -363,12 +368,6 @@ const VideoCallScreen = ({ route }: any) => {
               </View>
             </>
           ) : null}
-
-          <View style={styles.remoteUserBadge}>
-            <Text style={styles.remoteUserText}>
-              {swapped ? 'You' : user?.name || 'Remote User'}
-            </Text>
-          </View>
         </View>
       </TouchableOpacity>
 
@@ -518,11 +517,11 @@ const VideoCallScreen = ({ route }: any) => {
           <View style={styles.selfVideo}>
             <View style={styles.videoClipper}>
               {swapped ? (
-                remoteStream ? (
+                displayRemoteStream ? (
                   <>
                     <RTCView
                       pointerEvents="none"
-                      streamURL={remoteStream.toURL()}
+                      streamURL={displayRemoteStream.toURL()}
                       style={styles.rtcVideo}
                       objectFit="cover"
                     />
@@ -633,12 +632,10 @@ const styles = StyleSheet.create({
   selfVideo: {
     width: '100%',
     height: '100%',
-    justifyContent: 'flex-end',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.12)',
     borderRadius: 22,
     overflow: 'hidden',
     backgroundColor: '#000',
+    position: 'relative',
   },
 
   controlsOverlay: {
@@ -691,9 +688,11 @@ const styles = StyleSheet.create({
   },
 
   rtcVideo: {
-    ...StyleSheet.absoluteFill,
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 
   controlsRow: {
@@ -758,22 +757,6 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.55)',
     fontSize: 17,
     fontWeight: '500',
-  },
-
-  remoteUserBadge: {
-    position: 'absolute',
-    top: 18,
-    left: 18,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 18,
-  },
-
-  remoteUserText: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
   },
 
   youBadge: {
