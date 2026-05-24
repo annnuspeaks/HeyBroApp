@@ -281,15 +281,19 @@ const VideoCallScreen = ({ route }: any) => {
   };
 
   const switchCamera = () => {
-    if (!localStream) return;
+    if (!localStream || isVideoOff) return;
 
-    localStream.getVideoTracks().forEach((track: any) => {
-      if (track._switchCamera) {
-        track._switchCamera();
-      }
-    });
+    try {
+      localStream.getVideoTracks().forEach((track: any) => {
+        if (track.enabled && track._switchCamera) {
+          track._switchCamera();
+        }
+      });
 
-    setIsFrontCamera(prev => !prev);
+      setIsFrontCamera(prev => !prev);
+    } catch (error) {
+      console.log('Switch camera skipped');
+    }
   };
 
   const toggleExpand = () => {
@@ -389,7 +393,16 @@ const VideoCallScreen = ({ route }: any) => {
               color="#fff"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.controlBtn} onPress={switchCamera}>
+          <TouchableOpacity
+            style={[
+              styles.controlBtn,
+              isVideoOff && {
+                opacity: 0.45,
+              },
+            ]}
+            disabled={isVideoOff}
+            onPress={switchCamera}
+          >
             <Icon name="camera-reverse" size={22} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity
