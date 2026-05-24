@@ -323,42 +323,50 @@ const VideoCallScreen = ({ route }: any) => {
         <View style={styles.selfVideo}>
           {swapped ? (
             !isVideoOff && localStream ? (
-              <RTCView
-                pointerEvents="none"
-                streamURL={localStream.toURL()}
-                style={styles.rtcVideo}
-                objectFit="cover"
-                mirror
-              />
-            ) : (
-              <View style={styles.videoOffContainer}>
-                <View style={styles.videoOffContent}>
-                  <View style={styles.videoOffAvatar}>
-                    <Icon name="person" size={60} color="#fff" />
-                  </View>
+              <>
+                <RTCView
+                  pointerEvents="none"
+                  streamURL={localStream.toURL()}
+                  style={styles.rtcVideo}
+                  objectFit="cover"
+                  mirror
+                />
 
-                  <Text style={styles.videoOffName}>You</Text>
-
-                  <Text style={styles.videoOffText}>
-                    Camera is switched off
-                  </Text>
+                <View style={styles.youBadge}>
+                  <Text style={styles.youBadgeText}>You</Text>
                 </View>
+              </>
+            ) : (
+              <View style={styles.selfOffContainer}>
+                <View style={styles.selfOffAvatar}>
+                  <Icon name="person" size={28} color="#fff" />
+                </View>
+
+                <Text style={styles.youText}>You</Text>
+
+                <Text style={styles.selfOffText}>Camera Off</Text>
               </View>
             )
-          ) : (
-            remoteStream && (
+          ) : remoteStream ? (
+            <>
               <RTCView
                 pointerEvents="none"
                 streamURL={remoteStream.toURL()}
                 style={styles.rtcVideo}
                 objectFit="cover"
               />
-            )
-          )}
+
+              <View style={styles.youBadge}>
+                <Text style={styles.youBadgeText}>
+                  {user?.name || 'Remote User'}
+                </Text>
+              </View>
+            </>
+          ) : null}
 
           <View style={styles.remoteUserBadge}>
             <Text style={styles.remoteUserText}>
-              {user?.name || 'Remote User'}
+              {swapped ? 'You' : user?.name || 'Remote User'}
             </Text>
           </View>
         </View>
@@ -485,7 +493,7 @@ const VideoCallScreen = ({ route }: any) => {
       <Animated.View
         {...panResponder.panHandlers}
         style={[
-          swapped ? styles.fullSelfView : styles.miniSelfView,
+          styles.miniSelfView,
 
           {
             transform: [
@@ -502,7 +510,11 @@ const VideoCallScreen = ({ route }: any) => {
           },
         ]}
       >
-        <TouchableWithoutFeedback onPress={swapVideos} onLongPress={toggleExpand} delayLongPress={300}>
+        <TouchableWithoutFeedback
+          onPress={swapVideos}
+          onLongPress={toggleExpand}
+          delayLongPress={300}
+        >
           <View style={styles.selfVideo}>
             <View style={styles.videoClipper}>
               {swapped ? (
@@ -603,13 +615,11 @@ const styles = StyleSheet.create({
 
     width: 120,
     height: 180,
-
     borderRadius: 22,
-
     shadowColor: '#000',
     shadowOpacity: 0.35,
     shadowRadius: 10,
-
+    overflow: 'hidden',
     elevation: 10,
 
     backgroundColor: '#111',
@@ -681,8 +691,9 @@ const styles = StyleSheet.create({
   },
 
   rtcVideo: {
-    width: '101%',
-    height: '101%',
+    ...StyleSheet.absoluteFill,
+    width: '100%',
+    height: '100%',
   },
 
   controlsRow: {
@@ -696,7 +707,9 @@ const styles = StyleSheet.create({
   },
 
   videoClipper: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
+    position: 'relative',
     borderRadius: 22,
     overflow: 'hidden',
     backgroundColor: '#000',
