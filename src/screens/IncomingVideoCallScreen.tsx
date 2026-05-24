@@ -1,15 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import {
   View,
   Text,
   StyleSheet,
   Animated,
-  ImageBackground,
   Dimensions,
   PanResponder,
   Vibration,
+  Easing,
 } from 'react-native';
+
+import LinearGradient from 'react-native-linear-gradient';
+
+import { BlurView } from '@react-native-community/blur';
+
+import Sound from 'react-native-sound';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -17,32 +23,99 @@ const { width, height } = Dimensions.get('window');
 
 const isPortrait = height > width;
 
-const BUTTON_SIZE = isPortrait ? width * 0.13 : height * 0.12;
+const BUTTON_SIZE = isPortrait ? width * 0.12 : height * 0.11;
 
-const AVATAR_SIZE = isPortrait ? width * 0.3 : height * 0.28;
+const AVATAR_SIZE = isPortrait ? width * 0.28 : height * 0.24;
 
-const IncomingVideoCallScreen = ({ route, navigation }: any) => {
+const IncomingVideoCallScreen = ({
+  route,
+  navigation,
+}: any) => {
   const { user } = route.params;
 
   // =========================
   // ANIMATIONS
   // =========================
 
-  const glowAnim = useRef(new Animated.Value(0.4)).current;
+  const glowAnim = useRef(
+    new Animated.Value(0.45),
+  ).current;
 
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const pulseAnim = useRef(
+    new Animated.Value(1),
+  ).current;
 
-  const arrowAnim = useRef(new Animated.Value(0)).current;
+  const arrowAnim = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const islandAnim = useRef(
+    new Animated.Value(1),
+  ).current;
+
+  const waveAnim = useRef(
+    new Animated.Value(0),
+  ).current;
+
+  const bgAnim = useRef(
+    new Animated.Value(0),
+  ).current;
 
   // =========================
   // DRAG STATES
   // =========================
 
-  const acceptDrag = useRef(new Animated.ValueXY()).current;
+  const acceptDrag = useRef(
+    new Animated.ValueXY(),
+  ).current;
 
-  const rejectDrag = useRef(new Animated.ValueXY()).current;
+  const rejectDrag = useRef(
+    new Animated.ValueXY(),
+  ).current;
 
-  const messageDrag = useRef(new Animated.ValueXY()).current;
+  const messageDrag = useRef(
+    new Animated.ValueXY(),
+  ).current;
+
+  // =========================
+  // RINGTONE
+  // =========================
+
+  useEffect(() => {
+    Sound.setCategory('Playback');
+
+    const ringtone = new Sound(
+      'ringtone.mp3',
+      Sound.MAIN_BUNDLE,
+      error => {
+        if (error) {
+          console.log(
+            'Ringtone Error:',
+            error,
+          );
+
+          return;
+        }
+
+        ringtone.setNumberOfLoops(-1);
+
+        ringtone.play();
+      },
+    );
+
+    Vibration.vibrate(
+      [0, 900, 700],
+      true,
+    );
+
+    return () => {
+      ringtone.stop();
+
+      ringtone.release();
+
+      Vibration.cancel();
+    };
+  }, []);
 
   // =========================
   // LOOP ANIMATIONS
@@ -52,27 +125,63 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
     Animated.loop(
       Animated.parallel([
         Animated.sequence([
+          Animated.timing(bgAnim, {
+            toValue: 1,
+            duration: 5000,
+            easing:
+              Easing.inOut(
+                Easing.ease,
+              ),
+            useNativeDriver: false,
+          }),
+
+          Animated.timing(bgAnim, {
+            toValue: 0,
+            duration: 5000,
+            easing:
+              Easing.inOut(
+                Easing.ease,
+              ),
+            useNativeDriver: false,
+          }),
+        ]),
+
+        Animated.sequence([
           Animated.timing(glowAnim, {
-            toValue: 0.9,
-            duration: 1200,
+            toValue: 0.95,
+            duration: 1400,
             useNativeDriver: true,
           }),
 
           Animated.timing(glowAnim, {
             toValue: 0.35,
-            duration: 1200,
+            duration: 1400,
             useNativeDriver: true,
           }),
         ]),
 
         Animated.sequence([
           Animated.timing(pulseAnim, {
-            toValue: 1.08,
-            duration: 1200,
+            toValue: 1.06,
+            duration: 1400,
             useNativeDriver: true,
           }),
 
           Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1400,
+            useNativeDriver: true,
+          }),
+        ]),
+
+        Animated.sequence([
+          Animated.timing(islandAnim, {
+            toValue: 1.04,
+            duration: 1200,
+            useNativeDriver: true,
+          }),
+
+          Animated.timing(islandAnim, {
             toValue: 1,
             duration: 1200,
             useNativeDriver: true,
@@ -82,8 +191,8 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
         Animated.loop(
           Animated.sequence([
             Animated.timing(arrowAnim, {
-              toValue: -10,
-              duration: 700,
+              toValue: -8,
+              duration: 650,
               useNativeDriver: true,
             }),
 
@@ -94,22 +203,24 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
             }),
           ]),
         ),
+
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(waveAnim, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+
+            Animated.timing(waveAnim, {
+              toValue: 0,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ]),
+        ),
       ]),
     ).start();
-  }, []);
-
-  // =========================
-  // RING / VIBRATION
-  // =========================
-
-  useEffect(() => {
-    const vibrationPattern = [0, 900, 700];
-
-    Vibration.vibrate(vibrationPattern, true);
-
-    return () => {
-      Vibration.cancel();
-    };
   }, []);
 
   // =========================
@@ -117,7 +228,10 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const acceptCall = () => {
-    navigation.replace('VideoCallScreen', { user });
+    navigation.replace(
+      'VideoCallScreen',
+      { user },
+    );
   };
 
   const rejectCall = () => {
@@ -125,48 +239,64 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   };
 
   const openChat = () => {
-    navigation.navigate('ChatOpenScreen', {
-      user,
-      defaultMessage: "Hello! I'm busy right now. Calling you later.",
-    });
+    navigation.navigate(
+      'ChatOpenScreen',
+      {
+        user,
+        defaultMessage:
+          "Hello! I'm busy right now. Calling you later.",
+      },
+    );
   };
 
   // =========================
-  // CREATE DRAGGABLE BUTTON
+  // DRAG BUTTONS
   // =========================
 
-  const createPanResponder = (animatedValue: any, action: () => void) => {
+  const createPanResponder = (
+    animatedValue: any,
+    action: () => void,
+  ) => {
     let hapticTriggered = false;
 
     return PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder:
+        () => true,
 
-      onPanResponderMove: (_, gesture) => {
-        // MAX SWIPE LIMIT
-
-        const limitedY = Math.max(gesture.dy, -85);
+      onPanResponderMove: (
+        _,
+        gesture,
+      ) => {
+        const limitedY = Math.max(
+          gesture.dy,
+          -70,
+        );
 
         animatedValue.setValue({
           x: 0,
           y: limitedY,
         });
 
-        // HAPTIC AT LIMIT
-
-        if (limitedY <= -85 && !hapticTriggered) {
+        if (
+          limitedY <= -70 &&
+          !hapticTriggered
+        ) {
           Vibration.vibrate(40);
 
           hapticTriggered = true;
         }
 
-        if (limitedY > -85) {
+        if (limitedY > -70) {
           hapticTriggered = false;
         }
       },
 
-      onPanResponderRelease: (_, gesture) => {
-        if (gesture.dy < -85) {
-          Vibration.vibrate(60);
+      onPanResponderRelease: (
+        _,
+        gesture,
+      ) => {
+        if (gesture.dy < -70) {
+          Vibration.vibrate(70);
 
           action();
         }
@@ -179,299 +309,593 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
 
           friction: 5,
 
+          tension: 90,
+
           useNativeDriver: false,
         }).start();
       },
     });
   };
 
-  const acceptPan = createPanResponder(acceptDrag, acceptCall);
+  const acceptPan = createPanResponder(
+    acceptDrag,
+    acceptCall,
+  );
 
-  const rejectPan = createPanResponder(rejectDrag, rejectCall);
+  const rejectPan = createPanResponder(
+    rejectDrag,
+    rejectCall,
+  );
 
-  const messagePan = createPanResponder(messageDrag, openChat);
+  const messagePan = createPanResponder(
+    messageDrag,
+    openChat,
+  );
 
   return (
-    <ImageBackground
-      source={{
-        uri: user.image,
-      }}
-      blurRadius={30}
-      style={styles.container}
+    <Animated.View
+      style={[
+        styles.backgroundWrapper,
+        {
+          backgroundColor:
+            bgAnim.interpolate({
+              inputRange: [0, 1],
+
+              outputRange: [
+                '#111111',
+                '#24152F',
+              ],
+            }),
+        },
+      ]}
     >
-      <View style={styles.overlay}>
-        {/* AVATAR GLOW */}
-
-        <Animated.View
-          style={[
-            styles.avatarGlow,
-            {
-              opacity: glowAnim,
-
-              transform: [
-                {
-                  scale: pulseAnim,
-                },
-              ],
-            },
-          ]}
-        />
-
-        {/* AVATAR */}
-
-        <Animated.Image
-          source={{
-            uri: user.image,
-          }}
-          style={[
-            styles.avatar,
-            {
-              transform: [
-                {
-                  scale: pulseAnim,
-                },
-              ],
-            },
-          ]}
-        />
-
-        {/* NAME */}
-
-        <Text style={styles.name}>{user.name}</Text>
-
-        <Text style={styles.subText}>Incoming video call...</Text>
-
-        {/* BUTTONS */}
-
-        <View style={styles.buttonsRow}>
-          {/* DECLINE */}
+      <LinearGradient
+        colors={[
+          '#0F0F0F',
+          '#171717',
+          '#24112D',
+          '#120A1A',
+        ]}
+        style={styles.container}
+      >
+        <View style={styles.overlay}>
+          {/* DYNAMIC ISLAND */}
 
           <Animated.View
-            {...rejectPan.panHandlers}
-            style={{
-              transform: rejectDrag.getTranslateTransform(),
-            }}
-          >
-            <View style={styles.buttonWrapper}>
-              <View
-                style={[
-                  styles.button,
+            style={[
+              styles.dynamicIsland,
+              {
+                transform: [
                   {
-                    backgroundColor: '#FF4444',
+                    scale: islandAnim,
                   },
-                ]}
-              >
-                <Icon
-                  name="call"
-                  size={26}
-                  color="#fff"
-                  style={{
-                    transform: [
-                      {
-                        rotate: '135deg',
-                      },
-                    ],
-                  }}
-                />
-              </View>
+                ],
+              },
+            ]}
+          >
+            <View style={styles.islandDot} />
 
-              <Text style={styles.buttonText}>Decline</Text>
-            </View>
+            <Text style={styles.islandText}>
+              Incoming Call
+            </Text>
           </Animated.View>
 
-          {/* ACCEPT */}
+          {/* AVATAR GLOW */}
 
           <Animated.View
-            {...acceptPan.panHandlers}
-            style={{
-              transform: acceptDrag.getTranslateTransform(),
+            style={[
+              styles.avatarGlow,
+              {
+                opacity: glowAnim,
+
+                transform: [
+                  {
+                    scale: pulseAnim,
+                  },
+                ],
+              },
+            ]}
+          />
+
+          {/* AVATAR */}
+
+          <Animated.Image
+            source={{
+              uri: user.image,
             }}
+            style={[
+              styles.avatar,
+              {
+                transform: [
+                  {
+                    scale: pulseAnim,
+                  },
+                ],
+              },
+            ]}
+          />
+
+          {/* INFO */}
+
+          <BlurView
+            blurType="dark"
+            blurAmount={18}
+            style={styles.infoGlass}
           >
-            <View style={styles.buttonWrapper}>
-              {/* ARROWS */}
+            <Text style={styles.subText}>
+              Incoming video call...
+            </Text>
 
-              <Animated.View
-                style={{
-                  marginBottom: -90,
+            <Text style={styles.name}>
+              {user.name}
+            </Text>
 
-                  transform: [
+            {/* WAVEFORM */}
+
+            <View style={styles.waveRow}>
+              {[...Array(5)].map(
+                (_, i) => (
+                  <Animated.View
+                    key={i}
+                    style={[
+                      styles.waveBar,
+                      {
+                        transform: [
+                          {
+                            scaleY:
+                              waveAnim.interpolate(
+                                {
+                                  inputRange:
+                                    [0, 1],
+
+                                  outputRange:
+                                    [
+                                      0.5,
+                                      1.5,
+                                    ],
+                                },
+                              ),
+                          },
+                        ],
+
+                        opacity:
+                          waveAnim.interpolate(
+                            {
+                              inputRange:
+                                [0, 1],
+
+                              outputRange:
+                                [
+                                  0.3,
+                                  1,
+                                ],
+                            },
+                          ),
+                      },
+                    ]}
+                  />
+                ),
+              )}
+            </View>
+          </BlurView>
+
+          {/* BUTTONS */}
+
+          <View style={styles.buttonsRow}>
+            {/* DECLINE */}
+
+            <Animated.View
+              {...rejectPan.panHandlers}
+              style={{
+                transform:
+                  rejectDrag.getTranslateTransform(),
+              }}
+            >
+              <View
+                style={styles.buttonWrapper}
+              >
+                <View
+                  style={[
+                    styles.button,
                     {
-                      translateY: arrowAnim,
+                      backgroundColor:
+                        '#FF4444',
                     },
-                  ],
-                }}
-              >
-                <Icon name="chevron-up" size={20} color="#fff" />
+                  ]}
+                >
+                  <Icon
+                    name="call"
+                    size={24}
+                    color="#fff"
+                    style={{
+                      transform: [
+                        {
+                          rotate:
+                            '135deg',
+                        },
+                      ],
+                    }}
+                  />
+                </View>
 
-                <Icon
-                  name="chevron-up"
-                  size={20}
-                  color="#fff"
-                  style={{
-                    marginTop: -12,
-                  }}
-                />
-
-                <Icon
-                  name="chevron-up"
-                  size={20}
-                  color="#fff"
-                  style={{
-                    marginTop: -12,
-                  }}
-                />
-              </Animated.View>
-
-              {/* GLOW */}
-
-              <Animated.View
-                style={[
-                  {
-                    opacity: glowAnim,
-
-                    transform: [
-                      {
-                        scale: pulseAnim,
-                      },
-                    ],
-                  },
-                ]}
-              />
-
-              {/* BUTTON */}
-
-              <Animated.View
-                style={[
-                  styles.button,
-                  {
-                    transform: [
-                      {
-                        translateY: arrowAnim.interpolate({
-                          inputRange: [-10, 0],
-
-                          outputRange: [-4, 0],
-                        }),
-                      },
-                    ],
-                  },
-                  {
-                    backgroundColor: '#8B5CF6',
-                  },
-                ]}
-              >
-                <Icon name="videocam" size={26} color="#fff" />
-              </Animated.View>
-
-              <Text style={styles.buttonText}>Swipe Up</Text>
-            </View>
-          </Animated.View>
-
-          {/* MESSAGE */}
-
-          <Animated.View
-            {...messagePan.panHandlers}
-            style={{
-              transform: messageDrag.getTranslateTransform(),
-            }}
-          >
-            <View style={styles.buttonWrapper}>
-              <View
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: '#fff',
-                  },
-                ]}
-              >
-                <Icon name="chatbubble" size={24} color="#111" />
+                <Text
+                  style={
+                    styles.buttonText
+                  }
+                >
+                  Decline
+                </Text>
               </View>
+            </Animated.View>
 
-              <Text style={styles.darkText}>Message</Text>
-            </View>
-          </Animated.View>
+            {/* ACCEPT */}
+
+            <Animated.View
+              {...acceptPan.panHandlers}
+              style={{
+                transform:
+                  acceptDrag.getTranslateTransform(),
+              }}
+            >
+              <View
+                style={styles.buttonWrapper}
+              >
+                {/* ARROWS */}
+
+                <Animated.View
+                  style={{
+                    marginBottom: 8,
+
+                    transform: [
+                      {
+                        translateY:
+                          arrowAnim,
+                      },
+                    ],
+                  }}
+                >
+                  <Icon
+                    name="chevron-up"
+                    size={18}
+                    color="#fff"
+                  />
+
+                  <Icon
+                    name="chevron-up"
+                    size={18}
+                    color="#fff"
+                    style={{
+                      marginTop: -10,
+                    }}
+                  />
+
+                  <Icon
+                    name="chevron-up"
+                    size={18}
+                    color="#fff"
+                    style={{
+                      marginTop: -10,
+                    }}
+                  />
+                </Animated.View>
+
+                {/* PULSE */}
+
+                <Animated.View
+                  style={[
+                    styles.acceptGlow,
+                    {
+                      opacity:
+                        glowAnim,
+
+                      transform: [
+                        {
+                          scale:
+                            pulseAnim,
+                        },
+                      ],
+                    },
+                  ]}
+                />
+
+                {/* BUTTON */}
+
+                <Animated.View
+                  style={[
+                    styles.button,
+                    {
+                      backgroundColor:
+                        '#8B5CF6',
+
+                      transform: [
+                        {
+                          translateY:
+                            arrowAnim.interpolate(
+                              {
+                                inputRange:
+                                  [
+                                    -8,
+                                    0,
+                                  ],
+
+                                outputRange:
+                                  [
+                                    -3,
+                                    0,
+                                  ],
+                              },
+                            ),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <Icon
+                    name="videocam"
+                    size={24}
+                    color="#fff"
+                  />
+                </Animated.View>
+
+                <Text
+                  style={
+                    styles.buttonText
+                  }
+                >
+                  Swipe Up
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* MESSAGE */}
+
+            <Animated.View
+              {...messagePan.panHandlers}
+              style={{
+                transform:
+                  messageDrag.getTranslateTransform(),
+              }}
+            >
+              <View
+                style={styles.buttonWrapper}
+              >
+                <View
+                  style={[
+                    styles.button,
+                    {
+                      backgroundColor:
+                        '#fff',
+                    },
+                  ]}
+                >
+                  <Icon
+                    name="chatbubble"
+                    size={22}
+                    color="#111"
+                  />
+                </View>
+
+                <Text
+                  style={
+                    styles.buttonText
+                  }
+                >
+                  Message
+                </Text>
+              </View>
+            </Animated.View>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </LinearGradient>
+    </Animated.View>
   );
 };
 
 export default IncomingVideoCallScreen;
 
 const styles = StyleSheet.create({
+  backgroundWrapper: {
+    flex: 1,
+  },
+
   container: {
     flex: 1,
   },
 
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+
+    backgroundColor:
+      'rgba(0,0,0,0.50)',
+
     justifyContent: 'center',
+
     alignItems: 'center',
+
     paddingHorizontal: 20,
+  },
+
+  dynamicIsland: {
+    position: 'absolute',
+
+    top: isPortrait ? 20 : 14,
+
+    alignSelf: 'center',
+
+    backgroundColor:
+      'rgba(0,0,0,0.75)',
+
+    paddingHorizontal: 18,
+
+    paddingVertical: 10,
+
+    borderRadius: 999,
+
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    gap: 8,
+  },
+
+  islandDot: {
+    width: 8,
+
+    height: 8,
+
+    borderRadius: 99,
+
+    backgroundColor: '#8B5CF6',
+  },
+
+  islandText: {
+    color: '#fff',
+
+    fontSize: 13,
+
+    fontWeight: '600',
   },
 
   avatarGlow: {
     position: 'absolute',
-    width: AVATAR_SIZE + 35,
-    height: AVATAR_SIZE + 35,
+
+    width: AVATAR_SIZE + 34,
+
+    height: AVATAR_SIZE + 34,
+
     borderRadius: 999,
-    backgroundColor: 'rgba(139,92,246,0.18)',
+
+    backgroundColor:
+      'rgba(139,92,246,0.16)',
   },
 
   avatar: {
     width: AVATAR_SIZE,
+
     height: AVATAR_SIZE,
+
     borderRadius: 999,
+
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.25)',
+
+    borderColor:
+      'rgba(255,255,255,0.18)',
+
+    marginBottom: 24,
+  },
+
+  infoGlass: {
+    paddingHorizontal: 36,
+
+    paddingVertical: 24,
+
+    borderRadius: 999,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    overflow: 'hidden',
+
+    backgroundColor:
+      'rgba(255,255,255,0.02)',
+  },
+
+  subText: {
+    color:
+      'rgba(255,255,255,0.72)',
+
+    fontSize: 17,
+
+    textAlign: 'center',
+
+    marginBottom: 8,
   },
 
   name: {
     color: '#fff',
-    fontSize: isPortrait ? 34 : 26,
+
+    fontSize:
+      isPortrait ? 32 : 26,
+
     fontWeight: '800',
-    marginTop: 22,
+
+    textAlign: 'center',
   },
 
-  subText: {
-    color: 'rgba(255,255,255,0.72)',
-    fontSize: 17,
-    marginTop: 8,
+  waveRow: {
+    flexDirection: 'row',
+
+    alignItems: 'flex-end',
+
+    justifyContent: 'center',
+
+    gap: 6,
+
+    marginTop: 18,
+  },
+
+  waveBar: {
+    width: 5,
+
+    height: 22,
+
+    borderRadius: 999,
+
+    backgroundColor: '#B388FF',
   },
 
   buttonsRow: {
     flexDirection: 'row',
+
     alignItems: 'flex-end',
-    marginTop: isPortrait ? 80 : 40,
-    gap: 80,
+
+    justifyContent: 'center',
+
+    marginTop:
+      isPortrait ? 70 : 40,
+
+    gap: isPortrait ? 42 : 60,
   },
 
   buttonWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
   },
 
   button: {
-    marginTop: 90,
     width: BUTTON_SIZE,
+
     height: BUTTON_SIZE,
+
     borderRadius: 999,
+
     justifyContent: 'center',
+
     alignItems: 'center',
-    elevation: 8,
+
+    elevation: 10,
+  },
+
+  acceptGlow: {
+    position: 'absolute',
+
+    width: BUTTON_SIZE + 18,
+
+    height: BUTTON_SIZE + 18,
+
+    borderRadius: 999,
+
+    backgroundColor:
+      'rgba(255,255,255,0.12)',
   },
 
   buttonText: {
     color: '#fff',
-    marginTop: 12,
-    fontSize: 15,
-    fontWeight: '600',
-  },
 
-  darkText: {
-    color: '#fff',
-    marginTop: 12,
-    fontSize: 15,
+    fontSize: 14,
+
     fontWeight: '600',
+
+    marginTop: 12,
   },
 });
