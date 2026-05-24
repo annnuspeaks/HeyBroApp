@@ -1,154 +1,258 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
-  TextInput,
-  Alert,
+  ScrollView,
+  Image,
+  Dimensions,
 } from 'react-native';
-import { ThemeContext } from '../theme/ThemeContext';
 
-const ProfileScreen = ({ navigation }: any) => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  const phone = '+91 9876543210';
-  const [name, setName] = useState('Harshvardhan');
-  const [isEditing] = useState(false);
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-  const handleLogout = () => {
-    navigation.replace('LoginScreen');
-  };
+const {width, height} = Dimensions.get('window');
+
+const isTablet = width >= 768;
+
+const menuItems1 = [
+  {
+    title: 'Edit Profile',
+    icon: 'person-outline',
+  },
+  {
+    title: 'Privacy',
+    icon: 'lock-closed-outline',
+  },
+  {
+    title: 'Chats',
+    icon: 'chatbubble-ellipses-outline',
+  },
+  {
+    title: 'Notifications',
+    icon: 'notifications-outline',
+  },
+  {
+    title: 'Storage',
+    icon: 'server-outline',
+  },
+  {
+    title: 'Linked Devices',
+    icon: 'desktop-outline',
+  },
+];
+
+const menuItems2 = [
+  {
+    title: 'Invite a Friend',
+    icon: 'heart-outline',
+  },
+  {
+    title: 'Help and Feedback',
+    icon: 'help-circle-outline',
+  },
+];
+
+export default function ProfileScreen() {
+  const renderItem = (item: any, isLogout = false) => (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.menuItem}>
+      
+      <View style={styles.leftRow}>
+        <Ionicons
+          name={item.icon}
+          size={24}
+          color={isLogout ? '#ff3b30' : '#ffffff'}
+        />
+
+        <Text
+          style={[
+            styles.menuText,
+            isLogout && {
+              color: '#ff3b30',
+            },
+          ]}>
+          {item.title}
+        </Text>
+      </View>
+
+      {!isLogout && (
+        <Ionicons
+          name="chevron-forward"
+          size={20}
+          color="rgba(255,255,255,0.4)"
+        />
+      )}
+    </TouchableOpacity>
+  );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* 🔥 PROFILE HEADER */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => Alert.alert('Image picker later')}>
+    <View style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 140,
+        }}>
+        
+        {/* PROFILE SECTION */}
+
+        <View style={styles.profileContainer}>
           <Image
-            source={{ uri: 'https://i.pravatar.cc/150?img=12' }}
+            source={{
+              uri: 'https://i.pravatar.cc/300',
+            }}
             style={styles.avatar}
           />
-        </TouchableOpacity>
 
-        {isEditing ? (
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            style={[styles.input, { color: theme.text }]}
-          />
-        ) : (
-          <Text style={[styles.name, { color: theme.text }]}>{name}</Text>
-        )}
-
-        <Text style={[styles.phone, { color: theme.subText }]}>{phone}</Text>
-      </View>
-
-      {/* 🔥 OPTIONS CARD */}
-      <View
-        style={[
-          styles.card,
-          {
-            backgroundColor:
-              theme.background === '#020617'
-                ? 'rgba(255,255,255,0.05)'
-                : 'rgba(0,0,0,0.05)',
-            borderColor: theme.border,
-          },
-        ]}
-      >
-        {/* EDIT PROFILE */}
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => navigation.navigate('EditProfile')}
-        >
-          <Text style={[styles.itemText, { color: theme.text }]}>
-            {isEditing ? 'Save' : 'Edit Profile'}
+          <Text style={styles.name}>
+            Harshvardhan
           </Text>
-        </TouchableOpacity>
 
-        {/* SETTINGS */}
-        <TouchableOpacity style={styles.item}>
-          <Text style={[styles.itemText, { color: theme.text }]}>Settings</Text>
-        </TouchableOpacity>
-
-        {/* / THEME TOGGLE */}
-        <TouchableOpacity style={styles.item} onPress={toggleTheme}>
-          <Text style={[styles.itemText, { color: theme.text }]}>
-            Toggle Theme 🌗
+          <Text style={styles.number}>
+            +91 9876543210
           </Text>
-        </TouchableOpacity>
+        </View>
+
+        {/* SETTINGS GROUP */}
+
+        <View style={styles.card}>
+          <Text style={styles.groupTitle}>
+            Settings
+          </Text>
+
+          {menuItems1.map((item, index) => (
+            <View key={index}>
+              {renderItem(item)}
+
+              {index !== menuItems1.length - 1 && (
+                <View style={styles.divider} />
+              )}
+            </View>
+          ))}
+        </View>
+
+        {/* SECOND GROUP */}
+
+        <View style={styles.card}>
+          {menuItems2.map((item, index) => (
+            <View key={index}>
+              {renderItem(item)}
+
+              {index !== menuItems2.length - 1 && (
+                <View style={styles.divider} />
+              )}
+            </View>
+          ))}
+        </View>
 
         {/* LOGOUT */}
-        <TouchableOpacity style={styles.item} onPress={handleLogout}>
-          <Text style={[styles.itemText, { color: 'red' }]}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+
+        <View style={styles.card}>
+          {renderItem(
+            {
+              title: 'Logout',
+              icon: 'log-out-outline',
+            },
+            true,
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
-};
-
-export default ProfileScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 80,
+
+    backgroundColor: '#020826',
   },
 
-
-  header: {
+  profileContainer: {
     alignItems: 'center',
-    marginBottom: 40,
+
+    marginTop: height * 0.06,
+    marginBottom: 35,
   },
 
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 12,
+    width: isTablet ? 120 : 95,
+    height: isTablet ? 120 : 95,
+
+    borderRadius: 100,
+
+    marginBottom: 18,
   },
 
   name: {
-    fontSize: 20,
+    color: '#ffffff',
+
+    fontSize: isTablet ? 34 : 28,
     fontWeight: '700',
   },
 
-  phone: {
-    marginTop: 4,
-    fontSize: 14,
+  number: {
+    color: 'rgba(255,255,255,0.6)',
+
+    marginTop: 8,
+
+    fontSize: isTablet ? 20 : 16,
   },
 
   card: {
-    borderRadius: 20,
+    marginHorizontal: 20,
+    marginBottom: 22,
+
+    borderRadius: 26,
+
+    overflow: 'hidden',
+
+    backgroundColor: 'rgba(255,255,255,0.03)',
+
     borderWidth: 1,
-    paddingVertical: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 5,
+    borderColor: 'rgba(255,255,255,0.05)',
   },
 
-  item: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'rgba(255,255,255,0.1)',
-  },
+  groupTitle: {
+    color: 'rgba(255,255,255,0.5)',
 
-  itemText: {
     fontSize: 15,
+
+    marginTop: 18,
+    marginLeft: 22,
+    marginBottom: 8,
+  },
+
+  menuItem: {
+    minHeight: 72,
+
+    paddingHorizontal: 22,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  leftRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  menuText: {
+    color: '#ffffff',
+
+    marginLeft: 18,
+
+    fontSize: isTablet ? 20 : 17,
     fontWeight: '500',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 16,
-    marginTop: 6,
+
+  divider: {
+    height: 1,
+
+    backgroundColor: 'rgba(255,255,255,0.05)',
+
+    marginLeft: 65,
   },
-  
 });
