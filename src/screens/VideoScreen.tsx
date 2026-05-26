@@ -29,7 +29,7 @@ const VideoScreen = () => {
   const videoCalls = [
     {
       id: '1',
-      name: 'Shreya Ji',
+      name: 'Shreya Rajput',
       type: 'Incoming',
       online: true,
       timestamp: new Date(),
@@ -38,55 +38,29 @@ const VideoScreen = () => {
 
     {
       id: '2',
-      name: 'Aham Deshwal',
+      name: 'Sundar Mehta',
       type: 'Missed',
       online: false,
       timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
+      image: 'https://i.pravatar.cc/150?img=7',
     },
 
     {
       id: '3',
-      name: 'Aham Deshwal',
+      name: 'Stuti Sethi',
       type: 'Missed',
       online: true,
       timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
+      image: 'https://i.pravatar.cc/150?img=31',
     },
     {
       id: '4',
-      name: 'Aham Deshwal',
-      type: 'Missed',
-      online: false,
+      name: 'Henrick Peterson',
+      type: 'Outgoing',
+      online: true,
       timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
+      image: 'https://i.pravatar.cc/150?img=6',
     },
-    {
-      id: '5',
-      name: 'Aham Deshwal',
-      type: 'Missed',
-      online: false,
-      timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
-    },
-    {
-      id: '6',
-      name: 'Aham Deshwal',
-      type: 'Missed',
-      online: false,
-      timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
-    },
-
-    {
-      id: '7',
-      name: 'Vishwajeet',
-      type: 'Incoming',
-      online: false,
-      timestamp: new Date(),
-      image: 'https://i.pravatar.cc/150?img=20',
-    },
-
   ];
 
   const filteredCalls =

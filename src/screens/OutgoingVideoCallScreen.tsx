@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -7,11 +7,11 @@ import {
   Animated,
   Dimensions,
   TouchableOpacity,
-  Easing,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Sound from 'react-native-sound';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,16 +25,57 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
   const { user } = route.params;
 
   // =========================
-  // ANIMATIONS
+  // STATES
   // =========================
 
-  const glowAnim = useRef(new Animated.Value(0.45)).current;
+  const [isMuted, setIsMuted] = useState(false);
 
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [isSpeakerOn, setIsSpeakerOn] = useState(false);
+
+  // =========================
+  // ANIMATIONS
+  // =========================
 
   const textAnim = useRef(new Animated.Value(0.4)).current;
 
   const islandAnim = useRef(new Animated.Value(1)).current;
+
+  // =========================
+  // RINGTONE
+  // =========================
+
+  const ringtoneRef = useRef<Sound | null>(null);
+
+  useEffect(() => {
+    Sound.setCategory('Playback');
+
+    const ringtone = new Sound(
+      'ring.mp3',
+      Sound.MAIN_BUNDLE,
+      error => {
+        if (error) {
+          console.log('OUTGOING RINGTONE ERROR => ', error);
+          return;
+        }
+
+        ringtone.setVolume(1);
+
+        ringtone.setNumberOfLoops(-1);
+
+        ringtone.play(success => {
+          console.log('OUTGOING RINGTONE PLAYING => ', success);
+        });
+      },
+    );
+
+    ringtoneRef.current = ringtone;
+
+    return () => {
+      ringtone.stop(() => {
+        ringtone.release();
+      });
+    };
+  }, []);
 
   // =========================
   // LOOP ANIMATION
@@ -43,38 +84,6 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     Animated.loop(
       Animated.parallel([
-        Animated.sequence([
-          Animated.timing(glowAnim, {
-            toValue: 0.9,
-            duration: 2400,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-
-          Animated.timing(glowAnim, {
-            toValue: 0.45,
-            duration: 2400,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-        ]),
-
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.03,
-            duration: 2400,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 2400,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-        ]),
-
         Animated.sequence([
           Animated.timing(textAnim, {
             toValue: 1,
@@ -111,7 +120,17 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const cancelCall = () => {
+    ringtoneRef.current?.stop();
+
     navigation.goBack();
+  };
+
+  const toggleMute = () => {
+    setIsMuted(prev => !prev);
+  };
+
+  const toggleSpeaker = () => {
+    setIsSpeakerOn(prev => !prev);
   };
 
   return (
@@ -140,17 +159,6 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
         {/* CENTER */}
 
         <View style={styles.centerContainer}>
-          {/* AVATAR GLOW */}
-
-          <Animated.View
-            style={[
-              {
-                opacity: glowAnim,
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
-          />
-
           {/* AVATAR */}
 
           <Animated.Image
@@ -185,9 +193,22 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
         <View style={styles.bottomContainer}>
           {/* MUTE */}
 
-          <TouchableOpacity activeOpacity={0.8}>
-            <View style={styles.secondaryButton}>
-              <Icon name="mic-off" size={26} color="#fff" />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={toggleMute}
+          >
+            <View
+              style={[
+                styles.secondaryButton,
+
+                isMuted && styles.activeMuteButton,
+              ]}
+            >
+              <Icon
+                name={isMuted ? 'mic-off' : 'mic'}
+                size={26}
+                color="#fff"
+              />
             </View>
           </TouchableOpacity>
 
@@ -211,9 +232,26 @@ const OutgoingVideoCallScreen = ({ route, navigation }: any) => {
 
           {/* SPEAKER */}
 
-          <TouchableOpacity activeOpacity={0.8}>
-            <View style={styles.secondaryButton}>
-              <Icon name="volume-high" size={26} color="#fff" />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={toggleSpeaker}
+          >
+            <View
+              style={[
+                styles.secondaryButton,
+
+                isSpeakerOn && styles.activeSpeakerButton,
+              ]}
+            >
+              <Icon
+                name={
+                  isSpeakerOn
+                    ? 'volume-high'
+                    : 'volume-medium'
+                }
+                size={26}
+                color="#fff"
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -266,8 +304,8 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: AVATAR_SIZE+50,
-    height: AVATAR_SIZE+50,
+    width: AVATAR_SIZE + 50,
+    height: AVATAR_SIZE + 50,
     borderRadius: 999,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.15)',
@@ -309,6 +347,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.12)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  activeMuteButton: {
+    backgroundColor: '#D97706',
+
+    shadowColor: '#F59E0B',
+
+    shadowOpacity: 0.9,
+
+    shadowRadius: 18,
+
+    elevation: 12,
+  },
+
+  activeSpeakerButton: {
+    backgroundColor: '#1f78fd',
+
+    shadowColor: '#22C55E',
+
+    shadowOpacity: 0.9,
+
+    shadowRadius: 18,
+
+    elevation: 12,
   },
 
   endCallButton: {
