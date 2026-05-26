@@ -8,12 +8,13 @@ import OtpScreen from './src/screens/OtpScreen';
 import ChatOpenScreen from './src/screens/ChatOpenScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-import ContactsScreen from './src/screens/ContactsScreen';
+import ContactsScreen from './src/screens/VoiceContactsScreen';
 import CallingScreen from './src/screens/CallingScreen';
 import VideoScreen from './src/screens/VideoScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
 import IncomingVideoCallScreen from './src/screens/IncomingVideoCallScreen';
 import OutgoingVideoCallScreen from './src/screens/OutgoingVideoCallScreen';
+import VideoContactsScreen from './src/screens/VideoContactsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,12 @@ const App = () => {
           <Stack.Screen
             name="OutgoingVideoCallScreen"
             component={OutgoingVideoCallScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="VideoContactsScreen"
+            component={VideoContactsScreen}
             options={{ headerShown: false }}
           />
 

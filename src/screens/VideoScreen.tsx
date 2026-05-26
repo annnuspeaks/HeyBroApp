@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -18,23 +13,14 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {ThemeContext} from '../theme/ThemeContext';
+import { ThemeContext } from '../theme/ThemeContext';
 
-const VideoCallItem = ({
-  item,
-  index,
-  theme,
-  navigation,
-}: any) => {
-  const translateY = useRef(
-    new Animated.Value(30),
-  ).current;
+const VideoCallItem = ({ item, index, theme, navigation }: any) => {
+  const translateY = useRef(new Animated.Value(30)).current;
 
-  const opacity = useRef(
-    new Animated.Value(0),
-  ).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -73,14 +59,11 @@ const VideoCallItem = ({
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate(
-          'OutgoingVideoCallScreen',
-          {
-            user: item,
-          },
-        )
+        navigation.navigate('OutgoingVideoCallScreen', {
+          user: item,
+        })
       }
-      style={({pressed}) => [
+      style={({ pressed }) => [
         {
           transform: [
             {
@@ -88,35 +71,36 @@ const VideoCallItem = ({
             },
           ],
         },
-      ]}>
+      ]}
+    >
       <Animated.View
         style={[
           styles.card,
 
           {
             backgroundColor:
-              theme.background ===
-              '#020617'
+              theme.background === '#020617'
                 ? 'rgba(255,255,255,0.05)'
                 : '#fff',
 
             borderColor:
-              theme.background ===
-              '#020617'
+              theme.background === '#020617'
                 ? 'rgba(255,255,255,0.08)'
                 : 'rgba(0,0,0,0.06)',
 
             opacity,
 
-            transform: [{translateY}],
+            transform: [{ translateY }],
           },
-        ]}>
+        ]}
+      >
         {/* AVATAR */}
 
         <View
           style={{
             position: 'relative',
-          }}>
+          }}
+        >
           <Image
             source={{
               uri: item.image,
@@ -124,42 +108,34 @@ const VideoCallItem = ({
             style={styles.avatar}
           />
 
-          {item.online && (
-            <View style={styles.onlineDot} />
-          )}
+          {item.online && <View style={styles.onlineDot} />}
         </View>
 
         {/* INFO */}
 
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Text
             style={[
               styles.name,
               {
                 color: theme.text,
               },
-            ]}>
+            ]}
+          >
             {item.name}
           </Text>
 
           <View style={styles.row}>
-            <Icon
-              name={getIcon()}
-              size={14}
-              color={getIconColor()}
-            />
+            <Icon name={getIcon()} size={14} color={getIconColor()} />
 
             <Text
               style={[
                 styles.callType,
                 {
-                  color:
-                    item.type ===
-                    'Missed'
-                      ? '#EF4444'
-                      : '#8B5CF6',
+                  color: item.type === 'Missed' ? '#EF4444' : '#8B5CF6',
                 },
-              ]}>
+              ]}
+            >
               {item.type}
             </Text>
           </View>
@@ -170,17 +146,17 @@ const VideoCallItem = ({
         <View
           style={{
             alignItems: 'flex-end',
-          }}>
+          }}
+        >
           <Text
             style={[
               styles.time,
               {
                 color: theme.subText,
               },
-            ]}>
-            {new Date(
-              item.timestamp,
-            ).toLocaleTimeString([], {
+            ]}
+          >
+            {new Date(item.timestamp).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
             })}
@@ -189,18 +165,12 @@ const VideoCallItem = ({
           <TouchableOpacity
             style={styles.callButton}
             onPress={() =>
-              navigation.navigate(
-                'OutgoingVideoCallScreen',
-                {
-                  user: item,
-                },
-              )
-            }>
-            <Icon
-              name="videocam"
-              size={18}
-              color="#fff"
-            />
+              navigation.navigate('OutgoingVideoCallScreen', {
+                user: item,
+              })
+            }
+          >
+            <Icon name="videocam" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -209,24 +179,15 @@ const VideoCallItem = ({
 };
 
 const VideoScreen = () => {
-  const {theme} =
-    useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
-  const navigation =
-    useNavigation<any>();
+  const navigation = useNavigation<any>();
 
-  const fadeAnim = useRef(
-    new Animated.Value(0),
-  ).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const toggleAnim = useRef(
-    new Animated.Value(0),
-  ).current;
+  const toggleAnim = useRef(new Animated.Value(0)).current;
 
-  const [activeTab, setActiveTab] =
-    useState<'All' | 'Missed'>(
-      'All',
-    );
+  const [activeTab, setActiveTab] = useState<'All' | 'Missed'>('All');
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -238,10 +199,7 @@ const VideoScreen = () => {
 
   useEffect(() => {
     Animated.spring(toggleAnim, {
-      toValue:
-        activeTab === 'All'
-          ? 0
-          : 1,
+      toValue: activeTab === 'All' ? 0 : 1,
 
       useNativeDriver: true,
 
@@ -258,8 +216,7 @@ const VideoScreen = () => {
       type: 'Incoming',
       online: true,
       timestamp: new Date(),
-      image:
-        'https://i.pravatar.cc/150?img=10',
+      image: 'https://i.pravatar.cc/150?img=10',
     },
 
     {
@@ -267,11 +224,8 @@ const VideoScreen = () => {
       name: 'Sundar Mehta',
       type: 'Missed',
       online: false,
-      timestamp: new Date(
-        '2026-05-25',
-      ),
-      image:
-        'https://i.pravatar.cc/150?img=7',
+      timestamp: new Date('2026-05-25'),
+      image: 'https://i.pravatar.cc/150?img=7',
     },
 
     {
@@ -279,11 +233,8 @@ const VideoScreen = () => {
       name: 'Stuti Sethi',
       type: 'Missed',
       online: true,
-      timestamp: new Date(
-        '2026-05-24',
-      ),
-      image:
-        'https://i.pravatar.cc/150?img=31',
+      timestamp: new Date('2026-05-24'),
+      image: 'https://i.pravatar.cc/150?img=31',
     },
 
     {
@@ -291,11 +242,8 @@ const VideoScreen = () => {
       name: 'Henrick Peterson',
       type: 'Outgoing',
       online: true,
-      timestamp: new Date(
-        '2026-05-23',
-      ),
-      image:
-        'https://i.pravatar.cc/150?img=6',
+      timestamp: new Date('2026-05-23'),
+      image: 'https://i.pravatar.cc/150?img=6',
     },
 
     {
@@ -303,107 +251,75 @@ const VideoScreen = () => {
       name: 'Aham Deshwal',
       type: 'Outgoing',
       online: true,
-      timestamp: new Date(
-        '2026-05-18',
-      ),
-      image:
-        'https://i.pravatar.cc/150?img=25',
+      timestamp: new Date('2026-05-18'),
+      image: 'https://i.pravatar.cc/150?img=25',
     },
   ];
 
   const filteredCalls =
     activeTab === 'Missed'
-      ? videoCalls.filter(
-          item =>
-            item.type ===
-            'Missed',
-        )
+      ? videoCalls.filter(item => item.type === 'Missed')
       : videoCalls;
 
-  const getGroupLabel = (
-    date: Date,
-  ) => {
+  const getGroupLabel = (date: Date) => {
     const today = new Date();
 
     const yesterday = new Date();
 
-    yesterday.setDate(
-      today.getDate() - 1,
-    );
+    yesterday.setDate(today.getDate() - 1);
 
     const input = new Date(date);
 
-    if (
-      input.toDateString() ===
-      today.toDateString()
-    ) {
+    if (input.toDateString() === today.toDateString()) {
       return 'Today';
     }
 
-    if (
-      input.toDateString() ===
-      yesterday.toDateString()
-    ) {
+    if (input.toDateString() === yesterday.toDateString()) {
       return 'Yesterday';
     }
 
-    const diff =
-      (today.getTime() -
-        input.getTime()) /
-      (1000 * 60 * 60 * 24);
+    const diff = (today.getTime() - input.getTime()) / (1000 * 60 * 60 * 24);
 
     if (diff < 7) {
-      return input.toLocaleDateString(
-        'en-US',
-        {
-          weekday: 'long',
-        },
-      );
+      return input.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
     }
 
-    return input.toLocaleDateString(
-      'en-US',
-      {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      },
-    );
+    return input.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
   };
 
-  const groupedCalls =
-    filteredCalls.reduce(
-      (groups: any, item) => {
-        const label =
-          getGroupLabel(
-            item.timestamp,
-          );
+  const groupedCalls = filteredCalls.reduce((groups: any, item) => {
+    const label = getGroupLabel(item.timestamp);
 
-        if (!groups[label]) {
-          groups[label] = [];
-        }
+    if (!groups[label]) {
+      groups[label] = [];
+    }
 
-        groups[label].push(item);
+    groups[label].push(item);
 
-        return groups;
-      },
-      {},
-    );
+    return groups;
+  }, {});
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor:
-            theme.background,
+          backgroundColor: theme.background,
         },
-      ]}>
+      ]}
+    >
       <Animated.View
         style={{
           opacity: fadeAnim,
           flex: 1,
-        }}>
+        }}
+      >
         {/* HEADER */}
 
         <View style={styles.headerRow}>
@@ -412,10 +328,10 @@ const VideoScreen = () => {
               style={[
                 styles.header,
                 {
-                  color:
-                    theme.text,
+                  color: theme.text,
                 },
-              ]}>
+              ]}
+            >
               Video Calls
             </Text>
 
@@ -423,59 +339,40 @@ const VideoScreen = () => {
               style={[
                 styles.subHeader,
                 {
-                  color:
-                    theme.subText,
+                  color: theme.subText,
                 },
-              ]}>
+              ]}
+            >
               Recent video activity
             </Text>
           </View>
 
           <TouchableOpacity
-            style={styles.videoFab}>
-            <Icon
-              name="videocam"
-              size={18}
-              color="#fff"
-            />
+            style={styles.videoFab}
+            onPress={() => navigation.navigate('VideoContactsScreen')}
+          >
+            <Icon name="videocam" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
 
         {/* TOGGLE */}
 
         <View style={styles.segmentOuter}>
-          <View
-            style={
-              styles.segmentContainer
-            }>
+          <View style={styles.segmentContainer}>
             <Animated.View
               style={[
                 styles.activePill,
 
                 {
-                  backgroundColor:
-                    activeTab ===
-                    'All'
-                      ? '#8B5CF6'
-                      : '#EF4444',
+                  backgroundColor: activeTab === 'All' ? '#8B5CF6' : '#EF4444',
 
                   transform: [
                     {
-                      translateX:
-                        toggleAnim.interpolate(
-                          {
-                            inputRange: [
-                              0,
-                              1,
-                            ],
+                      translateX: toggleAnim.interpolate({
+                        inputRange: [0, 1],
 
-                            outputRange:
-                              [
-                                0,
-                                78,
-                              ],
-                          },
-                        ),
+                        outputRange: [0, 78],
+                      }),
                     },
                   ],
                 },
@@ -483,41 +380,31 @@ const VideoScreen = () => {
             />
 
             <TouchableOpacity
-              style={
-                styles.segmentButton
-              }
-              onPress={() =>
-                setActiveTab('All')
-              }>
+              style={styles.segmentButton}
+              onPress={() => setActiveTab('All')}
+            >
               <Text
                 style={[
                   styles.segmentText,
 
-                  activeTab ===
-                    'All' &&
-                    styles.activeSegmentText,
-                ]}>
+                  activeTab === 'All' && styles.activeSegmentText,
+                ]}
+              >
                 All
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={
-                styles.segmentButton
-              }
-              onPress={() =>
-                setActiveTab(
-                  'Missed',
-                )
-              }>
+              style={styles.segmentButton}
+              onPress={() => setActiveTab('Missed')}
+            >
               <Text
                 style={[
                   styles.segmentText,
 
-                  activeTab ===
-                    'Missed' &&
-                    styles.activeSegmentText,
-                ]}>
+                  activeTab === 'Missed' && styles.activeSegmentText,
+                ]}
+              >
                 Missed
               </Text>
             </TouchableOpacity>
@@ -527,13 +414,9 @@ const VideoScreen = () => {
         {/* LIST */}
 
         <FlatList
-          data={Object.keys(
-            groupedCalls,
-          )}
+          data={Object.keys(groupedCalls)}
           keyExtractor={item => item}
-          showsVerticalScrollIndicator={
-            false
-          }
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingBottom: 120,
           }}
@@ -544,35 +427,19 @@ const VideoScreen = () => {
               }}
             />
           )}
-          renderItem={({
-            item: section,
-          }) => (
+          renderItem={({ item: section }) => (
             <View>
-              <Text
-                style={
-                  styles.groupLabel
-                }>
-                {section}
-              </Text>
+              <Text style={styles.groupLabel}>{section}</Text>
 
-              {groupedCalls[
-                section
-              ].map(
-                (
-                  call: any,
-                  index: number,
-                ) => (
-                  <VideoCallItem
-                    key={call.id}
-                    item={call}
-                    index={index}
-                    theme={theme}
-                    navigation={
-                      navigation
-                    }
-                  />
-                ),
-              )}
+              {groupedCalls[section].map((call: any, index: number) => (
+                <VideoCallItem
+                  key={call.id}
+                  item={call}
+                  index={index}
+                  theme={theme}
+                  navigation={navigation}
+                />
+              ))}
             </View>
           )}
         />
@@ -592,8 +459,7 @@ const styles = StyleSheet.create({
 
   headerRow: {
     flexDirection: 'row',
-    justifyContent:
-      'space-between',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 18,
   },
@@ -617,19 +483,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#8B5CF6',
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#8B5CF6',
-
     shadowOpacity: 0.25,
-
     shadowRadius: 8,
-
     elevation: 4,
   },
 
   segmentOuter: {
     alignItems: 'center',
-
     marginBottom: 22,
   },
 
@@ -637,56 +498,36 @@ const styles = StyleSheet.create({
     width: 170,
     height: 44,
     borderRadius: 22,
-    backgroundColor:
-      'rgba(255,255,255,0.06)',
-
+    backgroundColor: 'rgba(255,255,255,0.06)',
     flexDirection: 'row',
-
     position: 'relative',
-
     overflow: 'hidden',
-
     borderWidth: 1,
-
-    borderColor:
-      'rgba(255,255,255,0.05)',
+    borderColor: 'rgba(255,255,255,0.05)',
   },
 
   activePill: {
     position: 'absolute',
-
     width: 85,
-
     height: 38,
-
     borderRadius: 19,
-
     top: 3,
-
     left: 3,
-
     shadowOpacity: 0.3,
-
     shadowRadius: 8,
-
     elevation: 4,
   },
 
   segmentButton: {
     flex: 1,
-
     justifyContent: 'center',
-
     alignItems: 'center',
-
     zIndex: 2,
   },
 
   segmentText: {
     color: '#94A3B8',
-
     fontSize: 14,
-
     fontWeight: '600',
   },
 
@@ -696,111 +537,74 @@ const styles = StyleSheet.create({
 
   groupLabel: {
     color: '#94A3B8',
-
     fontSize: 13,
-
     fontWeight: '700',
-
     marginBottom: 10,
-
     marginTop: 12,
-
     letterSpacing: 1,
-
     textTransform: 'uppercase',
   },
 
   card: {
     flexDirection: 'row',
-
     alignItems: 'center',
-
     paddingVertical: 14,
-
     paddingHorizontal: 16,
-
     borderRadius: 22,
-
     marginBottom: 10,
-
     borderWidth: 1,
   },
 
   avatar: {
     width: 62,
-
     height: 62,
-
     borderRadius: 31,
-
     marginRight: 14,
   },
 
   onlineDot: {
     position: 'absolute',
-
     bottom: 2,
-
     right: 14,
-
     width: 13,
-
     height: 13,
-
     borderRadius: 7,
-
     borderWidth: 2,
-
     borderColor: '#020617',
-
     backgroundColor: '#22C55E',
   },
 
   name: {
     fontSize: 16,
-
     fontWeight: '600',
   },
 
   row: {
     flexDirection: 'row',
-
     alignItems: 'center',
-
     marginTop: 5,
   },
 
   callType: {
     marginLeft: 5,
-
     fontSize: 13,
   },
 
   time: {
     fontSize: 12,
-
     marginBottom: 12,
   },
 
   callButton: {
     width: 38,
-
     height: 38,
-
     borderRadius: 20,
-
     backgroundColor: '#8B5CF6',
-
     justifyContent: 'center',
-
     alignItems: 'center',
-
     shadowColor: '#8B5CF6',
-
     shadowOpacity: 0.35,
-
     shadowRadius: 8,
-
     elevation: 5,
   },
 });
