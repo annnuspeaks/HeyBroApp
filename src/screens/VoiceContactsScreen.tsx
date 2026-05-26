@@ -68,7 +68,7 @@ const ContactsScreen = () => {
               },
             ]}
             onPress={() =>
-              navigation.navigate('CallingScreen', {
+              navigation.navigate('OutgoingVoiceCallScreen', {
                 user: item,
               })
             }>

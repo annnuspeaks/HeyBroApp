@@ -9,7 +9,7 @@ import ChatOpenScreen from './src/screens/ChatOpenScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ContactsScreen from './src/screens/VoiceContactsScreen';
-import CallingScreen from './src/screens/CallingScreen';
+import OutgoingVoiceCallScreen from './src/screens/OutgoingVoiceCallScreen';
 import VideoScreen from './src/screens/VideoScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
 import IncomingVideoCallScreen from './src/screens/IncomingVideoCallScreen';
@@ -67,8 +67,8 @@ const App = () => {
           />
 
           <Stack.Screen
-            name="CallingScreen"
-            component={CallingScreen}
+            name="OutgoingVoiceCallScreen"
+            component={OutgoingVoiceCallScreen}
             options={{ headerShown: false }}
           />
 
