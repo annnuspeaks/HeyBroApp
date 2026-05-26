@@ -13,6 +13,7 @@ import CallingScreen from './src/screens/CallingScreen';
 import VideoScreen from './src/screens/VideoScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
 import IncomingVideoCallScreen from './src/screens/IncomingVideoCallScreen';
+import OutgoingVideoCallScreen from './src/screens/OutgoingVideoCallScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,12 @@ const App = () => {
           <Stack.Screen
             name="IncomingVideoCallScreen"
             component={IncomingVideoCallScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="OutgoingVideoCallScreen"
+            component={OutgoingVideoCallScreen}
             options={{ headerShown: false }}
           />
 

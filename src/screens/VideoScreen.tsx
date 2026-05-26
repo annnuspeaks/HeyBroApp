@@ -44,6 +44,49 @@ const VideoScreen = () => {
       timestamp: new Date(),
       image: 'https://i.pravatar.cc/150?img=20',
     },
+
+    {
+      id: '3',
+      name: 'Aham Deshwal',
+      type: 'Missed',
+      online: true,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=20',
+    },
+    {
+      id: '4',
+      name: 'Aham Deshwal',
+      type: 'Missed',
+      online: false,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=20',
+    },
+    {
+      id: '5',
+      name: 'Aham Deshwal',
+      type: 'Missed',
+      online: false,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=20',
+    },
+    {
+      id: '6',
+      name: 'Aham Deshwal',
+      type: 'Missed',
+      online: false,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=20',
+    },
+
+    {
+      id: '7',
+      name: 'Vishwajeet',
+      type: 'Incoming',
+      online: false,
+      timestamp: new Date(),
+      image: 'https://i.pravatar.cc/150?img=20',
+    },
+
   ];
 
   const filteredCalls =
@@ -161,7 +204,7 @@ const VideoScreen = () => {
             ]}
             onPress={() =>
               navigation.navigate(
-                'IncomingVideoCallScreen',
+                'OutgoingVideoCallScreen',
                 {
                   user: item,
                 },
