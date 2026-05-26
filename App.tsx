@@ -9,6 +9,7 @@ import ChatOpenScreen from './src/screens/ChatOpenScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ContactsScreen from './src/screens/VoiceContactsScreen';
+import IncomingVoiceCallScreen from './src/screens/IncomingVoiceCallScreen';
 import OutgoingVoiceCallScreen from './src/screens/OutgoingVoiceCallScreen';
 import VideoScreen from './src/screens/VideoScreen';
 import VideoCallScreen from './src/screens/VideoCallScreen';
@@ -63,6 +64,12 @@ const App = () => {
           <Stack.Screen
             name="ContactsScreen"
             component={ContactsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="IncomingVoiceCallScreen"
+            component={IncomingVoiceCallScreen}
             options={{ headerShown: false }}
           />
 

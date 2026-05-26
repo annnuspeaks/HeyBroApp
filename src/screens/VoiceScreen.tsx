@@ -115,7 +115,7 @@ const CallItem = ({ item, index, theme, navigation }: any) => {
           <TouchableOpacity
             style={styles.smallCallButton}
             onPress={() =>
-              navigation.navigate('OutgoingVoiceCallScreen', {
+              navigation.navigate('IncomingVoiceCallScreen', {
                 user: item,
               })
             }
