@@ -170,7 +170,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const acceptCall = () => {
-    navigation.replace('CallingScreen', {
+    navigation.replace('VoiceCallScreen', {
       user,
     });
   };
