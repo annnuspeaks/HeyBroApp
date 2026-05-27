@@ -102,7 +102,14 @@ export default function ProfileScreen({ navigation, route }: any) {
         }
 
         if (item.title === 'Terms and Conditions') {
-          navigation.navigate('TermsAndConditionsScreen');
+          navigation.navigate('TermsAndConditions');
+        }
+
+        if (item.title === 'Logout') {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+          });
         }
       }}
     >
