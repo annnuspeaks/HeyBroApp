@@ -19,6 +19,8 @@ import OutgoingVideoCallScreen from './src/screens/OutgoingVideoCallScreen';
 import VideoContactsScreen from './src/screens/VideoContactsScreen';
 import MyProfileQRScreen from './src/screens/MyProfileQRScreen';
 import TermsAndConditionsScreen from './src/screens/TermsAndConditionsScreen';
+import InviteFriendsScreen from './src/screens/InviteFriendsScreen';
+import HelpAndFeedbackScreen from './src/screens/HelpAndFeedbackScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +68,18 @@ const App = () => {
           <Stack.Screen
             name="TermsAndConditionsScreen"
             component={TermsAndConditionsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="InviteFriendsScreen"
+            component={InviteFriendsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="HelpAndFeedbackScreen"
+            component={HelpAndFeedbackScreen}
             options={{ headerShown: false }}
           />
 

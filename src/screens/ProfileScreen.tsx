@@ -101,8 +101,16 @@ export default function ProfileScreen({ navigation, route }: any) {
           });
         }
 
+        if (item.title === 'Invite a Friend') {
+          navigation.navigate('InviteFriendsScreen');
+        }
+
+        if (item.title === 'Help and Feedback') {
+          navigation.navigate('HelpAndFeedbackScreen');
+        }
+
         if (item.title === 'Terms and Conditions') {
-          navigation.navigate('TermsAndConditions');
+          navigation.navigate('TermsAndConditionsScreen');
         }
 
         if (item.title === 'Logout') {
