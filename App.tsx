@@ -21,6 +21,7 @@ import MyProfileQRScreen from './src/screens/MyProfileQRScreen';
 import TermsAndConditionsScreen from './src/screens/TermsAndConditionsScreen';
 import InviteFriendsScreen from './src/screens/InviteFriendsScreen';
 import HelpAndFeedbackScreen from './src/screens/HelpAndFeedbackScreen';
+import LinkedDevicesScreen from './src/screens/LinkedDevicesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,8 +67,8 @@ const App = () => {
           />
 
           <Stack.Screen
-            name="TermsAndConditionsScreen"
-            component={TermsAndConditionsScreen}
+            name="LinkedDevicesScreen"
+            component={LinkedDevicesScreen}
             options={{ headerShown: false }}
           />
 
@@ -80,6 +81,12 @@ const App = () => {
           <Stack.Screen
             name="HelpAndFeedbackScreen"
             component={HelpAndFeedbackScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="TermsAndConditionsScreen"
+            component={TermsAndConditionsScreen}
             options={{ headerShown: false }}
           />
 

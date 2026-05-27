@@ -101,6 +101,10 @@ export default function ProfileScreen({ navigation, route }: any) {
           });
         }
 
+        if (item.title === 'Linked Devices') {
+          navigation.navigate('LinkedDevicesScreen');
+        }
+
         if (item.title === 'Invite a Friend') {
           navigation.navigate('InviteFriendsScreen');
         }
