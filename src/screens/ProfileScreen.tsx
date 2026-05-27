@@ -101,6 +101,10 @@ export default function ProfileScreen({ navigation, route }: any) {
           });
         }
 
+        if (item.title === 'Notifications') {
+          navigation.navigate('NotificationsScreen');
+        }
+
         if (item.title === 'Storage') {
           navigation.navigate('StorageScreen');
         }

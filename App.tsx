@@ -23,6 +23,7 @@ import InviteFriendsScreen from './src/screens/InviteFriendsScreen';
 import HelpAndFeedbackScreen from './src/screens/HelpAndFeedbackScreen';
 import LinkedDevicesScreen from './src/screens/LinkedDevicesScreen';
 import StorageScreen from './src/screens/StorageScreen';
+import NotificationsScreen from './src/screens/NotificationsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,12 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+            <Stack.Screen
+            name="NotificationsScreen"
+            component={NotificationsScreen}
             options={{ headerShown: false }}
           />
 
