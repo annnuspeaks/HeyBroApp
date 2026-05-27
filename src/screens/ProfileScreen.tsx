@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
- StyleSheet,
+  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -102,7 +102,7 @@ export default function ProfileScreen({ navigation, route }: any) {
         }
 
         if (item.title === 'Terms and Conditions') {
-          Linking.openURL('https://example.com');
+          navigation.navigate('TermsAndConditionsScreen');
         }
       }}
     >

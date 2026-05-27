@@ -18,12 +18,12 @@ import IncomingVideoCallScreen from './src/screens/IncomingVideoCallScreen';
 import OutgoingVideoCallScreen from './src/screens/OutgoingVideoCallScreen';
 import VideoContactsScreen from './src/screens/VideoContactsScreen';
 import MyProfileQRScreen from './src/screens/MyProfileQRScreen';
+import TermsAndConditionsScreen from './src/screens/TermsAndConditionsScreen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    
     <ThemeProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="LoginScreen">
@@ -60,6 +60,12 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="TermsAndConditionsScreen"
+            component={TermsAndConditionsScreen}
             options={{ headerShown: false }}
           />
 
@@ -122,7 +128,6 @@ const App = () => {
             component={VideoContactsScreen}
             options={{ headerShown: false }}
           />
-
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
