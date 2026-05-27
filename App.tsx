@@ -25,6 +25,7 @@ import LinkedDevicesScreen from './src/screens/LinkedDevicesScreen';
 import StorageScreen from './src/screens/StorageScreen';
 import NotificationsScreen from './src/screens/NotificationsScreen';
 import ChatSettingScreen from './src/screens/ChatSettingScreen';
+import PrivacyScreen from './src/screens/PrivacyScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,12 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="PrivacyScreen"
+            component={PrivacyScreen}
             options={{ headerShown: false }}
           />
 
