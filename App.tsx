@@ -24,6 +24,7 @@ import HelpAndFeedbackScreen from './src/screens/HelpAndFeedbackScreen';
 import LinkedDevicesScreen from './src/screens/LinkedDevicesScreen';
 import StorageScreen from './src/screens/StorageScreen';
 import NotificationsScreen from './src/screens/NotificationsScreen';
+import ChatSettingScreen from './src/screens/ChatSettingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +69,13 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
-            <Stack.Screen
+          <Stack.Screen
+            name="ChatSettingScreen"
+            component={ChatSettingScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
             name="NotificationsScreen"
             component={NotificationsScreen}
             options={{ headerShown: false }}

@@ -101,6 +101,10 @@ export default function ProfileScreen({ navigation, route }: any) {
           });
         }
 
+        if (item.title === 'Chats') {
+          navigation.navigate('ChatSettingScreen');
+        }
+
         if (item.title === 'Notifications') {
           navigation.navigate('NotificationsScreen');
         }
