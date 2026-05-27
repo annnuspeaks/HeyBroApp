@@ -37,6 +37,7 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.ignoreWords": [
-        "incall"
+        "incall",
+        "qrcode"
     ]
 }

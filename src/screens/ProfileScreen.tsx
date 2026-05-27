@@ -158,7 +158,7 @@ export default function ProfileScreen({ navigation, route }: any) {
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.qrButton}
-              onPress={() => navigation.navigate('MyProfileQR')}
+              onPress={() => navigation.navigate('MyProfileQRScreen')}
             >
               <Ionicons name="qr-code-outline" size={18} color="#fff" />
             </TouchableOpacity>

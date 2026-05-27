@@ -17,6 +17,7 @@ import VideoCallScreen from './src/screens/VideoCallScreen';
 import IncomingVideoCallScreen from './src/screens/IncomingVideoCallScreen';
 import OutgoingVideoCallScreen from './src/screens/OutgoingVideoCallScreen';
 import VideoContactsScreen from './src/screens/VideoContactsScreen';
+import MyProfileQRScreen from './src/screens/MyProfileQRScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,12 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="MyProfileQRScreen"
+            component={MyProfileQRScreen}
             options={{ headerShown: false }}
           />
 
