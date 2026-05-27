@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
   controlBtnActive: {
     shadowOpacity: 0.9,
     shadowRadius: 18,
-    elevation: 18,
+    elevation: 32,
     transform: [{ scale: 1.08 }],
   },
 

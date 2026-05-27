@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
+ StyleSheet,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -19,7 +19,7 @@ const isTablet = width >= 768;
 
 const menuItems1 = [
   {
-    title: 'Edit Profile',
+    title: 'Account',
     icon: 'person-outline',
   },
   {
@@ -52,6 +52,10 @@ const menuItems2 = [
   {
     title: 'Help and Feedback',
     icon: 'help-circle-outline',
+  },
+  {
+    title: 'Terms and Conditions',
+    icon: 'document-text-outline',
   },
 ];
 
@@ -96,6 +100,10 @@ export default function ProfileScreen({ navigation, route }: any) {
             },
           });
         }
+
+        if (item.title === 'Terms and Conditions') {
+          Linking.openURL('https://example.com');
+        }
       }}
     >
       <View style={styles.leftRow}>
@@ -139,26 +147,32 @@ export default function ProfileScreen({ navigation, route }: any) {
         {/* PROFILE */}
 
         <View style={styles.profileContainer}>
-          <Image
-            source={{
-              uri: profile.image,
-            }}
-            style={styles.avatar}
-          />
+          <View style={styles.avatarWrapper}>
+            <Image
+              source={{
+                uri: profile.image,
+              }}
+              style={styles.avatar}
+            />
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.qrButton}
+              onPress={() => navigation.navigate('MyProfileQR')}
+            >
+              <Ionicons name="qr-code-outline" size={18} color="#fff" />
+            </TouchableOpacity>
+          </View>
 
           <Text style={styles.name}>{profile.name}</Text>
 
           <Text style={styles.number}>{profile.phone}</Text>
-
-          {/* BIO */}
 
           {!!profile.bio && (
             <View style={styles.bioBox}>
               <Text style={styles.bioText}>“{profile.bio}”</Text>
             </View>
           )}
-
-          {/* WEBSITE */}
 
           {!!profile.website && (
             <TouchableOpacity
@@ -216,6 +230,18 @@ export default function ProfileScreen({ navigation, route }: any) {
             true,
           )}
         </View>
+
+        {/* FOOTER */}
+
+        <View style={styles.footerContainer}>
+          <Text style={styles.fromText}>from</Text>
+
+          <Image
+            source={require('../assets/brand-logo.png')}
+            style={styles.tasLogo}
+            resizeMode="contain"
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -237,6 +263,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
+  avatarWrapper: {
+    position: 'relative',
+  },
+
   avatar: {
     width: isTablet ? 120 : 95,
     height: isTablet ? 120 : 95,
@@ -247,6 +277,26 @@ const styles = StyleSheet.create({
 
     borderWidth: 2,
     borderColor: '#7C3AED',
+  },
+
+  qrButton: {
+    position: 'absolute',
+
+    right: -2,
+    bottom: 12,
+
+    width: 32,
+    height: 32,
+
+    borderRadius: 16,
+
+    backgroundColor: '#8B5CF6',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    borderWidth: 2,
+    borderColor: '#020826',
   },
 
   name: {
@@ -375,5 +425,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.05)',
 
     marginLeft: 65,
+  },
+
+  footerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    marginTop: 10,
+    marginBottom: 50,
+  },
+
+  fromText: {
+    color: 'rgba(255,255,255,0.45)',
+
+    fontSize: 14,
+
+    marginBottom: 10,
+
+    letterSpacing: 1,
+  },
+
+  tasLogo: {
+    width: 110,
+    height: 55,
   },
 });

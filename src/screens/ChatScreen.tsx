@@ -263,7 +263,7 @@ const ChatScreen = () => {
         ListEmptyComponent={() => (
           <View style={{ alignItems: 'center', marginTop: 100 }}>
             <Text style={{ color: theme.text, opacity: 0.5 }}>
-               Start a new conversation 🚀
+              Start a new conversation 🚀
             </Text>
           </View>
         )}
@@ -287,29 +287,77 @@ const ChatScreen = () => {
               Active Now
             </Text>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {[1, 2, 3].map(i => (
-                <View key={i} style={styles.activeUser}>
-                  <View style={{ position: 'relative' }}>
-                    <Image
-                      source={{ uri: `https://i.pravatar.cc/150?img=${i}` }}
-                      style={styles.activeAvatar}
-                    />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingRight: 10 }}
+            >
+              {[
+                {
+                  id: '1',
+                  name: 'Shreya Ji',
+                  image: 'https://i.pravatar.cc/150?img=1',
+                },
+                {
+                  id: '2',
+                  name: 'Rohan',
+                  image: 'https://i.pravatar.cc/150?img=2',
+                },
+                {
+                  id: '3',
+                  name: 'Aaditya',
+                  image: 'https://i.pravatar.cc/150?img=3',
+                },
+              ].map(user => (
+                <Pressable
+                  key={user.id}
+                  onPress={() =>
+                    navigation.navigate('ChatOpen', {
+                      user: {
+                        id: user.id,
+                        name: user.name,
+                        image: user.image,
+                        message: '',
+                        time: '',
+                        unread: 0,
+                      },
+                    })
+                  }
+                  style={({ pressed }) => ({
+                    transform: [{ scale: pressed ? 0.94 : 1 }],
+                    opacity: pressed ? 0.85 : 1,
+                  })}
+                >
+                  <View style={styles.activeUser}>
+                    <View style={{ position: 'relative' }}>
+                      <Image
+                        source={{ uri: user.image }}
+                        style={styles.activeAvatar}
+                      />
 
-                    <View
-                      style={[
-                        styles.onlineDotActive,
-                        {
-                          borderColor: theme.background,
-                        },
-                      ]}
-                    />
+                      <View
+                        style={[
+                          styles.onlineDotActive,
+                          {
+                            borderColor: theme.background,
+                          },
+                        ]}
+                      />
+                    </View>
                   </View>
-                </View>
+                </Pressable>
               ))}
             </ScrollView>
 
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                {
+                  color: theme.text,
+                  marginTop: 26,
+                },
+              ]}
+            >
               Recent Chats
             </Text>
           </>

@@ -351,11 +351,27 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         </View>
 
         <View style={styles.rightIcons}>
-          <TouchableOpacity style={styles.iconBtn}>
+          <TouchableOpacity
+            style={styles.iconBtn}
+            activeOpacity={0.7}
+            onPress={() =>
+              navigation.navigate('OutgoingVoiceCallScreen', {
+                user,
+              })
+            }
+          >
             <Icon name="call-outline" size={22} color={theme.text} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconBtn}>
+          <TouchableOpacity
+            style={styles.iconBtn}
+            activeOpacity={0.7}
+            onPress={() =>
+              navigation.navigate('OutgoingVideoCallScreen', {
+                user,
+              })
+            }
+          >
             <Icon name="videocam-outline" size={24} color={theme.text} />
           </TouchableOpacity>
         </View>
