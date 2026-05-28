@@ -14,6 +14,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {COLORS} from '../theme/colors';
 const { width, height } = Dimensions.get('window');
 const isPortrait = height > width;
 const BUTTON_SIZE = isPortrait ? width * 0.12 : height * 0.11;
@@ -414,7 +415,7 @@ const IncomingVideoCallScreen = ({ route, navigation }: any) => {
                 style={[
                   styles.button,
                   {
-                    backgroundColor: '#8B5CF6',
+                    backgroundColor: COLORS.primary,
                   },
                 ]}
               >

@@ -13,6 +13,8 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { ThemeContext } from '../theme/ThemeContext';
@@ -80,7 +82,7 @@ const CallItem = ({ item, index, theme, navigation }: any) => {
             style={[
               styles.onlineDot,
               {
-                backgroundColor: item.online ? '#22C55E' : '#64748B',
+                backgroundColor: item.online ? COLORS.success : '#64748B',
               },
             ]}
           />

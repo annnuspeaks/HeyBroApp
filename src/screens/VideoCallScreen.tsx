@@ -16,6 +16,8 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 
+import {COLORS} from '../theme/colors';
+
 import { mediaDevices, RTCView } from 'react-native-webrtc';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -462,7 +464,7 @@ const VideoCallScreen = ({ route }: any) => {
                 backgroundColor: 'rgba(34,197,94,0.18)',
                 borderColor: 'rgba(34,197,94,0.4)',
 
-                shadowColor: '#22C55E',
+                shadowColor: COLORS.success,
               },
 
               isSpeakerOn && styles.controlBtnActive,

@@ -14,6 +14,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {COLORS} from '../theme/colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -294,7 +295,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
             style={[
               styles.islandDot,
               {
-                backgroundColor: '#22C55E',
+                backgroundColor: COLORS.success,
               },
             ]}
           />

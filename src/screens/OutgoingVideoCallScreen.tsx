@@ -11,6 +11,7 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {COLORS} from '../theme/colors';
 import Sound from 'react-native-sound';
 
 const { width, height } = Dimensions.get('window');
@@ -288,7 +289,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 999,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
   },
 
   islandText: {
@@ -364,7 +365,7 @@ const styles = StyleSheet.create({
   activeSpeakerButton: {
     backgroundColor: '#1f78fd',
 
-    shadowColor: '#22C55E',
+    shadowColor: COLORS.success,
 
     shadowOpacity: 0.9,
 

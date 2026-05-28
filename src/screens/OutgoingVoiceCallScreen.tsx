@@ -11,6 +11,7 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {COLORS} from '../theme/colors';
 import Sound from 'react-native-sound';
 import InCallManager from 'react-native-incall-manager';
 
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 999,
-    backgroundColor: '#22C55E',
+    backgroundColor: COLORS.success,
   },
 
   islandText: {

@@ -15,6 +15,8 @@ import InCallManager from 'react-native-incall-manager';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const VoiceCallScreen = ({ route }: any) => {
   const navigation = useNavigation<any>();
 
@@ -224,7 +226,7 @@ const VoiceCallScreen = ({ route }: any) => {
 
                 borderColor: 'rgba(34,197,94,0.4)',
 
-                shadowColor: '#22C55E',
+                shadowColor: COLORS.success,
               },
 
               isSpeakerOn && styles.controlBtnActive,
