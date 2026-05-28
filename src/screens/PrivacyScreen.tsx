@@ -7,16 +7,19 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
-  Dimensions,
 } from 'react-native';
+
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
-
-const isTablet = width >= 768;
+import { COLORS } from '../theme/colors';
 
 export default function PrivacyScreen({ navigation }: any) {
   const [privacy, setPrivacy] = useState({
@@ -119,14 +122,12 @@ export default function PrivacyScreen({ navigation }: any) {
           >
             <Ionicons
               name="arrow-back"
-              size={24}
+              size={isTablet ? 26 : 22}
               color={COLORS.white}
             />
           </TouchableOpacity>
 
-          <Text style={styles.headerTitle}>
-            Privacy
-          </Text>
+          <Text style={styles.headerTitle}>Privacy</Text>
 
           <View style={{ width: 48 }} />
         </View>
@@ -141,27 +142,23 @@ export default function PrivacyScreen({ navigation }: any) {
           <View style={styles.heroIcon}>
             <Ionicons
               name="lock-closed-outline"
-              size={48}
+              size={isTablet ? 46 : 40}
               color="#8B5CF6"
             />
           </View>
 
-          <Text style={styles.heroTitle}>
-            Privacy & Security
-          </Text>
+          <Text style={styles.heroTitle}>Privacy & Security</Text>
 
           <Text style={styles.heroSubtitle}>
-            Manage your privacy settings and control
-            how others interact with you on HeyBro.
+            Manage your privacy settings and control how others interact with
+            you on HeyBro.
           </Text>
         </View>
 
         {/* SETTINGS */}
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>
-            Privacy Preferences
-          </Text>
+          <Text style={styles.sectionTitle}>Privacy Preferences</Text>
 
           {privacyItems.map((item, index) => (
             <View key={index} style={styles.settingCard}>
@@ -176,35 +173,23 @@ export default function PrivacyScreen({ navigation }: any) {
                 >
                   <Ionicons
                     name={item.icon as any}
-                    size={24}
+                    size={isTablet ? 26 : 22}
                     color={item.color}
                   />
                 </View>
 
                 <View style={styles.textContainer}>
-                  <Text style={styles.itemTitle}>
-                    {item.title}
-                  </Text>
+                  <Text style={styles.itemTitle}>{item.title}</Text>
 
-                  <Text style={styles.itemSubtitle}>
-                    {item.subtitle}
-                  </Text>
+                  <Text style={styles.itemSubtitle}>{item.subtitle}</Text>
                 </View>
               </View>
 
               <Switch
-                value={
-                  privacy[
-                    item.key as keyof typeof privacy
-                  ]
-                }
-                onValueChange={() =>
-                  toggleSwitch(item.key)
-                }
+                value={privacy[item.key as keyof typeof privacy]}
+                onValueChange={() => toggleSwitch(item.key)}
                 thumbColor={
-                  privacy[
-                    item.key as keyof typeof privacy
-                  ]
+                  privacy[item.key as keyof typeof privacy]
                     ? COLORS.primary
                     : COLORS.secondary
                 }
@@ -222,13 +207,12 @@ export default function PrivacyScreen({ navigation }: any) {
         <View style={styles.footer}>
           <Ionicons
             name="shield-checkmark"
-            size={18}
+            size={isTablet ? 20 : 18}
             color={COLORS.success}
           />
 
           <Text style={styles.footerText}>
-            Your privacy preferences are encrypted and
-            securely protected.
+            Your privacy preferences are encrypted and securely protected.
           </Text>
         </View>
       </ScrollView>
@@ -243,21 +227,24 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: 60,
+    paddingBottom: verticalScale(60),
   },
 
   header: {
-    marginTop: height * 0.03,
+    marginTop: verticalScale(isTablet ? 20 : 28),
+    paddingHorizontal: scale(20),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1300,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
   },
 
   backButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: isTablet ? 52 : 46,
+    height: isTablet ? 52 : 46,
+    borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.06)',
@@ -265,18 +252,21 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: COLORS.white,
-    fontSize: isTablet ? 34 : 26,
+    fontSize: fontScale(isTablet ? 30 : 26),
     fontWeight: '700',
   },
 
   heroCard: {
-    marginTop: 34,
-    marginHorizontal: 20,
-    borderRadius: 32,
+    marginTop: verticalScale(34),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(32),
+    paddingVertical: verticalScale(40),
+    paddingHorizontal: scale(28),
+    width: '92%',
+    alignSelf: 'center',
+    maxWidth: 1300,
     overflow: 'hidden',
     alignItems: 'center',
-    paddingVertical: 40,
-    paddingHorizontal: 28,
     backgroundColor: 'rgba(255,255,255,0.04)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
@@ -284,69 +274,74 @@ const styles = StyleSheet.create({
 
   glow1: {
     position: 'absolute',
-    top: -90,
-    left: -70,
-    width: 220,
-    height: 220,
+    top: verticalScale(-90),
+    left: scale(-70),
+    width: scale(isTablet ? 260 : 220),
+    height: scale(isTablet ? 260 : 220),
     borderRadius: 999,
     backgroundColor: 'rgba(168,85,247,0.16)',
   },
 
   glow2: {
     position: 'absolute',
-    bottom: -100,
-    right: -80,
-    width: 220,
-    height: 220,
+    bottom: verticalScale(-100),
+    right: scale(-80),
+    width: scale(isTablet ? 260 : 220),
+    height: scale(isTablet ? 260 : 220),
     borderRadius: 999,
     backgroundColor: 'rgba(59,130,246,0.12)',
   },
 
   heroIcon: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: isTablet ? 95 : 82,
+    height: isTablet ? 95 : 82,
+    borderRadius: 999,
+    marginBottom: verticalScale(22),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(168,85,247,0.14)',
-    marginBottom: 22,
   },
 
   heroTitle: {
     color: COLORS.white,
-    fontSize: isTablet ? 34 : 28,
+    fontSize: fontScale(isTablet ? 30 : 27),
     fontWeight: '700',
     textAlign: 'center',
   },
 
   heroSubtitle: {
     color: 'rgba(255,255,255,0.6)',
-    marginTop: 14,
+    marginTop: verticalScale(14),
+    lineHeight: verticalScale(isTablet ? 28 : 24),
+    fontSize: fontScale(isTablet ? 16 : 15),
+    maxWidth: isTablet ? '75%' : '100%',
     textAlign: 'center',
-    lineHeight: 24,
-    fontSize: isTablet ? 18 : 15,
   },
 
   sectionContainer: {
-    marginTop: 34,
-    paddingHorizontal: 20,
+    marginTop: verticalScale(34),
+    paddingHorizontal: scale(20),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1300,
   },
 
   sectionTitle: {
     color: COLORS.white,
-    fontSize: isTablet ? 24 : 20,
+    fontSize: fontScale(isTablet ? 22 : 20),
+    marginBottom: verticalScale(18),
     fontWeight: '700',
-    marginBottom: 18,
   },
 
   settingCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 24,
-    paddingVertical: 18,
-    paddingHorizontal: 18,
-    marginBottom: 14,
+    borderRadius: moderateScale(24),
+    paddingVertical: verticalScale(18),
+    paddingHorizontal: scale(18),
+    marginBottom: verticalScale(14),
+    minHeight: isTablet ? 92 : 82,
     backgroundColor: 'rgba(255,255,255,0.04)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
@@ -359,12 +354,12 @@ const styles = StyleSheet.create({
   },
 
   iconWrapper: {
-    width: 58,
-    height: 58,
-    borderRadius: 18,
+    width: isTablet ? 62 : 54,
+    height: isTablet ? 62 : 54,
+    borderRadius: moderateScale(18),
+    marginRight: scale(16),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
   },
 
   textContainer: {
@@ -373,23 +368,25 @@ const styles = StyleSheet.create({
 
   itemTitle: {
     color: COLORS.white,
-    fontSize: 17,
+    fontSize: fontScale(isTablet ? 18 : 16),
     fontWeight: '700',
   },
 
   itemSubtitle: {
     color: 'rgba(255,255,255,0.5)',
-    marginTop: 6,
-    fontSize: 13,
-    lineHeight: 20,
+    marginTop: verticalScale(6),
+    fontSize: fontScale(isTablet ? 14 : 13),
+    lineHeight: verticalScale(isTablet ? 24 : 20),
   },
 
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 28,
-    paddingHorizontal: 24,
+    marginTop: verticalScale(28),
+    paddingHorizontal: scale(24),
+    maxWidth: 1200,
+    alignSelf: 'center',
   },
 
   footerText: {
