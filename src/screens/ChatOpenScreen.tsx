@@ -23,7 +23,7 @@ import {
 
 import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-import EmojiSelector from 'react-native-emoji-selector';
+import EmojiPicker from 'rn-emoji-keyboard';
 import { COLORS } from '../theme/colors';
 
 const messages = [
@@ -65,7 +65,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
   const [isRecording, setIsRecording] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   React.useEffect(() => {
@@ -485,23 +485,13 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         </View>
       )}
 
-      {showEmojiPicker && (
-        <View
-          style={[
-            styles.emojiPickerContainer,
-            {
-              backgroundColor: theme.background,
-            },
-          ]}
-        >
-          <EmojiSelector
-            onEmojiSelected={emoji => setMessage(prev => prev + emoji)}
-            showSearchBar={false}
-            showTabs={true}
-            columns={8}
-          />
-        </View>
-      )}
+      <EmojiPicker
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        onEmojiSelected={emoji => {
+          setMessage(prev => prev + emoji.emoji);
+        }}
+      />
 
       {replyTo && (
         <View style={styles.replyBar}>
@@ -533,7 +523,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         <TouchableOpacity
           style={styles.emojiBtn}
           activeOpacity={0.8}
-          onPress={() => setShowEmojiPicker(!showEmojiPicker)}
+          onPress={() => setIsOpen(true)}
         >
           <Icon
             name="happy-outline"
