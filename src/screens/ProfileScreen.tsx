@@ -91,7 +91,7 @@ export default function ProfileScreen({ navigation, route }: any) {
       activeOpacity={0.8}
       style={styles.menuItem}
       onPress={() => {
-        if (item.title === 'Edit Profile') {
+        if (item.title === 'Account') {
           navigation.navigate('EditProfile', {
             profile: profile,
 
@@ -191,12 +191,16 @@ export default function ProfileScreen({ navigation, route }: any) {
             />
 
             <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.qrButton}
-              onPress={() => navigation.navigate('MyProfileQRScreen')}
-            >
-              <Ionicons name="qr-code-outline" size={18} color="#fff" />
-            </TouchableOpacity>
+  activeOpacity={0.8}
+  style={styles.qrButton}
+  onPress={() =>
+    navigation.navigate('MyProfileQRScreen', {
+      profile: profile, // <-- YE IMPORTANT FIX HAI
+    })
+  }
+>
+  <Ionicons name="qr-code-outline" size={18} color="#fff" />
+</TouchableOpacity>
           </View>
 
           <Text style={styles.name}>{profile.name}</Text>
