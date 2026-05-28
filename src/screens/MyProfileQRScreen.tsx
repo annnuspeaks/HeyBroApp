@@ -5,30 +5,35 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
   SafeAreaView,
   Image,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from '../theme/responsive';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {useUserStore} from '../store/userStore';
+import { useUserStore } from '../store/userStore';
 
-import {COLORS} from '../theme/colors';
+import { COLORS } from '../theme/colors';
 
 import QRCode from 'react-native-qrcode-svg';
 
-const { width, height } = Dimensions.get('window');
+const isLandscape = SCREEN_WIDTH > SCREEN_HEIGHT;
 
-const isLandscape = width > height;
-
-export default function MyProfileQRScreen({
-  navigation,
-}: any) {
+export default function MyProfileQRScreen({ navigation }: any) {
   // PROFILE SCREEN SE DATA SYNC
 
-  const {profile} = useUserStore();
+  const { profile } = useUserStore();
 
   const qrValue = JSON.stringify({
     id: 'tas_user_001',
@@ -38,9 +43,7 @@ export default function MyProfileQRScreen({
 
   // RESPONSIVE QR SIZE
 
-  const qrSize = isLandscape
-    ? Math.min(height * 0.44, 320)
-    : Math.min(width * 0.62, 340);
+  const qrSize = isLandscape ? (isTablet ? 240 : 210) : isTablet ? 300 : 240;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +60,11 @@ export default function MyProfileQRScreen({
             onPress={() => navigation.goBack()}
             style={styles.backBtn}
           >
-            <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+            <Ionicons
+              name="arrow-back"
+              size={isTablet ? 26 : 22}
+              color={COLORS.white}
+            />
           </TouchableOpacity>
 
           <Text style={styles.headerTitle}>My QR Code</Text>
@@ -85,11 +92,7 @@ export default function MyProfileQRScreen({
 
           {/* NAME */}
 
-          <Text
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            style={styles.name}
-          >
+          <Text numberOfLines={1} adjustsFontSizeToFit style={styles.name}>
             {profile.name}
           </Text>
 
@@ -99,9 +102,7 @@ export default function MyProfileQRScreen({
 
           {/* SUBTEXT */}
 
-          <Text style={styles.subText}>
-            Scan this QR to start chatting
-          </Text>
+          <Text style={styles.subText}>Scan this QR to start chatting</Text>
 
           {/* QR */}
 
@@ -116,9 +117,7 @@ export default function MyProfileQRScreen({
 
           {/* FOOTER */}
 
-          <Text style={styles.infoText}>
-            TAS Secure Chat Identity
-          </Text>
+          <Text style={styles.infoText}>TAS Secure Chat Identity</Text>
 
           <Text style={styles.bottomInfo}>
             Share this QR with your friends to connect instantly.
@@ -132,66 +131,55 @@ export default function MyProfileQRScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: COLORS.background,
   },
 
   scrollContainer: {
     flexGrow: 1,
-
-    paddingBottom: 30,
+    paddingBottom: verticalScale(30),
   },
 
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    paddingHorizontal: 18,
-
-    marginTop: 10,
+    paddingHorizontal: scale(18),
+    marginTop: verticalScale(isTablet ? 14 : 10),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1300,
   },
 
   backBtn: {
-    width: 42,
-    height: 42,
-
-    borderRadius: 21,
-
+    width: isTablet ? 52 : 42,
+    height: isTablet ? 52 : 42,
+    borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   headerTitle: {
     color: COLORS.white,
-
-    fontSize: 21,
+    fontSize: fontScale(isTablet ? 24 : 21),
     fontWeight: '700',
   },
 
   qrCard: {
     overflow: 'hidden',
-
     flex: 1,
-
-    marginTop: isLandscape ? 16 : 38,
-
-    marginHorizontal: isLandscape ? 36 : 18,
-
-    borderRadius: 34,
-
-    paddingTop: isLandscape ? 24 : 34,
-    paddingBottom: isLandscape ? 26 : 34,
-
-    paddingHorizontal: isLandscape ? 18 : 20,
-
+    marginTop: isLandscape ? verticalScale(16) : verticalScale(38),
+    marginHorizontal: scale(isLandscape ? 36 : 18),
+    borderRadius: moderateScale(34),
+    paddingTop: verticalScale(isLandscape ? 24 : 34),
+    paddingBottom: verticalScale(isLandscape ? 26 : 34),
+    paddingHorizontal: scale(isLandscape ? 18 : 20),
+    width: '92%',
+    alignSelf: 'center',
+    maxWidth: isTablet ? 760 : 500,
     alignItems: 'center',
-
     backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.06)',
@@ -199,116 +187,85 @@ const styles = StyleSheet.create({
 
   glowTop: {
     position: 'absolute',
-
-    top: -120,
-    left: -120,
-
-    width: 240,
-    height: 240,
-
+    top: verticalScale(-120),
+    left: scale(-120),
+    width: scale(isTablet ? 300 : 240),
+    height: scale(isTablet ? 300 : 240),
     borderRadius: 999,
-
     backgroundColor: 'rgba(139,92,246,0.16)',
   },
 
   glowBottom: {
     position: 'absolute',
-
-    bottom: -120,
-    right: -120,
-
-    width: 240,
-    height: 240,
-
+    bottom: verticalScale(-120),
+    right: scale(-120),
+    width: scale(isTablet ? 300 : 240),
+    height: scale(isTablet ? 300 : 240),
     borderRadius: 999,
-
     backgroundColor: 'rgba(59,130,246,0.12)',
   },
 
   avatar: {
-    width: isLandscape ? 82 : 92,
-    height: isLandscape ? 82 : 92,
-
+    width: isLandscape ? (isTablet ? 90 : 82) : isTablet ? 100 : 92,
+    height: isLandscape ? (isTablet ? 90 : 82) : isTablet ? 100 : 92,
     borderRadius: 100,
-
     borderWidth: 2.5,
     borderColor: COLORS.primary,
-
-    marginBottom: 18,
+    marginBottom: verticalScale(18),
   },
 
   name: {
     color: COLORS.white,
-
-    fontSize: isLandscape ? 28 : 34,
+    fontSize: fontScale(
+      isLandscape ? (isTablet ? 30 : 28) : isTablet ? 38 : 34,
+    ),
     fontWeight: '800',
-
     maxWidth: '90%',
   },
 
   phone: {
     color: 'rgba(255,255,255,0.62)',
-
-    marginTop: 8,
-
-    fontSize: isLandscape ? 15 : 17,
+    marginTop: verticalScale(8),
+    fontSize: fontScale(isLandscape ? 15 : isTablet ? 18 : 17),
   },
 
   subText: {
     color: 'rgba(255,255,255,0.5)',
-
-    fontSize: 15,
-
-    marginTop: 14,
-    marginBottom: isLandscape ? 18 : 26,
-
+    fontSize: fontScale(isTablet ? 16 : 15),
+    marginTop: verticalScale(14),
+    marginBottom: verticalScale(isLandscape ? 18 : 26),
     textAlign: 'center',
   },
 
   qrWrapper: {
     backgroundColor: COLORS.white,
-
-    padding: isLandscape ? 12 : 16,
-
-    borderRadius: 28,
-
+    padding: scale(isLandscape ? 12 : 16),
+    borderRadius: moderateScale(28),
     shadowColor: '#000',
-
     shadowOpacity: 0.28,
     shadowRadius: 18,
-
     shadowOffset: {
       width: 0,
       height: 10,
     },
-
     elevation: 12,
   },
 
   infoText: {
     color: '#A78BFA',
-
-    marginTop: isLandscape ? 18 : 24,
-
-    fontSize: 15,
+    marginTop: verticalScale(isLandscape ? 18 : 24),
+    fontSize: fontScale(isTablet ? 16 : 15),
     fontWeight: '700',
-
     letterSpacing: 0.4,
   },
 
   bottomInfo: {
     color: 'rgba(255,255,255,0.42)',
-
-    marginTop: 10,
-
-    fontSize: 12.5,
-
-    lineHeight: 19,
-
+    marginTop: verticalScale(10),
+    fontSize: fontScale(isTablet ? 13.5 : 12.5),
+    lineHeight: verticalScale(isTablet ? 22 : 19),
+    paddingHorizontal: scale(14),
+    maxWidth: isTablet ? 520 : 420,
     textAlign: 'center',
-
-    paddingHorizontal: 14,
-
-    maxWidth: 420,
   },
 });
