@@ -6,18 +6,22 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
   Switch,
   Alert,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+  SCREEN_WIDTH,
+} from '../theme/responsive';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
-
-const isTablet = width >= 768;
+import { COLORS } from '../theme/colors';
 
 export default function LinkedDevices({ navigation }: any) {
   const [devices, setDevices] = useState([
@@ -80,9 +84,7 @@ export default function LinkedDevices({ navigation }: any) {
           style: 'destructive',
 
           onPress: () => {
-            setDevices(prev =>
-              prev.filter(device => device.id !== id),
-            );
+            setDevices(prev => prev.filter(device => device.id !== id));
           },
         },
       ],
@@ -105,14 +107,12 @@ export default function LinkedDevices({ navigation }: any) {
           >
             <Ionicons
               name="arrow-back"
-              size={24}
+              size={isTablet ? 26 : 22}
               color={COLORS.white}
             />
           </TouchableOpacity>
 
-          <Text style={styles.headerTitle}>
-            Linked Devices
-          </Text>
+          <Text style={styles.headerTitle}>Linked Devices</Text>
 
           <View style={{ width: 48 }} />
         </View>
@@ -127,42 +127,32 @@ export default function LinkedDevices({ navigation }: any) {
           <View style={styles.heroIcon}>
             <Ionicons
               name="desktop-outline"
-              size={48}
+              size={isTablet ? 46 : 40}
               color="#A855F7"
             />
           </View>
 
-          <Text style={styles.heroTitle}>
-            Manage Connected Devices
-          </Text>
+          <Text style={styles.heroTitle}>Manage Connected Devices</Text>
 
           <Text style={styles.heroSubtitle}>
-            Securely manage devices connected to your
-            HeyBro account.
+            Securely manage devices connected to your HeyBro account.
           </Text>
 
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={styles.linkButton}
-          >
+          <TouchableOpacity activeOpacity={0.85} style={styles.linkButton}>
             <Ionicons
               name="add-circle-outline"
-              size={22}
+              size={isTablet ? 24 : 22}
               color={COLORS.white}
             />
 
-            <Text style={styles.linkButtonText}>
-              Link New Device
-            </Text>
+            <Text style={styles.linkButtonText}>Link New Device</Text>
           </TouchableOpacity>
         </View>
 
         {/* DEVICE LIST */}
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>
-            Connected Devices
-          </Text>
+          <Text style={styles.sectionTitle}>Connected Devices</Text>
 
           {devices.map(device => (
             <View key={device.id} style={styles.deviceCard}>
@@ -173,32 +163,23 @@ export default function LinkedDevices({ navigation }: any) {
                   <View style={styles.deviceIconWrapper}>
                     <Ionicons
                       name={device.type as any}
-                      size={28}
+                      size={isTablet ? 30 : 26}
                       color="#A855F7"
                     />
                   </View>
 
                   <View style={{ flex: 1 }}>
                     <View style={styles.nameRow}>
-                      <Text
-                        numberOfLines={1}
-                        style={styles.deviceName}
-                      >
+                      <Text numberOfLines={1} style={styles.deviceName}>
                         {device.name}
                       </Text>
 
-                      {device.active && (
-                        <View style={styles.activeDot} />
-                      )}
+                      {device.active && <View style={styles.activeDot} />}
                     </View>
 
-                    <Text style={styles.location}>
-                      {device.location}
-                    </Text>
+                    <Text style={styles.location}>{device.location}</Text>
 
-                    <Text style={styles.lastActive}>
-                      {device.lastActive}
-                    </Text>
+                    <Text style={styles.lastActive}>{device.lastActive}</Text>
                   </View>
                 </View>
               </View>
@@ -207,9 +188,7 @@ export default function LinkedDevices({ navigation }: any) {
 
               <View style={styles.bottomRow}>
                 <View>
-                  <Text style={styles.trustedTitle}>
-                    Trusted Device
-                  </Text>
+                  <Text style={styles.trustedTitle}>Trusted Device</Text>
 
                   <Text style={styles.trustedSubtitle}>
                     Allow seamless secure login
@@ -218,13 +197,9 @@ export default function LinkedDevices({ navigation }: any) {
 
                 <Switch
                   value={device.trusted}
-                  onValueChange={() =>
-                    toggleTrusted(device.id)
-                  }
+                  onValueChange={() => toggleTrusted(device.id)}
                   thumbColor={
-                    device.trusted
-                      ? COLORS.primary
-                      : COLORS.secondary
+                    device.trusted ? COLORS.primary : COLORS.secondary
                   }
                   trackColor={{
                     false: '#767577',
@@ -238,19 +213,15 @@ export default function LinkedDevices({ navigation }: any) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.removeButton}
-                onPress={() =>
-                  unlinkDevice(device.id)
-                }
+                onPress={() => unlinkDevice(device.id)}
               >
                 <Ionicons
                   name="unlink-outline"
-                  size={18}
+                  size={isTablet ? 20 : 18}
                   color="#ff4d4f"
                 />
 
-                <Text style={styles.removeText}>
-                  Unlink Device
-                </Text>
+                <Text style={styles.removeText}>Unlink Device</Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -261,13 +232,12 @@ export default function LinkedDevices({ navigation }: any) {
         <View style={styles.footer}>
           <Ionicons
             name="shield-checkmark"
-            size={18}
+            size={isTablet ? 20 : 18}
             color={COLORS.success}
           />
 
           <Text style={styles.footerText}>
-            Your devices are protected with secure
-            authentication.
+            Your devices are protected with secure authentication.
           </Text>
         </View>
       </ScrollView>
@@ -278,137 +248,107 @@ export default function LinkedDevices({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: COLORS.background,
   },
 
   scrollContent: {
-    paddingBottom: 60,
+    paddingBottom: verticalScale(60),
   },
 
   header: {
-    marginTop: height * 0.03,
-
+    marginTop: verticalScale(isTablet ? 20 : 28),
+    paddingHorizontal: scale(20),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1300,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    paddingHorizontal: 20,
   },
 
   backButton: {
-    width: 48,
-    height: 48,
-
-    borderRadius: 24,
-
+    width: isTablet ? 52 : 46,
+    height: isTablet ? 52 : 46,
+    borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   headerTitle: {
     color: COLORS.white,
-
-    fontSize: isTablet ? 34 : 26,
+    fontSize: fontScale(isTablet ? 30 : 26),
     fontWeight: '700',
   },
 
   heroCard: {
-    marginTop: 36,
-
-    marginHorizontal: 20,
-
-    borderRadius: 30,
-
+    marginTop: verticalScale(36),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(30),
+    paddingVertical: verticalScale(38),
+    paddingHorizontal: scale(28),
+    width: '92%',
+    alignSelf: 'center',
+    maxWidth: 1300,
     overflow: 'hidden',
-
-    paddingVertical: 38,
-    paddingHorizontal: 28,
-
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   glow1: {
     position: 'absolute',
-
-    top: -90,
-    left: -80,
-
-    width: 220,
-    height: 220,
-
+    top: verticalScale(-90),
+    left: scale(-80),
+    width: scale(isTablet ? 260 : 220),
+    height: scale(isTablet ? 260 : 220),
     borderRadius: 999,
-
     backgroundColor: 'rgba(168,85,247,0.15)',
   },
 
   glow2: {
     position: 'absolute',
-
-    bottom: -100,
-    right: -70,
-
-    width: 220,
-    height: 220,
-
+    bottom: verticalScale(-100),
+    right: scale(-70),
+    width: scale(isTablet ? 260 : 220),
+    height: scale(isTablet ? 260 : 220),
     borderRadius: 999,
-
     backgroundColor: 'rgba(34,197,94,0.08)',
   },
 
   heroIcon: {
-    width: 90,
-    height: 90,
-
-    borderRadius: 45,
-
+    width: isTablet ? 95 : 82,
+    height: isTablet ? 95 : 82,
+    borderRadius: 999,
+    marginBottom: verticalScale(22),
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(168,85,247,0.14)',
-
-    marginBottom: 22,
   },
 
   heroTitle: {
     color: COLORS.white,
-
-    fontSize: isTablet ? 34 : 28,
+    fontSize: fontScale(isTablet ? 30 : 27),
     fontWeight: '700',
-
     textAlign: 'center',
   },
 
   heroSubtitle: {
     color: 'rgba(255,255,255,0.6)',
-
-    marginTop: 14,
-
     textAlign: 'center',
-
-    lineHeight: 24,
-
-    fontSize: isTablet ? 18 : 15,
+    marginTop: verticalScale(14),
+    lineHeight: verticalScale(isTablet ? 28 : 24),
+    fontSize: fontScale(isTablet ? 16 : 15),
+    maxWidth: isTablet ? '75%' : '100%',
   },
 
   linkButton: {
-    marginTop: 28,
-
-    height: 58,
-
-    paddingHorizontal: 26,
-
-    borderRadius: 18,
-
+    marginTop: verticalScale(28),
+    height: isTablet ? 64 : 58,
+    paddingHorizontal: scale(26),
+    borderRadius: moderateScale(18),
     backgroundColor: COLORS.primary,
-
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -416,43 +356,38 @@ const styles = StyleSheet.create({
 
   linkButtonText: {
     color: COLORS.white,
-
-    fontSize: 16,
     fontWeight: '700',
-
-    marginLeft: 10,
+    fontSize: fontScale(isTablet ? 17 : 16),
+    marginLeft: scale(10),
   },
 
   sectionContainer: {
-    marginTop: 34,
-
-    paddingHorizontal: 20,
+    marginTop: verticalScale(34),
+    paddingHorizontal: scale(20),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1300,
   },
 
   sectionTitle: {
     color: COLORS.white,
-
-    fontSize: isTablet ? 24 : 20,
     fontWeight: '700',
-
-    marginBottom: 18,
+    fontSize: fontScale(isTablet ? 22 : 20),
+    marginBottom: verticalScale(18),
   },
 
   deviceCard: {
-    borderRadius: 26,
-
-    padding: 22,
-
-    marginBottom: 18,
-
+    borderRadius: moderateScale(26),
+    padding: scale(22),
+    marginBottom: verticalScale(18),
+    minHeight: isTablet ? 190 : 170,
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   deviceTop: {
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
 
   leftSection: {
@@ -461,17 +396,13 @@ const styles = StyleSheet.create({
   },
 
   deviceIconWrapper: {
-    width: 64,
-    height: 64,
-
-    borderRadius: 20,
-
+    width: isTablet ? 68 : 58,
+    height: isTablet ? 68 : 58,
+    borderRadius: moderateScale(20),
+    marginRight: scale(16),
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(168,85,247,0.12)',
-
-    marginRight: 16,
   },
 
   nameRow: {
@@ -480,39 +411,30 @@ const styles = StyleSheet.create({
   },
 
   activeDot: {
-    width: 10,
-    height: 10,
-
+    width: isTablet ? 12 : 10,
+    height: isTablet ? 12 : 10,
+    marginLeft: scale(10),
     borderRadius: 999,
-
     backgroundColor: COLORS.success,
-
-    marginLeft: 10,
   },
 
   deviceName: {
     color: COLORS.white,
-
-    fontSize: 18,
+    fontSize: fontScale(isTablet ? 19 : 17),
+    maxWidth: SCREEN_WIDTH * 0.42,
     fontWeight: '700',
-
-    maxWidth: width * 0.45,
   },
 
   location: {
     color: 'rgba(255,255,255,0.55)',
-
-    marginTop: 6,
-
-    fontSize: 14,
+    marginTop: verticalScale(6),
+    fontSize: fontScale(isTablet ? 15 : 14),
   },
 
   lastActive: {
     color: '#A855F7',
-
-    marginTop: 6,
-
-    fontSize: 13,
+    marginTop: verticalScale(6),
+    fontSize: fontScale(isTablet ? 14 : 13),
     fontWeight: '600',
   },
 
@@ -520,35 +442,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    marginBottom: 18,
+    marginBottom: verticalScale(18),
   },
 
   trustedTitle: {
     color: COLORS.white,
-
-    fontSize: 15,
+    fontSize: fontScale(isTablet ? 16 : 15),
     fontWeight: '700',
   },
 
   trustedSubtitle: {
     color: 'rgba(255,255,255,0.45)',
-
-    marginTop: 4,
-
-    fontSize: 13,
+    marginTop: verticalScale(4),
+    fontSize: fontScale(isTablet ? 14 : 13),
   },
 
   removeButton: {
-    height: 48,
-
-    borderRadius: 16,
-
+    height: isTablet ? 52 : 48,
+    borderRadius: moderateScale(16),
     backgroundColor: 'rgba(255,77,79,0.12)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,77,79,0.18)',
-
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -556,32 +470,26 @@ const styles = StyleSheet.create({
 
   removeText: {
     color: '#ff4d4f',
-
-    fontSize: 15,
+    fontSize: fontScale(isTablet ? 16 : 15),
+    marginLeft: scale(8),
     fontWeight: '700',
-
-    marginLeft: 8,
   },
 
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-
-    marginTop: 20,
-
-    paddingHorizontal: 20,
+    marginTop: verticalScale(20),
+    paddingHorizontal: scale(20),
+    maxWidth: 1200,
+    alignSelf: 'center',
   },
 
   footerText: {
     color: 'rgba(255,255,255,0.5)',
-
-    marginLeft: 10,
-
-    fontSize: 13,
-
+    marginLeft: scale(10),
+    fontSize: fontScale(isTablet ? 14 : 13),
     textAlign: 'center',
-
     flex: 1,
   },
 });
