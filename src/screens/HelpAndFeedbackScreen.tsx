@@ -8,18 +8,21 @@ import {
   ScrollView,
   TextInput,
   Alert,
-  Dimensions,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
-
-const isTablet = width >= 768;
+import { COLORS } from '../theme/colors';
 
 export default function HelpAndFeedbackScreen({ navigation }: any) {
   const [subject, setSubject] = useState('');
@@ -58,7 +61,11 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
               style={styles.backButton}
               onPress={() => navigation.goBack()}
             >
-              <Ionicons name="arrow-back" size={24} color="#fff" />
+              <Ionicons
+                name="arrow-back"
+                size={isTablet ? 34 : 24}
+                color="#fff"
+              />
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>Help & Feedback</Text>
@@ -78,7 +85,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
             <View style={styles.iconWrapper}>
               <Ionicons
                 name="help-circle-outline"
-                size={42}
+                size={isTablet ? 68 : 42}
                 color="#A855F7"
               />
             </View>
@@ -97,7 +104,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
             <TouchableOpacity activeOpacity={0.8} style={styles.quickCard}>
               <Ionicons
                 name="chatbubble-ellipses-outline"
-                size={26}
+                size={isTablet ? 38 : 26}
                 color="#8B5CF6"
               />
 
@@ -109,13 +116,15 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
             </TouchableOpacity>
 
             <TouchableOpacity activeOpacity={0.8} style={styles.quickCard}>
-              <Ionicons name="mail-outline" size={26} color={COLORS.success} />
+              <Ionicons
+                name="mail-outline"
+                size={isTablet ? 38 : 26}
+                color={COLORS.success}
+              />
 
               <Text style={styles.quickTitle}>Email Us</Text>
 
-              <Text style={styles.quickSub}>
-                support@heybroapp.com
-              </Text>
+              <Text style={styles.quickSub}>support@heybroapp.com</Text>
             </TouchableOpacity>
           </View>
 
@@ -198,7 +207,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
 
                 <Ionicons
                   name="chevron-forward"
-                  size={18}
+                  size={isTablet ? 28 : 18}
                   color="rgba(255,255,255,0.35)"
                 />
               </TouchableOpacity>
@@ -221,50 +230,40 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    marginTop: height * 0.03,
-
+    marginTop: verticalScale(12),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    paddingHorizontal: 20,
+    paddingHorizontal: scale(20),
   },
 
   backButton: {
-    width: 48,
-    height: 48,
-
-    borderRadius: 24,
-
+    width: isTablet ? 58 : 42,
+    height: isTablet ? 58 : 42,
+    borderRadius: isTablet ? 29 : 21,
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   headerTitle: {
-    color: '#fff',
-
-    fontSize: isTablet ? 34 : 26,
+    color: COLORS.white,
+    fontSize: fontScale(isTablet ? 28 : 24),
     fontWeight: '700',
   },
 
   topCard: {
-    marginTop: 40,
-
-    marginHorizontal: 20,
-
-    borderRadius: 28,
-
-    paddingVertical: 38,
-    paddingHorizontal: 28,
-
+    marginTop: verticalScale(40),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(28),
+    paddingVertical: verticalScale(38),
+    paddingHorizontal: scale(28),
+    maxWidth: 1350,
+    width: '92%',
+    alignSelf: 'center',
     alignItems: 'center',
-
     overflow: 'hidden',
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
@@ -273,91 +272,70 @@ const styles = StyleSheet.create({
 
   topLeftBubble: {
     position: 'absolute',
-
-    top: -75,
-    left: -75,
-
-    width: 190,
-    height: 190,
-
+    top: isTablet ? -110 : -75,
+    left: isTablet ? -110 : -75,
+    width: isTablet ? 280 : 190,
+    height: isTablet ? 280 : 190,
     borderRadius: 999,
-
     backgroundColor: 'rgba(168,85,247,0.22)',
   },
 
   bottomRightBubble: {
     position: 'absolute',
-
-    bottom: -65,
-    right: -65,
-
-    width: 170,
-    height: 170,
-
+    bottom: isTablet ? -100 : -65,
+    right: isTablet ? -100 : -65,
+    width: isTablet ? 260 : 170,
+    height: isTablet ? 260 : 170,
     borderRadius: 999,
-
     backgroundColor: 'rgba(20,184,166,0.16)',
   },
 
   iconWrapper: {
-    width: 82,
-    height: 82,
-
-    borderRadius: 41,
+    width: isTablet ? 130 : 82,
+    height: isTablet ? 130 : 82,
+    borderRadius: 999,
+    marginBottom: verticalScale(22),
 
     justifyContent: 'center',
     alignItems: 'center',
 
     backgroundColor: 'rgba(168,85,247,0.15)',
-
-    marginBottom: 22,
   },
 
   mainTitle: {
-    color: '#fff',
-
-    fontSize: isTablet ? 34 : 28,
+    color: COLORS.white,
+    fontSize: isTablet ? 48 : 28,
     fontWeight: '700',
   },
 
   subtitle: {
     color: 'rgba(255,255,255,0.6)',
-
-    marginTop: 14,
-
+    marginTop: verticalScale(14),
+    lineHeight: verticalScale(isTablet ? 42 : 24),
+    fontSize: isTablet ? 26 : 15,
+    maxWidth: scale(700),
     textAlign: 'center',
-
-    lineHeight: 24,
-
-    fontSize: isTablet ? 18 : 15,
   },
 
   quickContainer: {
     flexDirection: 'row',
-
     justifyContent: 'space-between',
-
-    marginTop: 26,
-
-    paddingHorizontal: 20,
+    marginTop: verticalScale(26),
+    paddingHorizontal: scale(20),
   },
 
   quickCard: {
     width: '48%',
-
-    borderRadius: 24,
-
-    paddingVertical: 28,
-    paddingHorizontal: 18,
-
+    borderRadius: moderateScale(24),
+    paddingVertical: verticalScale(28),
+    paddingHorizontal: scale(18),
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   quickTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     marginTop: 16,
 
@@ -376,13 +354,14 @@ const styles = StyleSheet.create({
   },
 
   formCard: {
-    marginTop: 28,
+    marginTop: verticalScale(28),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(28),
+    padding: scale(24),
 
-    marginHorizontal: 20,
-
-    borderRadius: 28,
-
-    padding: 24,
+    maxWidth: 1350,
+    width: '92%',
+    alignSelf: 'center',
 
     backgroundColor: 'rgba(255,255,255,0.04)',
 
@@ -414,33 +393,25 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
-
     color: '#fff',
-
     fontSize: 16,
-
     marginLeft: 12,
-
-    height: 58,
+    height: isTablet ? 72 : 58,
   },
 
   messageInput: {
     flex: 1,
-
     color: '#fff',
-
     fontSize: 16,
-
     marginLeft: 12,
-
-    minHeight: 140,
-    maxHeight: 220,
+    minHeight: isTablet ? 220 : 140,
+    maxHeight: isTablet ? 340 : 220,
   },
 
   submitButton: {
-    height: 58,
+    height: isTablet ? 72 : 58,
 
-    borderRadius: 18,
+    borderRadius: moderateScale(18),
 
     backgroundColor: COLORS.primary,
 
@@ -454,24 +425,20 @@ const styles = StyleSheet.create({
 
   submitText: {
     color: '#fff',
-
     fontSize: 16,
     fontWeight: '700',
-
     marginLeft: 10,
   },
 
   faqCard: {
-    marginTop: 28,
-
-    marginHorizontal: 20,
-
-    borderRadius: 28,
-
-    padding: 24,
-
+    marginTop: verticalScale(28),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(28),
+    padding: scale(24),
+    maxWidth: 1350,
+    width: '92%',
+    alignSelf: 'center',
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
