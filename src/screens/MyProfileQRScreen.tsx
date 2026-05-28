@@ -15,16 +15,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {useUserStore} from '../store/userStore';
 
+import {COLORS} from '../theme/colors';
+
 import QRCode from 'react-native-qrcode-svg';
 
 const { width, height } = Dimensions.get('window');
 
 const isLandscape = width > height;
-const isTablet = width >= 768;
 
 export default function MyProfileQRScreen({
   navigation,
-  route,
 }: any) {
   // PROFILE SCREEN SE DATA SYNC
 
@@ -57,7 +57,7 @@ export default function MyProfileQRScreen({
             onPress={() => navigation.goBack()}
             style={styles.backBtn}
           >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={COLORS.white} />
           </TouchableOpacity>
 
           <Text style={styles.headerTitle}>My QR Code</Text>
@@ -110,7 +110,7 @@ export default function MyProfileQRScreen({
               value={qrValue}
               size={qrSize}
               color="#000"
-              backgroundColor="#fff"
+              backgroundColor={COLORS.qrBackground}
             />
           </View>
 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   scrollContainer: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: 21,
     fontWeight: '700',
@@ -192,8 +192,7 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
 
-    backgroundColor: 'rgba(255,255,255,0.04)',
-
+    backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.06)',
   },
@@ -233,13 +232,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
 
     borderWidth: 2.5,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.primary,
 
     marginBottom: 18,
   },
 
   name: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isLandscape ? 28 : 34,
     fontWeight: '800',
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
   },
 
   qrWrapper: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
 
     padding: isLandscape ? 12 : 16,
 

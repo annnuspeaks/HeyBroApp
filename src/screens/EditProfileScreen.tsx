@@ -18,6 +18,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {useUserStore} from '../store/userStore';
 
+import {COLORS} from '../theme/colors';
+
 const { width } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -73,7 +75,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={24} color="#fff" />
+        <Ionicons name="arrow-back" size={24} color={COLORS.white} />
       </TouchableOpacity>
 
       <ScrollView
@@ -100,7 +102,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
             />
 
             <View style={styles.cameraBadge}>
-              <Ionicons name="camera" size={18} color="#fff" />
+              <Ionicons name="camera" size={18} color={COLORS.white} />
             </View>
 
             <Text style={styles.changePhoto}>Change Photo</Text>
@@ -159,7 +161,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
                       styles.genderText,
 
                       form.gender === item && {
-                        color: '#fff',
+                        color: COLORS.white,
                       },
                     ]}
                   >
@@ -182,7 +184,7 @@ const EditProfileScreen = ({ navigation, route }: any) => {
             >
               <Text
                 style={{
-                  color: form.dob ? '#fff' : 'rgba(255,255,255,0.35)',
+                  color: form.dob ? COLORS.white : 'rgba(255,255,255,0.35)',
                 }}
               >
                 {form.dob || 'Select Date'}
@@ -288,80 +290,59 @@ export default EditProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   backButton: {
     position: 'absolute',
-
     top: 45,
     left: 20,
-
     zIndex: 999,
-
     width: 46,
     height: 46,
-
     borderRadius: 23,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: COLORS.overlay,
   },
 
   card: {
     marginTop: 90,
-
     width: '88%',
     alignSelf: 'center',
-
     borderRadius: 34,
-
     padding: 24,
-
-    backgroundColor: 'rgba(255,255,255,0.08)',
-
+    backgroundColor: COLORS.overlay,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
   imageContainer: {
     alignItems: 'center',
-
     marginBottom: 35,
   },
 
   avatar: {
     width: isTablet ? 140 : 110,
     height: isTablet ? 140 : 110,
-
     borderRadius: 100,
   },
 
   cameraBadge: {
     position: 'absolute',
-
     right: width * 0.34,
     bottom: 28,
-
     width: 34,
     height: 34,
-
     borderRadius: 20,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: '#7C3AED',
+    backgroundColor: COLORS.primaryDark,
   },
 
   changePhoto: {
     marginTop: 12,
-
     color: '#C084FC',
-
     fontSize: 16,
     fontWeight: '600',
   },
@@ -372,36 +353,25 @@ const styles = StyleSheet.create({
 
   label: {
     color: 'rgba(255,255,255,0.7)',
-
     marginBottom: 10,
-
     fontSize: 15,
   },
 
   input: {
     minHeight: 58,
-
     borderRadius: 18,
-
     paddingHorizontal: 18,
-
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: 16,
-
     justifyContent: 'center',
-
-    backgroundColor: 'rgba(255,255,255,0.05)',
-
+    backgroundColor: COLORS.input,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
   bioInput: {
     minHeight: 120,
-
     paddingTop: 18,
-
     textAlignVertical: 'top',
   },
 
@@ -412,50 +382,38 @@ const styles = StyleSheet.create({
 
   genderButton: {
     width: '31%',
-
     height: 54,
-
     borderRadius: 16,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: 'rgba(255,255,255,0.05)',
-
+    backgroundColor: COLORS.input,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
   genderButtonActive: {
-    backgroundColor: '#7C3AED',
+    backgroundColor: COLORS.primaryDark,
   },
 
   genderText: {
     color: 'rgba(255,255,255,0.6)',
-
     fontWeight: '600',
   },
 
   saveButton: {
     position: 'absolute',
-
     bottom: 24,
     left: 20,
     right: 20,
-
     height: 64,
-
     borderRadius: 22,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: '#7C3AED',
+    backgroundColor: COLORS.primaryDark,
   },
 
   saveText: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: 18,
     fontWeight: '700',
   },
