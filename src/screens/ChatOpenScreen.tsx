@@ -10,8 +10,21 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
+
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from '../theme/responsive';
+
 import { ThemeContext } from '../theme/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
+import EmojiSelector from 'react-native-emoji-selector';
+import { COLORS } from '../theme/colors';
 
 const messages = [
   {
@@ -35,6 +48,9 @@ const messages = [
     time: '10:42 PM',
   },
 ];
+
+const isLandscape = SCREEN_WIDTH > SCREEN_HEIGHT;
+
 const ChatOpenScreen = ({ route, navigation }: any) => {
   const flatListRef = useRef<any>(null);
   const messageRefs = useRef<{ [key: string]: any }>({});
@@ -49,6 +65,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const translateXMap = useRef<{ [key: string]: Animated.Value }>({}).current;
   const [isRecording, setIsRecording] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   React.useEffect(() => {
@@ -360,7 +377,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
               })
             }
           >
-            <Icon name="call-outline" size={22} color={theme.text} />
+            <Icon
+              name="call-outline"
+              size={isTablet ? 24 : 22}
+              color={theme.text}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -372,7 +393,11 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
               })
             }
           >
-            <Icon name="videocam-outline" size={24} color={theme.text} />
+            <Icon
+              name="videocam-outline"
+              size={isTablet ? 26 : 24}
+              color={theme.text}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -388,7 +413,7 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         windowSize={5}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={() => (
-          <Text style={{ color: '#fff', textAlign: 'center' }}>
+          <Text style={{ color: COLORS.white, textAlign: 'center' }}>
             No messages
           </Text>
         )}
@@ -460,6 +485,24 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
         </View>
       )}
 
+      {showEmojiPicker && (
+        <View
+          style={[
+            styles.emojiPickerContainer,
+            {
+              backgroundColor: theme.background,
+            },
+          ]}
+        >
+          <EmojiSelector
+            onEmojiSelected={emoji => setMessage(prev => prev + emoji)}
+            showSearchBar={false}
+            showTabs={true}
+            columns={8}
+          />
+        </View>
+      )}
+
       {replyTo && (
         <View style={styles.replyBar}>
           <View style={{ flex: 1 }}>
@@ -487,8 +530,16 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
           },
         ]}
       >
-        <TouchableOpacity style={styles.iconBtn}>
-          <Icon name="happy-outline" size={22} color={theme.text} />
+        <TouchableOpacity
+          style={styles.emojiBtn}
+          activeOpacity={0.8}
+          onPress={() => setShowEmojiPicker(!showEmojiPicker)}
+        >
+          <Icon
+            name="happy-outline"
+            size={isTablet ? (isLandscape ? 26 : 28) : 24}
+            color={theme.text}
+          />
         </TouchableOpacity>
 
         <TextInput
@@ -530,8 +581,8 @@ const ChatOpenScreen = ({ route, navigation }: any) => {
               name={
                 isRecording ? 'mic' : message.trim() ? 'send' : 'mic-outline'
               }
-              size={22}
-              color={isRecording ? 'red' : '#fff'}
+              size={isTablet ? (isLandscape ? 26 : 28) : 24}
+              color={isRecording ? 'red' : COLORS.white}
             />
           </Animated.View>
         </TouchableOpacity>
@@ -548,125 +599,168 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(isTablet ? 14 : 10),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1400,
     borderBottomWidth: 1,
   },
+
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginHorizontal: 10,
+    width: isTablet ? 50 : 40,
+    height: isTablet ? 50 : 40,
+    borderRadius: 999,
+    marginHorizontal: scale(10),
   },
+
   name: {
-    fontSize: 16,
+    fontSize: fontScale(isTablet ? 18 : 16),
     fontWeight: '600',
   },
+
   messageBubble: {
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    borderRadius: 18,
-    maxWidth: '75%',
-    minWidth: 60,
+    paddingVertical: verticalScale(10),
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    borderRadius: moderateScale(12),
+    maxWidth: isLandscape
+      ? isTablet
+        ? '52%'
+        : '62%'
+      : isTablet
+      ? '58%'
+      : '75%',
+    minWidth: scale(60),
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 3,
   },
+
   input: {
     flex: 1,
-    fontSize: 15,
-    marginHorizontal: 10,
+    fontSize: fontScale(isTablet ? 16 : 15),
+    marginHorizontal: scale(10),
   },
+
   sendBtn: {
-    backgroundColor: '#8B5CF6',
-    padding: 10,
-    borderRadius: 25,
+    backgroundColor: COLORS.primary,
+    width: isTablet ? (isLandscape ? scale(20) : scale(22)) : scale(18),
+    height: isTablet ? (isLandscape ? scale(20) : scale(22)) : scale(18),
+    borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: scale(2),
   },
+
   myMessage: {
     borderTopRightRadius: 4,
   },
+
   otherMessage: {
     borderTopLeftRadius: 4,
   },
+
   messageText: {
-    fontSize: 15,
+    fontSize: fontScale(isTablet ? 16 : 15),
+    lineHeight: verticalScale(isTablet ? 24 : 20),
     fontWeight: '500',
-    lineHeight: 20,
   },
+
   listContent: {
-    padding: 16,
-    paddingBottom: 80,
+    padding: scale(16),
+    paddingBottom: verticalScale(90),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: 1400,
   },
+
   timeText: {
-    fontSize: 12,
+    fontSize: fontScale(isTablet ? 13 : 12),
   },
+
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
+
   rightIcons: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   iconBtn: {
-    padding: 6,
+    padding: scale(6),
   },
+
   messageRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
     width: '100%',
     justifyContent: 'flex-start',
   },
+
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 30,
+    margin: scale(8),
+    paddingHorizontal: scale(12),
+    paddingVertical: isTablet
+      ? isLandscape
+        ? verticalScale(2)
+        : verticalScale(5)
+      : verticalScale(4),
+    borderRadius: moderateScale(18),
+    width: '96%',
+    alignSelf: 'center',
+    maxWidth: 1400,
     borderWidth: 1,
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 8,
-    elevation: 2,
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   myBubble: {
     backgroundColor: '#8B5CF6',
+    paddingLeft: scale(14),
+    paddingRight: scale(isTablet && isLandscape ? 12 : 14),
   },
+
   otherBubble: {
     backgroundColor: '#1E293B',
+    paddingLeft: scale(isTablet && isLandscape ? 12 : 14),
+    paddingRight: scale(14),
   },
+
   myText: {
-    color: '#fff',
+    color: COLORS.white,
   },
+
   otherText: {
     color: '#ccc',
   },
 
   typingContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
     marginTop: 6,
   },
 
   typingBubble: {
     backgroundColor: 'rgba(255,255,255,0.08)',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 14,
+    paddingHorizontal: scale(14),
+    paddingVertical: verticalScale(8),
+    borderRadius: moderateScale(14),
     alignSelf: 'flex-start',
   },
 
   dot: {
-    width: 6,
-    height: 6,
+    width: scale(6),
+    height: scale(6),
+    borderRadius: 999,
     backgroundColor: '#aaa',
-    borderRadius: 3,
   },
 
   recordingContainer: {
@@ -676,10 +770,11 @@ const styles = StyleSheet.create({
 
   recordingText: {
     color: 'red',
-    fontSize: 14,
+    fontSize: fontScale(isTablet ? 15 : 14),
     fontWeight: '700',
     letterSpacing: 1,
   },
+
   metaContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -688,46 +783,50 @@ const styles = StyleSheet.create({
   },
 
   timeTextMsg: {
-    fontSize: 10,
+    fontSize: fontScale(10),
+    marginRight: scale(4),
     color: '#aaa',
-    marginRight: 4,
   },
 
   tick: {
-    fontSize: 12,
+    fontSize: fontScale(12),
     color: '#aaa',
   },
+
   replyBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    marginHorizontal: 10,
-    marginBottom: 4,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    padding: scale(10),
+    marginHorizontal: scale(10),
+    marginBottom: verticalScale(4),
+    borderRadius: moderateScale(12),
+    width: '95%',
+    alignSelf: 'center',
+    maxWidth: 1200,
+    backgroundColor: COLORS.overlay,
   },
 
   replyLabel: {
-    fontSize: 11,
+    fontSize: fontScale(11),
     color: '#aaa',
   },
 
   replyText: {
-    fontSize: 13,
-    color: '#fff',
+    fontSize: fontScale(13),
+    color: COLORS.white,
   },
 
   replyClose: {
-    fontSize: 18,
+    fontSize: fontScale(18),
+    paddingHorizontal: scale(8),
     color: '#aaa',
-    paddingHorizontal: 8,
   },
 
   arrowLeft: {
     marginRight: 10,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: scale(30),
+    height: scale(30),
+    borderRadius: 999,
     backgroundColor: 'rgba(139, 92, 246, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -735,41 +834,59 @@ const styles = StyleSheet.create({
 
   arrowRight: {
     marginLeft: 10,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: scale(30),
+    height: scale(30),
+    borderRadius: 999,
     backgroundColor: 'rgba(139, 92, 246, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   arrowText: {
-    color: '#8B5CF6',
-    fontSize: 16,
+    color: COLORS.primary,
+    fontSize: fontScale(16),
     fontWeight: 900,
   },
 
   replyPreviewBox: {
     borderLeftWidth: 3,
-    borderLeftColor: '#22C55E',
-    paddingLeft: 8,
-    marginBottom: 6,
+    borderLeftColor: COLORS.success,
+    paddingLeft: scale(8),
+    marginBottom: verticalScale(6),
   },
 
   replyName: {
-    color: '#22C55E',
+    color: COLORS.success,
     fontWeight: '700',
-    fontSize: 12,
-    marginBottom: 2,
+    fontSize: fontScale(12),
+    marginBottom: verticalScale(2),
   },
 
   replyPreviewText: {
-    color: 'rgba(255,255,255,0.6)',
-    fontSize: 12,
+    color: COLORS.textSecondary,
+    fontSize: fontScale(12),
   },
 
   highlightedMessage: {
     borderWidth: 2,
-    borderColor: '#22C55E',
+    borderColor: COLORS.success,
+  },
+
+  emojiBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: isTablet ? (isLandscape ? scale(28) : scale(34)) : scale(30),
+    height: isTablet ? (isLandscape ? scale(28) : scale(34)) : scale(30),
+    marginRight: scale(2),
+  },
+
+  emojiPickerContainer: {
+    height: isTablet
+      ? isLandscape
+        ? verticalScale(220)
+        : verticalScale(260)
+      : verticalScale(250),
+    borderTopWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
 });
