@@ -20,8 +20,8 @@ type UserStoreType = {
 
 export const useUserStore = create<UserStoreType>(set => ({
   profile: {
-    name: 'Harshvardhan',
-    phone: '+91 9876543210',
+    name: 'The Anurag Shukla',
+    phone: '+91 7068515424',
     image: 'https://i.pravatar.cc/300',
     bio: '',
     gender: '',
