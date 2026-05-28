@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import {useUserStore} from '../store/userStore';
+
 import QRCode from 'react-native-qrcode-svg';
 
 const { width, height } = Dimensions.get('window');
@@ -25,11 +28,7 @@ export default function MyProfileQRScreen({
 }: any) {
   // PROFILE SCREEN SE DATA SYNC
 
-  const profile = route?.params?.profile || {
-    name: 'Harshvardhan',
-    phone: '+91 9876543210',
-    image: 'https://i.pravatar.cc/300',
-  };
+  const {profile} = useUserStore();
 
   const qrValue = JSON.stringify({
     id: 'tas_user_001',

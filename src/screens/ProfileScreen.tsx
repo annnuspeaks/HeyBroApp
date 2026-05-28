@@ -13,6 +13,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {useUserStore} from '../store/userStore';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -60,31 +62,7 @@ const menuItems2 = [
 ];
 
 export default function ProfileScreen({ navigation, route }: any) {
-  const [profile, setProfile] = useState({
-    name: 'Harshvardhan',
-
-    phone: '+91 9876543210',
-
-    bio: '',
-
-    website: '',
-
-    image: 'https://i.pravatar.cc/300',
-
-    gender: '',
-
-    qualification: '',
-
-    dob: '',
-
-    email: '',
-  });
-
-  useEffect(() => {
-    if (route?.params?.updatedProfile) {
-      setProfile(route.params.updatedProfile);
-    }
-  }, [route?.params?.updatedProfile]);
+  const {profile, setProfile} = useUserStore();
 
   const renderItem = (item: any, isLogout = false) => (
     <TouchableOpacity
@@ -93,11 +71,7 @@ export default function ProfileScreen({ navigation, route }: any) {
       onPress={() => {
         if (item.title === 'Account') {
           navigation.navigate('EditProfile', {
-            profile: profile,
-
-            onGoBack: (updatedProfile: any) => {
-              setProfile(updatedProfile);
-            },
+            
           });
         }
 

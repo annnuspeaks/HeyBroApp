@@ -16,12 +16,16 @@ import DatePicker from 'react-native-date-picker';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {useUserStore} from '../store/userStore';
+
 const { width } = Dimensions.get('window');
 
 const isTablet = width >= 768;
 
 const EditProfileScreen = ({ navigation, route }: any) => {
   const oldProfile = route?.params?.profile;
+
+  const {setProfile} = useUserStore();
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
@@ -55,12 +59,10 @@ const EditProfileScreen = ({ navigation, route }: any) => {
   };
 
   const handleSave = () => {
-    navigation.goBack();
+  setProfile(form);
 
-    setTimeout(() => {
-      route.params?.onGoBack?.(form);
-    }, 100);
-  };
+  navigation.goBack();
+};
 
   return (
     <View style={styles.container}>
