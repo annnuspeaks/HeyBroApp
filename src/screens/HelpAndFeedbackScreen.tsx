@@ -67,6 +67,12 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
           {/* TOP CARD */}
 
           <View style={styles.topCard}>
+            {/* CROPPED BUBBLES */}
+
+            <View style={styles.topLeftBubble} />
+
+            <View style={styles.bottomRightBubble} />
+
             <View style={styles.iconWrapper}>
               <Ionicons
                 name="help-circle-outline"
@@ -253,10 +259,42 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
 
+    overflow: 'hidden',
+
     backgroundColor: 'rgba(255,255,255,0.04)',
 
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
+  },
+
+  /* CROPPED BUBBLES */
+
+  topLeftBubble: {
+    position: 'absolute',
+
+    top: -75,
+    left: -75,
+
+    width: 190,
+    height: 190,
+
+    borderRadius: 999,
+
+    backgroundColor: 'rgba(168,85,247,0.22)',
+  },
+
+  bottomRightBubble: {
+    position: 'absolute',
+
+    bottom: -65,
+    right: -65,
+
+    width: 170,
+    height: 170,
+
+    borderRadius: 999,
+
+    backgroundColor: 'rgba(20,184,166,0.16)',
   },
 
   iconWrapper: {
