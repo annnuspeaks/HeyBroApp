@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 import {
   View,
@@ -25,24 +25,39 @@ const OtpScreen = ({ navigation }: any) => {
 
   const inputRefs = useRef<any[]>([]);
 
+  // AUTO FOCUS FIRST BOX
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleOtpChange = (text: string, index: number) => {
     const cleaned = text.replace(/[^0-9]/g, '');
 
-    if (!cleaned && cleaned !== '') {
-      return;
-    }
-
     const updatedOtp = [...otp];
+
     updatedOtp[index] = cleaned;
 
     setOtp(updatedOtp);
 
+    // NEXT INPUT AUTO FOCUS
     if (cleaned && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
 
+    // AUTO BACK TO PREVIOUS
+    if (!cleaned && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+
+    // AUTO NAVIGATE
     if (updatedOtp.join('').length === 4) {
-      navigation.replace('MainTabs');
+      setTimeout(() => {
+        navigation.replace('MainTabs');
+      }, 250);
     }
   };
 
@@ -100,7 +115,16 @@ const OtpScreen = ({ navigation }: any) => {
                 onChangeText={text => handleOtpChange(text, index)}
                 keyboardType="number-pad"
                 maxLength={1}
-                style={[styles.otpInput, digit && styles.activeOtpInput]}
+                autoFocus={index === 0}
+                caretHidden={true} // CURSOR HIDE
+                selectionColor="transparent"
+                contextMenuHidden={true}
+                importantForAutofill="yes"
+                textContentType="oneTimeCode"
+                style={[
+                  styles.otpInput,
+                  digit ? styles.activeOtpInput : null,
+                ]}
                 placeholder="•"
                 placeholderTextColor="rgba(255,255,255,0.25)"
               />
@@ -200,9 +224,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'rgba(255,255,255,0.10)',
     color: '#FFFFFF',
-    textAlign: 'center',
+    textAlign: 'center', // CENTER ALIGN
+    textAlignVertical: 'center',
     fontSize: isTablet ? 28 : 22,
+    fontWeight: '600',
     marginHorizontal: 6,
+    padding: 0,
   },
 
   activeOtpInput: {
@@ -211,6 +238,7 @@ const styles = StyleSheet.create({
     shadowColor: '#C026FF',
     shadowOpacity: 0.4,
     shadowRadius: 12,
+    elevation: 8,
   },
 
   button: {
