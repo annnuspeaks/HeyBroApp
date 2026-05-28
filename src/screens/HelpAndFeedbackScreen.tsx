@@ -64,7 +64,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
               <Ionicons
                 name="arrow-back"
                 size={isTablet ? 34 : 24}
-                color="#fff"
+                color={COLORS.white}
               />
             </TouchableOpacity>
 
@@ -181,7 +181,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
               style={styles.submitButton}
               onPress={handleSubmit}
             >
-              <Ionicons name="send" size={20} color="#fff" />
+              <Ionicons name="send" size={20} color={COLORS.white} />
 
               <Text style={styles.submitText}>Submit Feedback</Text>
             </TouchableOpacity>
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
 
   mainTitle: {
     color: COLORS.white,
-    fontSize: isTablet ? 48 : 28,
+    fontSize: fontScale(isTablet ? 48 : 28),
     fontWeight: '700',
   },
 
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.6)',
     marginTop: verticalScale(14),
     lineHeight: verticalScale(isTablet ? 42 : 24),
-    fontSize: isTablet ? 26 : 15,
+    fontSize: fontScale(isTablet ? 26 : 15),
     maxWidth: scale(700),
     textAlign: 'center',
   },
@@ -336,20 +336,15 @@ const styles = StyleSheet.create({
 
   quickTitle: {
     color: COLORS.white,
-
     marginTop: 16,
-
-    fontSize: isTablet ? 22 : 17,
+    fontSize: fontScale(isTablet ? 22 : 17),
     fontWeight: '700',
   },
 
   quickSub: {
     color: 'rgba(255,255,255,0.55)',
-
     marginTop: 8,
-
     lineHeight: 20,
-
     fontSize: 13,
   },
 
@@ -358,51 +353,42 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     borderRadius: moderateScale(28),
     padding: scale(24),
-
     maxWidth: 1350,
     width: '92%',
     alignSelf: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   sectionTitle: {
-    color: '#fff',
-
-    fontSize: isTablet ? 24 : 20,
+    color: COLORS.white,
+    fontSize: fontScale(isTablet ? 24 : 20),
     fontWeight: '700',
-
     marginBottom: 20,
   },
 
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-
     borderRadius: 18,
-
     paddingHorizontal: 16,
-
     backgroundColor: 'rgba(255,255,255,0.05)',
-
     marginBottom: 18,
   },
 
   input: {
     flex: 1,
-    color: '#fff',
-    fontSize: 16,
+    color: COLORS.white,
+    fontSize: fontScale(16),
     marginLeft: 12,
     height: isTablet ? 72 : 58,
   },
 
   messageInput: {
     flex: 1,
-    color: '#fff',
-    fontSize: 16,
+    color: COLORS.white,
+    fontSize: fontScale(16),
     marginLeft: 12,
     minHeight: isTablet ? 220 : 140,
     maxHeight: isTablet ? 340 : 220,
@@ -410,22 +396,17 @@ const styles = StyleSheet.create({
 
   submitButton: {
     height: isTablet ? 72 : 58,
-
     borderRadius: moderateScale(18),
-
     backgroundColor: COLORS.primary,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     flexDirection: 'row',
-
     marginTop: 8,
   },
 
   submitText: {
-    color: '#fff',
-    fontSize: 16,
+    color: COLORS.white,
+    fontSize: fontScale(16),
     fontWeight: '700',
     marginLeft: 10,
   },
@@ -447,20 +428,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     paddingVertical: 18,
-
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.05)',
   },
 
   faqText: {
-    color: '#fff',
-
-    fontSize: 15,
-
+    color: COLORS.white,
+    fontSize: fontScale(15),
     flex: 1,
-
     marginRight: 10,
   },
 });
