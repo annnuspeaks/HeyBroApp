@@ -7,19 +7,20 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Dimensions,
   Linking,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import { useUserStore } from '../store/userStore';
-
 import { COLORS } from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
-
-const isTablet = width >= 768;
 
 const menuItems1 = [
   {
@@ -118,7 +119,7 @@ export default function ProfileScreen({ navigation }: any) {
       <View style={styles.leftRow}>
         <Ionicons
           name={item.icon}
-          size={24}
+          size={isTablet ? 26 : 24}
           color={isLogout ? '#ff3b30' : COLORS.white}
         />
 
@@ -138,7 +139,7 @@ export default function ProfileScreen({ navigation }: any) {
       {!isLogout && (
         <Ionicons
           name="chevron-forward"
-          size={20}
+          size={isTablet ? 22 : 20}
           color="rgba(255,255,255,0.4)"
         />
       )}
@@ -173,7 +174,11 @@ export default function ProfileScreen({ navigation }: any) {
                 })
               }
             >
-              <Ionicons name="qr-code-outline" size={18} color="#fff" />
+              <Ionicons
+                name="qr-code-outline"
+                size={isTablet ? 18 : 16}
+                color="#fff"
+              />
             </TouchableOpacity>
           </View>
 
@@ -272,9 +277,10 @@ const styles = StyleSheet.create({
 
   profileContainer: {
     alignItems: 'center',
-    marginTop: height * 0.06,
-    marginBottom: 35,
-    paddingHorizontal: 20,
+    marginTop: verticalScale(isTablet ? 28 : 42),
+    marginBottom: verticalScale(35),
+    paddingHorizontal: scale(20),
+    width: '100%',
   },
 
   avatarWrapper: {
@@ -282,66 +288,67 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: isTablet ? 120 : 95,
-    height: isTablet ? 120 : 95,
-    borderRadius: 100,
-    marginBottom: 18,
-    borderWidth: 2,
+    width: isTablet ? 110 : 95,
+    height: isTablet ? 110 : 95,
+    borderRadius: 999,
+    marginBottom: verticalScale(18),
+    borderWidth: moderateScale(2),
     borderColor: COLORS.primaryDark,
   },
 
   qrButton: {
     position: 'absolute',
-    right: -2,
-    bottom: 12,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    right: scale(-2),
+    bottom: verticalScale(10),
+    width: isTablet ? 34 : 32,
+    height: isTablet ? 34 : 32,
+    borderRadius: 999,
+    borderWidth: moderateScale(2),
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
     borderColor: COLORS.background,
   },
 
   name: {
     color: COLORS.white,
-    fontSize: isTablet ? 34 : 28,
+    fontSize: fontScale(isTablet ? 32 : 28),
     fontWeight: '700',
   },
 
   number: {
     color: COLORS.textMuted,
-    marginTop: 8,
-    fontSize: isTablet ? 20 : 16,
+    marginTop: verticalScale(8),
+    fontSize: fontScale(isTablet ? 18 : 16),
   },
 
   bioBox: {
-    marginTop: 18,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 18,
+    marginTop: verticalScale(18),
+    paddingHorizontal: scale(18),
+    paddingVertical: verticalScale(14),
+    borderRadius: moderateScale(18),
+    maxWidth: isTablet ? '72%' : '88%',
     backgroundColor: 'rgba(124,58,237,0.14)',
     borderWidth: 1,
     borderColor: 'rgba(124,58,237,0.35)',
-    maxWidth: width * 0.8,
   },
 
   bioText: {
     color: '#E9D5FF',
-    fontSize: 15,
+    fontSize: fontScale(isTablet ? 17 : 15),
+    lineHeight: verticalScale(isTablet ? 30 : 24),
     textAlign: 'center',
     fontStyle: 'italic',
-    lineHeight: 24,
   },
 
   websiteContainer: {
-    marginTop: 18,
+    marginTop: verticalScale(18),
+    paddingHorizontal: scale(18),
+    paddingVertical: verticalScale(12),
+    borderRadius: moderateScale(16),
+    maxWidth: isTablet ? '70%' : '90%',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 16,
     backgroundColor: 'rgba(168,85,247,0.14)',
     borderWidth: 1,
     borderColor: 'rgba(192,132,252,0.28)',
@@ -349,16 +356,19 @@ const styles = StyleSheet.create({
 
   website: {
     color: '#E9D5FF',
-    fontSize: 14,
+    fontSize: fontScale(isTablet ? 15 : 14),
     fontWeight: '700',
-    marginLeft: 10,
+    marginLeft: scale(10),
     letterSpacing: 0.5,
   },
 
   card: {
-    marginHorizontal: 20,
-    marginBottom: 22,
-    borderRadius: 26,
+    marginHorizontal: scale(20),
+    marginBottom: verticalScale(22),
+    borderRadius: moderateScale(26),
+    maxWidth: 1300,
+    width: '92%',
+    alignSelf: 'center',
     overflow: 'hidden',
     backgroundColor: COLORS.glass,
     borderWidth: 1,
@@ -367,15 +377,15 @@ const styles = StyleSheet.create({
 
   groupTitle: {
     color: COLORS.textMuted,
-    fontSize: 15,
-    marginTop: 18,
-    marginLeft: 22,
-    marginBottom: 8,
+    fontSize: fontScale(isTablet ? 17 : 15),
+    marginTop: verticalScale(18),
+    marginLeft: scale(22),
+    marginBottom: verticalScale(8),
   },
 
   menuItem: {
-    minHeight: 72,
-    paddingHorizontal: 22,
+    minHeight: isTablet ? 82 : 72,
+    paddingHorizontal: scale(22),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -388,22 +398,22 @@ const styles = StyleSheet.create({
 
   menuText: {
     color: COLORS.white,
-    marginLeft: 18,
-    fontSize: isTablet ? 20 : 17,
+    marginLeft: scale(18),
+    fontSize: fontScale(isTablet ? 18 : 17),
     fontWeight: '500',
   },
 
   divider: {
     height: 1,
     backgroundColor: COLORS.divider,
-    marginLeft: 65,
+    marginLeft: scale(65),
   },
 
   footerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 50,
+    marginTop: verticalScale(10),
+    marginBottom: verticalScale(50),
   },
 
   fromText: {
@@ -414,7 +424,7 @@ const styles = StyleSheet.create({
   },
 
   tasLogo: {
-    width: 110,
-    height: 55,
+    width: isTablet ? 140 : 110,
+    height: isTablet ? 70 : 55,
   },
 });
