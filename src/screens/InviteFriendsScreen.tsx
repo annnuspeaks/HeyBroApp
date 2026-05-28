@@ -8,20 +8,21 @@ import {
   SafeAreaView,
   ScrollView,
   Share,
-  Dimensions,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
+import { COLORS } from '../theme/colors';
 
-const { width } = Dimensions.get('window');
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
 
-const isTablet = width >= 768;
-
-export default function InviteFriendsScreen({
-  navigation,
-}: any) {
+export default function InviteFriendsScreen({ navigation }: any) {
   const handleInvite = async () => {
     try {
       await Share.share({
@@ -43,16 +44,10 @@ export default function InviteFriendsScreen({
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color="#fff"
-          />
+          <Ionicons name="arrow-back" size={isTablet ? 34 : 24} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>
-          Invite Friends
-        </Text>
+        <Text style={styles.headerTitle}>Invite Friends</Text>
 
         <View style={{ width: 42 }} />
       </View>
@@ -70,21 +65,14 @@ export default function InviteFriendsScreen({
           <View style={styles.glow2} />
 
           <View style={styles.iconWrapper}>
-            <Ionicons
-              name="people"
-              size={58}
-              color="#fff"
-            />
+            <Ionicons name="people" size={isTablet ? 110 : 58} color="#fff" />
           </View>
 
-          <Text style={styles.heroTitle}>
-            Invite Your Friends
-          </Text>
+          <Text style={styles.heroTitle}>Invite Your Friends</Text>
 
           <Text style={styles.heroSubtitle}>
-            Bring your friends to TAS and enjoy secure
-            messaging, crystal clear voice calls and
-            ultra smooth video calling experience together.
+            Bring your friends to TAS and enjoy secure messaging, crystal clear
+            voice calls and ultra smooth video calling experience together.
           </Text>
 
           <TouchableOpacity
@@ -94,13 +82,11 @@ export default function InviteFriendsScreen({
           >
             <Ionicons
               name="paper-plane"
-              size={22}
+              size={isTablet ? 34 : 22}
               color="#fff"
             />
 
-            <Text style={styles.inviteButtonText}>
-              Send Invite
-            </Text>
+            <Text style={styles.inviteButtonText}>Send Invite</Text>
           </TouchableOpacity>
         </View>
 
@@ -111,19 +97,16 @@ export default function InviteFriendsScreen({
             <View style={styles.featureIcon}>
               <Ionicons
                 name="chatbubble-ellipses"
-                size={24}
+                size={isTablet ? 34 : 24}
                 color="#A855F7"
               />
             </View>
 
             <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>
-                Secure Messaging
-              </Text>
+              <Text style={styles.featureTitle}>Secure Messaging</Text>
 
               <Text style={styles.featureDescription}>
-                Fast and private conversations with your
-                friends.
+                Fast and private conversations with your friends.
               </Text>
             </View>
           </View>
@@ -134,15 +117,13 @@ export default function InviteFriendsScreen({
             <View style={styles.featureIcon}>
               <Ionicons
                 name="call"
-                size={24}
+                size={isTablet ? 34 : 24}
                 color={COLORS.success}
               />
             </View>
 
             <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>
-                Crystal Voice Calls
-              </Text>
+              <Text style={styles.featureTitle}>Crystal Voice Calls</Text>
 
               <Text style={styles.featureDescription}>
                 Smooth and clear voice calling experience.
@@ -156,15 +137,13 @@ export default function InviteFriendsScreen({
             <View style={styles.featureIcon}>
               <Ionicons
                 name="videocam"
-                size={24}
+                size={isTablet ? 34 : 24}
                 color={COLORS.primary}
               />
             </View>
 
             <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>
-                HD Video Calls
-              </Text>
+              <Text style={styles.featureTitle}>HD Video Calls</Text>
 
               <Text style={styles.featureDescription}>
                 Connect face-to-face anytime anywhere.
@@ -195,15 +174,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    marginTop: 10,
-    marginBottom: 18,
+    paddingHorizontal: scale(18),
+    marginTop: verticalScale(10),
+    marginBottom: verticalScale(18),
   },
 
   backButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: isTablet ? 58 : 42,
+    height: isTablet ? 58 : 42,
+    borderRadius: isTablet ? 29 : 21,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.06)',
@@ -211,7 +190,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: fontScale(24),
     fontWeight: '700',
   },
 
@@ -220,13 +199,13 @@ const styles = StyleSheet.create({
   },
 
   heroCard: {
-    marginHorizontal: 20,
-    marginTop: 10,
-    borderRadius: 34,
+    marginHorizontal: scale(20),
+    marginTop: verticalScale(10),
+    borderRadius: moderateScale(34),
     overflow: 'hidden',
     alignItems: 'center',
-    paddingHorizontal: 26,
-    paddingVertical: 40,
+    paddingHorizontal: scale(26),
+    paddingVertical: verticalScale(40),
     backgroundColor: 'rgba(255,255,255,0.04)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
@@ -234,55 +213,55 @@ const styles = StyleSheet.create({
 
   glow1: {
     position: 'absolute',
-    top: -90,
-    left: -70,
-    width: 220,
-    height: 220,
+    top: verticalScale(-90),
+    left: scale(-70),
+    width: scale(220),
+    height: scale(220),
     borderRadius: 999,
     backgroundColor: 'rgba(168,85,247,0.18)',
   },
 
   glow2: {
     position: 'absolute',
-    bottom: -110,
-    right: -70,
-    width: 220,
-    height: 220,
+    bottom: verticalScale(-110),
+    right: scale(-70),
+    width: scale(220),
+    height: scale(220),
     borderRadius: 999,
     backgroundColor: 'rgba(34,197,94,0.10)',
   },
 
   iconWrapper: {
-    width: isTablet ? 130 : 105,
-    height: isTablet ? 130 : 105,
+    width: isTablet ? 240 : 105,
+    height: isTablet ? 240 : 105,
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.primary,
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
 
   heroTitle: {
     color: '#fff',
-    fontSize: isTablet ? 38 : 30,
+    fontSize: isTablet ? 54 : 30,
     fontWeight: '800',
     textAlign: 'center',
   },
 
   heroSubtitle: {
     color: 'rgba(255,255,255,0.65)',
-    fontSize: isTablet ? 18 : 15,
-    lineHeight: 28,
+    fontSize: isTablet ? 28 : 15,
+    lineHeight: verticalScale(28),
     textAlign: 'center',
-    marginTop: 18,
-    maxWidth: 550,
+    marginTop: verticalScale(18),
+    maxWidth: scale(550),
   },
 
   inviteButton: {
-    marginTop: 34,
-    height: 60,
-    paddingHorizontal: 32,
-    borderRadius: 20,
+    marginTop: verticalScale(34),
+    height: verticalScale(60),
+    paddingHorizontal: scale(32),
+    borderRadius: moderateScale(20),
     backgroundColor: COLORS.primary,
     flexDirection: 'row',
     alignItems: 'center',
@@ -291,15 +270,18 @@ const styles = StyleSheet.create({
 
   inviteButtonText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: fontScale(17),
     fontWeight: '700',
-    marginLeft: 12,
+    marginLeft: scale(12),
   },
 
   card: {
-    marginTop: 26,
-    marginHorizontal: 20,
-    borderRadius: 30,
+    maxWidth: 1350,
+    alignSelf: 'center',
+    width: '92%',
+    marginTop: verticalScale(26),
+    marginHorizontal: scale(20),
+    borderRadius: moderateScale(30),
     overflow: 'hidden',
     backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
@@ -309,14 +291,14 @@ const styles = StyleSheet.create({
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 22,
-    paddingVertical: 24,
+    paddingHorizontal: scale(22),
+    paddingVertical: verticalScale(24),
   },
 
   featureIcon: {
-    width: 58,
-    height: 58,
-    borderRadius: 18,
+    width: isTablet ? 90 : 58,
+    height: isTablet ? 90 : 58,
+    borderRadius: moderateScale(18),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.05)',
@@ -329,31 +311,31 @@ const styles = StyleSheet.create({
 
   featureTitle: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: fontScale(18),
     fontWeight: '700',
   },
 
   featureDescription: {
     color: 'rgba(255,255,255,0.55)',
-    fontSize: 14,
-    lineHeight: 24,
-    marginTop: 6,
+    fontSize: fontScale(14),
+    lineHeight: verticalScale(24),
+    marginTop: verticalScale(6),
   },
 
   divider: {
     height: 1,
     backgroundColor: 'rgba(255,255,255,0.05)',
-    marginLeft: 96,
+    marginLeft: scale(96),
   },
 
   footer: {
     alignItems: 'center',
-    marginTop: 36,
+    marginTop: verticalScale(36),
   },
 
   footerText: {
     color: 'rgba(255,255,255,0.45)',
-    fontSize: 14,
+    fontSize: fontScale(14),
     letterSpacing: 0.5,
   },
 });
