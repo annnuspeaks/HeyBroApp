@@ -13,6 +13,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -133,7 +135,7 @@ export default function InviteFriendsScreen({
               <Ionicons
                 name="call"
                 size={24}
-                color="#22C55E"
+                color={COLORS.success}
               />
             </View>
 
@@ -155,7 +157,7 @@ export default function InviteFriendsScreen({
               <Ionicons
                 name="videocam"
                 size={24}
-                color="#8B5CF6"
+                color={COLORS.primary}
               />
             </View>
 
@@ -186,17 +188,14 @@ export default function InviteFriendsScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     paddingHorizontal: 18,
-
     marginTop: 10,
     marginBottom: 18,
   },
@@ -204,18 +203,14 @@ const styles = StyleSheet.create({
   backButton: {
     width: 42,
     height: 42,
-
     borderRadius: 21,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   headerTitle: {
     color: '#fff',
-
     fontSize: 24,
     fontWeight: '700',
   },
@@ -226,100 +221,69 @@ const styles = StyleSheet.create({
 
   heroCard: {
     marginHorizontal: 20,
-
     marginTop: 10,
-
     borderRadius: 34,
-
     overflow: 'hidden',
-
     alignItems: 'center',
-
     paddingHorizontal: 26,
     paddingVertical: 40,
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   glow1: {
     position: 'absolute',
-
     top: -90,
     left: -70,
-
     width: 220,
     height: 220,
-
     borderRadius: 999,
-
     backgroundColor: 'rgba(168,85,247,0.18)',
   },
 
   glow2: {
     position: 'absolute',
-
     bottom: -110,
     right: -70,
-
     width: 220,
     height: 220,
-
     borderRadius: 999,
-
     backgroundColor: 'rgba(34,197,94,0.10)',
   },
 
   iconWrapper: {
     width: isTablet ? 130 : 105,
     height: isTablet ? 130 : 105,
-
     borderRadius: 999,
-
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: '#8B5CF6',
-
+    backgroundColor: COLORS.primary,
     marginBottom: 24,
   },
 
   heroTitle: {
     color: '#fff',
-
     fontSize: isTablet ? 38 : 30,
     fontWeight: '800',
-
     textAlign: 'center',
   },
 
   heroSubtitle: {
     color: 'rgba(255,255,255,0.65)',
-
     fontSize: isTablet ? 18 : 15,
-
     lineHeight: 28,
-
     textAlign: 'center',
-
     marginTop: 18,
-
     maxWidth: 550,
   },
 
   inviteButton: {
     marginTop: 34,
-
     height: 60,
-
     paddingHorizontal: 32,
-
     borderRadius: 20,
-
-    backgroundColor: '#8B5CF6',
-
+    backgroundColor: COLORS.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -327,24 +291,17 @@ const styles = StyleSheet.create({
 
   inviteButtonText: {
     color: '#fff',
-
     fontSize: 17,
     fontWeight: '700',
-
     marginLeft: 12,
   },
 
   card: {
     marginTop: 26,
-
     marginHorizontal: 20,
-
     borderRadius: 30,
-
     overflow: 'hidden',
-
     backgroundColor: 'rgba(255,255,255,0.03)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
@@ -352,7 +309,6 @@ const styles = StyleSheet.create({
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-
     paddingHorizontal: 22,
     paddingVertical: 24,
   },
@@ -360,57 +316,44 @@ const styles = StyleSheet.create({
   featureIcon: {
     width: 58,
     height: 58,
-
     borderRadius: 18,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.05)',
   },
 
   featureTextContainer: {
     flex: 1,
-
     marginLeft: 18,
   },
 
   featureTitle: {
     color: '#fff',
-
     fontSize: 18,
     fontWeight: '700',
   },
 
   featureDescription: {
     color: 'rgba(255,255,255,0.55)',
-
     fontSize: 14,
-
     lineHeight: 24,
-
     marginTop: 6,
   },
 
   divider: {
     height: 1,
-
     backgroundColor: 'rgba(255,255,255,0.05)',
-
     marginLeft: 96,
   },
 
   footer: {
     alignItems: 'center',
-
     marginTop: 36,
   },
 
   footerText: {
     color: 'rgba(255,255,255,0.45)',
-
     fontSize: 14,
-
     letterSpacing: 0.5,
   },
 });

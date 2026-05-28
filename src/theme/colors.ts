@@ -14,6 +14,7 @@ export const COLORS = {
 
   // PRIMARY
   primary: '#8B5CF6',
+  secondary: '#f4f3f4',
   primaryDark: '#7C3AED',
   primaryLight: '#C084FC',
 
@@ -29,4 +30,17 @@ export const COLORS = {
   // SPECIAL
   qrBackground: '#FFFFFF',
   black: '#000000',
+
+  // OTHERS
+footerColor: '#A855F7',
+footerSubColor: 'rgba(255,255,255,0.4)',
+sectionTextColor: 'rgba(255,255,255,0.72)',
+sectionTitleColor: '#C084FC',
+sectionCardBorderColor: 'rgba(255,255,255,0.05)',
+sectionCardBackgroundColor: 'rgba(255,255,255,0.03)',
+heroSubtitleColor: 'rgba(255,255,255,0.6)',
+heroGlowColor: 'rgba(168,85,247,0.18)',
+heroCardBorderColor: 'rgba(255,255,255,0.06)',
+heroCardBackgroundColor: 'rgba(255,255,255,0.04)'
 };
+

@@ -12,6 +12,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -29,7 +31,7 @@ export default function TermsAndConditionsScreen({
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>
@@ -222,17 +224,14 @@ export default function TermsAndConditionsScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     paddingHorizontal: 18,
-
     marginTop: 10,
     marginBottom: 20,
   },
@@ -240,18 +239,14 @@ const styles = StyleSheet.create({
   backButton: {
     width: 42,
     height: 42,
-
     borderRadius: 21,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   headerTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: 22,
     fontWeight: '700',
   },
@@ -262,112 +257,81 @@ const styles = StyleSheet.create({
 
   heroCard: {
     marginHorizontal: 20,
-
     borderRadius: 34,
-
     paddingVertical: 38,
     paddingHorizontal: 24,
-
     alignItems: 'center',
-
     overflow: 'hidden',
-
-    backgroundColor: 'rgba(255,255,255,0.04)',
-
+    backgroundColor: COLORS.heroCardBackgroundColor,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
+    borderColor: COLORS.heroCardBorderColor,
   },
 
   heroGlow: {
     position: 'absolute',
-
     top: -80,
     right: -60,
-
     width: 200,
     height: 200,
-
     borderRadius: 999,
-
-    backgroundColor: 'rgba(168,85,247,0.18)',
+    backgroundColor: COLORS.heroGlowColor,
   },
 
   heroTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: isTablet ? 34 : 28,
     fontWeight: '800',
-
     marginTop: 18,
   },
 
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.6)',
-
+    color: COLORS.heroSubtitleColor,
     fontSize: 15,
-
     textAlign: 'center',
-
     lineHeight: 24,
-
     marginTop: 14,
-
     maxWidth: 500,
   },
 
   sectionCard: {
     marginTop: 18,
-
     marginHorizontal: 20,
-
     borderRadius: 28,
-
     paddingVertical: 24,
     paddingHorizontal: 22,
-
-    backgroundColor: 'rgba(255,255,255,0.03)',
-
+    backgroundColor: COLORS.sectionCardBackgroundColor,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: COLORS.sectionCardBorderColor,
   },
 
   sectionTitle: {
-    color: '#C084FC',
-
+    color: COLORS.sectionTitleColor,
     fontSize: 18,
     fontWeight: '700',
-
     marginBottom: 14,
   },
 
   sectionText: {
-    color: 'rgba(255,255,255,0.72)',
-
+    color: COLORS.sectionTextColor,
     fontSize: 15,
-
     lineHeight: 28,
-
     letterSpacing: 0.2,
   },
 
   footer: {
     alignItems: 'center',
-
     marginTop: 40,
   },
 
   footerText: {
-    color: '#A855F7',
-
+    color: COLORS.footerColor,
     fontSize: 15,
     fontWeight: '700',
   },
 
   footerSubText: {
-    color: 'rgba(255,255,255,0.4)',
-
+    color: COLORS.footerSubColor,
     fontSize: 13,
-
     marginTop: 10,
   },
 });

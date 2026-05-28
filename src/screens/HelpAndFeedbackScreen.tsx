@@ -15,6 +15,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -107,7 +109,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
             </TouchableOpacity>
 
             <TouchableOpacity activeOpacity={0.8} style={styles.quickCard}>
-              <Ionicons name="mail-outline" size={26} color="#22C55E" />
+              <Ionicons name="mail-outline" size={26} color={COLORS.success} />
 
               <Text style={styles.quickTitle}>Email Us</Text>
 
@@ -211,7 +213,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   scrollContent: {
@@ -440,7 +442,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 18,
 
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
 
     justifyContent: 'center',
     alignItems: 'center',

@@ -13,6 +13,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -104,7 +106,7 @@ export default function LinkedDevices({ navigation }: any) {
             <Ionicons
               name="arrow-back"
               size={24}
-              color="#fff"
+              color={COLORS.white}
             />
           </TouchableOpacity>
 
@@ -146,7 +148,7 @@ export default function LinkedDevices({ navigation }: any) {
             <Ionicons
               name="add-circle-outline"
               size={22}
-              color="#fff"
+              color={COLORS.white}
             />
 
             <Text style={styles.linkButtonText}>
@@ -221,8 +223,8 @@ export default function LinkedDevices({ navigation }: any) {
                   }
                   thumbColor={
                     device.trusted
-                      ? '#A855F7'
-                      : '#f4f3f4'
+                      ? COLORS.primary
+                      : COLORS.secondary
                   }
                   trackColor={{
                     false: '#767577',
@@ -260,7 +262,7 @@ export default function LinkedDevices({ navigation }: any) {
           <Ionicons
             name="shield-checkmark"
             size={18}
-            color="#22C55E"
+            color={COLORS.success}
           />
 
           <Text style={styles.footerText}>
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   scrollContent: {
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 34 : 26,
     fontWeight: '700',
@@ -376,7 +378,7 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 34 : 28,
     fontWeight: '700',
@@ -405,7 +407,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 18,
 
-    backgroundColor: '#8B5CF6',
+    backgroundColor: COLORS.primary,
 
     flexDirection: 'row',
     alignItems: 'center',
@@ -413,7 +415,7 @@ const styles = StyleSheet.create({
   },
 
   linkButtonText: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: 16,
     fontWeight: '700',
@@ -428,7 +430,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 24 : 20,
     fontWeight: '700',
@@ -483,13 +485,13 @@ const styles = StyleSheet.create({
 
     borderRadius: 999,
 
-    backgroundColor: '#22C55E',
+    backgroundColor: COLORS.success,
 
     marginLeft: 10,
   },
 
   deviceName: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: 18,
     fontWeight: '700',
@@ -523,7 +525,7 @@ const styles = StyleSheet.create({
   },
 
   trustedTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: 15,
     fontWeight: '700',

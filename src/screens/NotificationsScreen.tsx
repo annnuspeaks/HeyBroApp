@@ -12,6 +12,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -42,7 +44,7 @@ export default function NotificationsScreen({
       title: 'Messages',
       subtitle: 'Get notified for new messages',
       icon: 'chatbubble-ellipses-outline',
-      color: '#8B5CF6',
+      color: COLORS.primary,
       key: 'messages',
     },
 
@@ -50,7 +52,7 @@ export default function NotificationsScreen({
       title: 'Calls',
       subtitle: 'Incoming voice & video calls',
       icon: 'call-outline',
-      color: '#22C55E',
+      color: COLORS.success,
       key: 'calls',
     },
 
@@ -120,7 +122,7 @@ export default function NotificationsScreen({
             <Ionicons
               name="arrow-back"
               size={24}
-              color="#fff"
+              color={COLORS.white}
             />
           </TouchableOpacity>
 
@@ -142,7 +144,7 @@ export default function NotificationsScreen({
             <Ionicons
               name="notifications-outline"
               size={48}
-              color="#8B5CF6"
+              color={COLORS.primary}
             />
           </View>
 
@@ -205,8 +207,8 @@ export default function NotificationsScreen({
                   notifications[
                     item.key as keyof typeof notifications
                   ]
-                    ? '#8B5CF6'
-                    : '#f4f3f4'
+                    ? COLORS.primary
+                    : COLORS.secondary
                 }
                 trackColor={{
                   false: '#767577',
@@ -223,7 +225,7 @@ export default function NotificationsScreen({
           <Ionicons
             name="shield-checkmark-outline"
             size={18}
-            color="#22C55E"
+            color={COLORS.success}
           />
 
           <Text style={styles.footerText}>
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   scrollContent: {
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 34 : 26,
     fontWeight: '700',
@@ -338,7 +340,7 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 34 : 28,
     fontWeight: '700',
@@ -365,7 +367,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: isTablet ? 24 : 20,
     fontWeight: '700',
@@ -415,7 +417,7 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    color: '#fff',
+    color: COLORS.white,
 
     fontSize: 17,
     fontWeight: '700',

@@ -12,6 +12,8 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {COLORS} from '../theme/colors';
+
 const { width, height } = Dimensions.get('window');
 
 const isTablet = width >= 768;
@@ -42,7 +44,7 @@ export default function ChatSettingScreen({
       title: 'Read Receipts',
       subtitle: 'Show when messages are read',
       icon: 'checkmark-done-outline',
-      color: '#8B5CF6',
+      color: COLORS.primary,
       key: 'readReceipts',
     },
 
@@ -50,7 +52,7 @@ export default function ChatSettingScreen({
       title: 'Typing Indicators',
       subtitle: 'Show typing status in chats',
       icon: 'create-outline',
-      color: '#22C55E',
+      color: COLORS.success,
       key: 'typingIndicators',
     },
 
@@ -120,7 +122,7 @@ export default function ChatSettingScreen({
             <Ionicons
               name="arrow-back"
               size={24}
-              color="#fff"
+              color={COLORS.white}
             />
           </TouchableOpacity>
 
@@ -142,7 +144,7 @@ export default function ChatSettingScreen({
             <Ionicons
               name="chatbubble-ellipses-outline"
               size={48}
-              color="#8B5CF6"
+              color={COLORS.primary}
             />
           </View>
 
@@ -205,8 +207,8 @@ export default function ChatSettingScreen({
                   settings[
                     item.key as keyof typeof settings
                   ]
-                    ? '#8B5CF6'
-                    : '#f4f3f4'
+                    ? COLORS.primary
+                    : COLORS.secondary
                 }
                 trackColor={{
                   false: '#767577',
@@ -223,7 +225,7 @@ export default function ChatSettingScreen({
           <Ionicons
             name="shield-checkmark-outline"
             size={18}
-            color="#22C55E"
+            color={COLORS.success}
           />
 
           <Text style={styles.footerText}>
@@ -239,8 +241,7 @@ export default function ChatSettingScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: '#020826',
+    backgroundColor: COLORS.background,
   },
 
   scrollContent: {
@@ -249,128 +250,94 @@ const styles = StyleSheet.create({
 
   header: {
     marginTop: height * 0.03,
-
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     paddingHorizontal: 20,
   },
 
   backButton: {
     width: 48,
     height: 48,
-
     borderRadius: 24,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
 
   headerTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: isTablet ? 34 : 26,
     fontWeight: '700',
   },
 
   heroCard: {
     marginTop: 34,
-
     marginHorizontal: 20,
-
     borderRadius: 32,
-
     overflow: 'hidden',
-
     alignItems: 'center',
-
     paddingVertical: 40,
     paddingHorizontal: 28,
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
 
   glow1: {
     position: 'absolute',
-
     top: -90,
     left: -70,
-
     width: 220,
     height: 220,
-
     borderRadius: 999,
-
     backgroundColor: 'rgba(168,85,247,0.16)',
   },
 
   glow2: {
     position: 'absolute',
-
     bottom: -100,
     right: -80,
-
     width: 220,
     height: 220,
-
     borderRadius: 999,
-
     backgroundColor: 'rgba(59,130,246,0.12)',
   },
 
   heroIcon: {
     width: 90,
     height: 90,
-
     borderRadius: 45,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     backgroundColor: 'rgba(168,85,247,0.14)',
-
     marginBottom: 22,
   },
 
   heroTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: isTablet ? 34 : 28,
     fontWeight: '700',
-
     textAlign: 'center',
   },
 
   heroSubtitle: {
     color: 'rgba(255,255,255,0.6)',
-
     marginTop: 14,
-
     textAlign: 'center',
-
     lineHeight: 24,
-
     fontSize: isTablet ? 18 : 15,
   },
 
   sectionContainer: {
     marginTop: 34,
-
     paddingHorizontal: 20,
   },
 
   sectionTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: isTablet ? 24 : 20,
     fontWeight: '700',
-
     marginBottom: 18,
   },
 
@@ -378,16 +345,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     borderRadius: 24,
-
     paddingVertical: 18,
     paddingHorizontal: 18,
-
     marginBottom: 14,
-
     backgroundColor: 'rgba(255,255,255,0.04)',
-
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
@@ -395,19 +357,15 @@ const styles = StyleSheet.create({
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-
     flex: 1,
   },
 
   iconWrapper: {
     width: 58,
     height: 58,
-
     borderRadius: 18,
-
     justifyContent: 'center',
     alignItems: 'center',
-
     marginRight: 16,
   },
 
@@ -416,19 +374,15 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    color: '#fff',
-
+    color: COLORS.white,
     fontSize: 17,
     fontWeight: '700',
   },
 
   itemSubtitle: {
     color: 'rgba(255,255,255,0.5)',
-
     marginTop: 6,
-
     fontSize: 13,
-
     lineHeight: 20,
   },
 
@@ -436,23 +390,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-
     marginTop: 28,
-
     paddingHorizontal: 24,
   },
 
   footerText: {
     color: 'rgba(255,255,255,0.5)',
-
     marginLeft: 10,
-
     textAlign: 'center',
-
     lineHeight: 22,
-
     fontSize: 13,
-
     flex: 1,
   },
 });
