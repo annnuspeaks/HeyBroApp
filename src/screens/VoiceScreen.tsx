@@ -58,7 +58,7 @@ const CallItem = ({ item, index, theme, navigation }: any) => {
       }
       style={({ pressed }) => [
         {
-          transform: [{ scale: pressed ? 0.98 : 1 }],
+          transform: [{ scale: pressed ? 0.985 : 1 }],
         },
       ]}
     >
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: verticalScale(14),
     paddingHorizontal: moderateScale(16),
-    borderRadius: moderateScale(22),
+    borderRadius: moderateScale(12),
     marginBottom: verticalScale(10),
     borderWidth: 1,
   },
@@ -423,8 +423,8 @@ const styles = StyleSheet.create({
 
   onlineDot: {
     position: 'absolute',
-    bottom: 2,
-    right: 12,
+    bottom: 0,
+    right: 27,
     width: isTablet ? 12 : 13,
     height: isTablet ? 12 : 13,
     borderRadius: 7,

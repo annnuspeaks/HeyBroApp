@@ -78,16 +78,9 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
         HapticFeedback.trigger('impactLight'); // ✅ subtle haptic on press
         onPress();
       }}
-      android_ripple={{
-        color:
-          theme.background === '#020617'
-            ? 'rgba(255,255,255,0.1)'
-            : 'rgba(0,0,0,0.1)',
-      }}
       style={({ pressed }) => [
         {
-          transform: [{ scale: pressed ? 0.97 : 1 }],
-          opacity: pressed ? 0.9 : 1,
+          transform: [{ scale: pressed ? 0.985 : 1 }],
         },
       ]}
     >
@@ -104,14 +97,6 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
               theme.background === '#020617'
                 ? 'rgba(255,255,255,0.08)'
                 : 'rgba(0,0,0,0.06)',
-
-            shadowColor: '#000',
-
-            shadowOpacity: theme.background === '#020617' ? 0.25 : 0.08, // ✅ soft light shadow
-
-            shadowRadius: 8,
-            elevation: theme.background === '#020617' ? 6 : 3,
-
             opacity,
             transform: [{ translateY }],
           },
@@ -374,31 +359,31 @@ const ChatScreen = () => {
 export default ChatScreen;
 
 const styles = StyleSheet.create({
- container: {
-  flex: 1,
-  paddingHorizontal: SCREEN_PADDING,
-  paddingTop: isTablet ? 14 : 16,
-},
+  container: {
+    flex: 1,
+    paddingHorizontal: SCREEN_PADDING,
+    paddingTop: isTablet ? 14 : 16,
+  },
 
   chatItem: {
     flexDirection: 'row',
-    paddingVertical: 12,
+    alignItems: 'center',
+
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    borderRadius: 18,
+
+    borderRadius: 22,
+
     marginBottom: 10,
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 6,
-    width: '100%',
+
+    minHeight: 86,
   },
 
   avatar: {
-    //not changed
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: isTablet ? 56 : 62,
+    height: isTablet ? 56 : 62,
+    borderRadius: isTablet ? 28 : 31,
     marginRight: 12,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.1)',
@@ -423,19 +408,23 @@ const styles = StyleSheet.create({
 
   rightSection: {
     alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    height: 52,
+    paddingLeft: 10,
   },
 
   time: {
     color: '#64748B',
-    fontSize: 11,
+    fontSize: 12,
+    marginBottom: 6,
     opacity: 0.8,
   },
 
   unreadBadge: {
     marginTop: 6,
-    minWidth: 26,
-    height: 26,
-    borderRadius: 13,
+    minWidth: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 8,
@@ -449,11 +438,10 @@ const styles = StyleSheet.create({
   unreadText: {
     color: COLORS.white,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 
   logo: {
-    //not changed
     width: 160,
     height: 80,
     resizeMode: 'contain',
@@ -461,7 +449,6 @@ const styles = StyleSheet.create({
   },
 
   search: {
-    //not changed
     backgroundColor: '#1E293B',
     borderColor: 'rgba(255,255,255,0.08)',
     borderWidth: 1,
@@ -505,11 +492,11 @@ const styles = StyleSheet.create({
 
   onlineDotChat: {
     position: 'absolute',
-    bottom: 0,
-    right: 16,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    bottom: 2,
+    right: 12,
+    width: isTablet ? 12 : 13,
+    height: isTablet ? 12 : 13,
+    borderRadius: 7,
     backgroundColor: COLORS.success,
     borderWidth: 2,
     borderColor: COLORS.success,
