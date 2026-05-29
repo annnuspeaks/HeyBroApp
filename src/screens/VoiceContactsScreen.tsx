@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 
 import {
   View,
@@ -7,15 +7,26 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {ThemeContext} from '../theme/ThemeContext';
-import {useNavigation} from '@react-navigation/native';
+import { ThemeContext } from '../theme/ThemeContext';
+
+import { useNavigation } from '@react-navigation/native';
+
+import {
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
+import { COLORS } from '../theme/colors';
 
 const ContactsScreen = () => {
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const navigation = useNavigation<any>();
 
   const contacts = [
@@ -48,61 +59,75 @@ const ContactsScreen = () => {
         {
           backgroundColor: theme.background,
         },
-      ]}>
-      <Text style={[styles.header, {color: theme.text}]}>
-        Select Contact
-      </Text>
+      ]}
+    >
+      <Text style={[styles.header, { color: theme.text }]}>Select Contact</Text>
 
       <FlatList
         data={contacts}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={[
-              styles.card,
-              {
-                backgroundColor:
-                  theme.background === '#020617'
-                    ? 'rgba(255,255,255,0.05)'
-                    : '#fff',
-              },
-            ]}
+        renderItem={({ item }) => (
+          <Pressable
             onPress={() =>
               navigation.navigate('OutgoingVoiceCallScreen', {
                 user: item,
               })
-            }>
-            <Image
-              source={{uri: item.image}}
-              style={styles.avatar}
-            />
+            }
+            style={({ pressed }) => ({
+              transform: [{ scale: pressed ? 0.985 : 1 }],
+            })}
+          >
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor:
+                    theme.background === '#020617'
+                      ? 'rgba(255,255,255,0.05)'
+                      : '#fff',
 
-            <View style={{flex: 1}}>
-              <Text
-                style={[
-                  styles.name,
-                  {color: theme.text},
-                ]}>
-                {item.name}
-              </Text>
+                  borderColor:
+                    theme.background === '#020617'
+                      ? 'rgba(255,255,255,0.08)'
+                      : 'rgba(0,0,0,0.06)',
+                },
+              ]}
+            >
+              <View style={{ position: 'relative' }}>
+                <Image source={{ uri: item.image }} style={styles.avatar} />
 
-              <Text
-                style={{
-                  color: item.online
-                    ? '#22C55E'
-                    : '#64748B',
-                  marginTop: 5,
-                }}>
-                {item.online ? 'Online' : 'Offline'}
-              </Text>
+                <View
+                  style={[
+                    styles.onlineDot,
+                    {
+                      backgroundColor: item.online ? COLORS.success : '#64748B',
+                    },
+                  ]}
+                />
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.name, { color: theme.text }]}>
+                  {item.name}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.status,
+                    {
+                      color: item.online ? '#22C55E' : '#64748B',
+                    },
+                  ]}
+                >
+                  {item.online ? 'Online' : 'Offline'}
+                </Text>
+              </View>
+
+              <TouchableOpacity style={styles.callButton}>
+                <Icon name="call" size={18} color="#fff" />
+              </TouchableOpacity>
             </View>
-
-            <Icon
-              name="call"
-              size={22}
-              color="#22C55E"
-            />
-          </TouchableOpacity>
+          </Pressable>
         )}
       />
     </View>
@@ -114,32 +139,79 @@ export default ContactsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: isTablet ? 18 : 14,
+    paddingTop: isTablet ? 12 : 10,
   },
 
   header: {
-    fontSize: 30,
+    fontSize: fontScale(isTablet ? 28 : 34),
     fontWeight: '700',
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
 
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 20,
-    marginBottom: 14,
+
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(16),
+
+    borderRadius: moderateScale(12),
+
+    marginBottom: verticalScale(10),
+
+    borderWidth: 1,
   },
 
   avatar: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    marginRight: 14,
+    width: isTablet ? 56 : 62,
+    height: isTablet ? 56 : 62,
+
+    borderRadius: isTablet ? 28 : 31,
+
+    marginRight: moderateScale(14),
+  },
+
+  onlineDot: {
+    position: 'absolute',
+
+    bottom: 0,
+    right: 2,
+
+    width: isTablet ? 12 : 13,
+    height: isTablet ? 12 : 13,
+
+    borderRadius: 7,
+
+    borderWidth: 2,
+    borderColor: '#020617',
   },
 
   name: {
-    fontSize: 16,
+    fontSize: fontScale(16),
     fontWeight: '600',
+  },
+
+  status: {
+    marginTop: 4,
+    fontSize: fontScale(13),
+  },
+
+  callButton: {
+    width: isTablet ? 36 : 38,
+    height: isTablet ? 36 : 38,
+
+    borderRadius: isTablet ? 18 : 20,
+
+    backgroundColor: '#25D366',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    shadowColor: '#25D366',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
 });
