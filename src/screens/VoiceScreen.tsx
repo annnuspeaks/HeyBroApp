@@ -11,14 +11,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
+import { COLORS } from '../theme/colors';
 
 import { useNavigation } from '@react-navigation/native';
 
 import { ThemeContext } from '../theme/ThemeContext';
-
 
 const CallItem = ({ item, index, theme, navigation }: any) => {
   const translateY = useRef(new Animated.Value(30)).current;
@@ -383,52 +389,51 @@ export default VoiceScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingTop: 12,
+    paddingHorizontal: isTablet ? 18 : 14,
+    paddingTop: isTablet ? 12 : 10,
   },
 
   header: {
-    fontSize: 34,
+    fontSize: fontScale(isTablet ? 28 : 34),
     fontWeight: '700',
   },
 
   subHeader: {
-    marginTop: 5,
-    marginBottom: 0,
-    fontSize: 14,
+    marginTop: verticalScale(4),
+    fontSize: fontScale(14),
     opacity: 0.7,
   },
 
   callCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    marginBottom: 10,
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(16),
+    borderRadius: moderateScale(22),
+    marginBottom: verticalScale(10),
     borderWidth: 1,
   },
 
   avatar: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    marginRight: 14,
+    width: isTablet ? 56 : 62,
+    height: isTablet ? 56 : 62,
+    borderRadius: isTablet ? 28 : 31,
+    marginRight: moderateScale(14),
   },
 
   onlineDot: {
     position: 'absolute',
     bottom: 2,
-    right: 14,
-    width: 13,
-    height: 13,
+    right: 12,
+    width: isTablet ? 12 : 13,
+    height: isTablet ? 12 : 13,
     borderRadius: 7,
     borderWidth: 2,
     borderColor: '#020617',
   },
 
   name: {
-    fontSize: 16,
+    fontSize: fontScale(16),
     fontWeight: '600',
   },
 
@@ -449,13 +454,12 @@ const styles = StyleSheet.create({
   },
 
   smallCallButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 20,
+    width: isTablet ? 36 : 38,
+    height: isTablet ? 36 : 38,
+    borderRadius: isTablet ? 18 : 20,
     backgroundColor: '#25D366',
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#25D366',
     shadowOpacity: 0.4,
     shadowRadius: 8,
@@ -470,9 +474,9 @@ const styles = StyleSheet.create({
   },
 
   topCallButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: isTablet ? 44 : 48,
+    height: isTablet ? 44 : 48,
+    borderRadius: isTablet ? 22 : 24,
     backgroundColor: '#25D366',
     justifyContent: 'center',
     alignItems: 'center',
@@ -484,13 +488,12 @@ const styles = StyleSheet.create({
 
   segmentOuter: {
     alignItems: 'center',
-
     marginBottom: 22,
   },
 
   segmentContainer: {
-    width: 170,
-    height: 44,
+    width: isTablet ? 160 : 170,
+    height: isTablet ? 42 : 44,
     borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.06)',
     flexDirection: 'row',
@@ -502,8 +505,8 @@ const styles = StyleSheet.create({
 
   activePill: {
     position: 'absolute',
-    width: 85,
-    height: 38,
+    width: isTablet ? 80 : 85,
+    height: isTablet ? 36 : 38,
     borderRadius: 19,
     top: 3,
     left: 3,
