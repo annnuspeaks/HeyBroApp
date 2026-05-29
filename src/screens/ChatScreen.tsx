@@ -13,6 +13,10 @@ import { ThemeContext } from '../theme/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import FloatingThemeToggle from '../components/FloatingThemeToggle';
 
+import { fontScale, isTablet } from '../theme/responsive';
+import { COLORS } from '../theme/colors';
+
+const SCREEN_PADDING = isTablet ? 20 : 16;
 const UnreadBadge = ({ count }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -370,15 +374,16 @@ const ChatScreen = () => {
 export default ChatScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 14,
-    paddingTop: 16,
-  },
+ container: {
+  flex: 1,
+  paddingHorizontal: SCREEN_PADDING,
+  paddingTop: isTablet ? 14 : 16,
+},
 
   chatItem: {
     flexDirection: 'row',
-    padding: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 18,
     marginBottom: 10,
     borderWidth: 1,
@@ -386,9 +391,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 6,
+    width: '100%',
   },
 
   avatar: {
+    //not changed
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -403,14 +410,14 @@ const styles = StyleSheet.create({
 
   name: {
     fontWeight: '600',
-    color: '#fff',
-    fontSize: 16,
+    color: COLORS.white,
+    fontSize: fontScale(isTablet ? 17 : 16),
   },
 
   message: {
-    color: '#fff',
+    color: COLORS.white,
     marginTop: 4,
-    fontSize: 14,
+    fontSize: fontScale(isTablet ? 14 : 14),
     opacity: 0.8,
   },
 
@@ -440,12 +447,13 @@ const styles = StyleSheet.create({
   },
 
   unreadText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 12,
     fontWeight: '600',
   },
 
   logo: {
+    //not changed
     width: 160,
     height: 80,
     resizeMode: 'contain',
@@ -453,6 +461,7 @@ const styles = StyleSheet.create({
   },
 
   search: {
+    //not changed
     backgroundColor: '#1E293B',
     borderColor: 'rgba(255,255,255,0.08)',
     borderWidth: 1,
@@ -460,12 +469,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
     marginBottom: 20,
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 14,
+    width: '100%',
   },
 
   sectionTitle: {
-    fontSize: 18,
+    fontSize: fontScale(isTablet ? 18 : 17),
     fontWeight: '600',
     letterSpacing: 0.5,
     marginBottom: 12,
@@ -478,19 +488,21 @@ const styles = StyleSheet.create({
   },
 
   activeAvatar: {
+    //not changed
     width: 62,
     height: 62,
     borderRadius: 31,
     borderWidth: 2,
     borderColor: '#8B5CF6',
-
     shadowColor: '#8B5CF6',
     shadowOpacity: 0.4,
     shadowRadius: 8,
   },
+
   listContent: {
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
+
   onlineDotChat: {
     position: 'absolute',
     bottom: 0,
@@ -498,14 +510,15 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#22C55E',
+    backgroundColor: COLORS.success,
     borderWidth: 2,
-    borderColor: '#22C55E',
-    shadowColor: '#22C55E',
+    borderColor: COLORS.success,
+    shadowColor: COLORS.success,
     shadowOpacity: 0.9,
     shadowRadius: 6,
     elevation: 4,
   },
+
   onlineDotActive: {
     position: 'absolute',
     bottom: 0,
@@ -513,10 +526,10 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#22C55E',
+    backgroundColor: COLORS.success,
     borderWidth: 2,
-    borderColor: '#22C55E',
-    shadowColor: '#22C55E',
+    borderColor: COLORS.success,
+    shadowColor: COLORS.success,
     shadowOpacity: 0.9,
     shadowRadius: 6,
     elevation: 4,
