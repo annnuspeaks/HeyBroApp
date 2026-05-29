@@ -152,37 +152,27 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-
     paddingVertical: verticalScale(14),
     paddingHorizontal: moderateScale(16),
-
     borderRadius: moderateScale(12),
-
     marginBottom: verticalScale(10),
-
     borderWidth: 1,
   },
 
   avatar: {
     width: isTablet ? 56 : 62,
     height: isTablet ? 56 : 62,
-
     borderRadius: isTablet ? 28 : 31,
-
     marginRight: moderateScale(14),
   },
 
   onlineDot: {
     position: 'absolute',
-
     bottom: 0,
-    right: 2,
-
+    right: 27,
     width: isTablet ? 12 : 13,
     height: isTablet ? 12 : 13,
-
     borderRadius: 7,
-
     borderWidth: 2,
     borderColor: '#020617',
   },
@@ -200,18 +190,13 @@ const styles = StyleSheet.create({
   callButton: {
     width: isTablet ? 36 : 38,
     height: isTablet ? 36 : 38,
-
     borderRadius: isTablet ? 18 : 20,
-
     backgroundColor: '#25D366',
-
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#25D366',
     shadowOpacity: 0.4,
     shadowRadius: 8,
-
     elevation: 5,
   },
 });

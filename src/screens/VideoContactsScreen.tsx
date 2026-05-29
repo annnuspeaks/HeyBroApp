@@ -7,7 +7,17 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
+
+import {
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
+import { COLORS } from '../theme/colors';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -91,69 +101,49 @@ const VideoContactsScreen = () => {
           paddingBottom: 30,
         }}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              styles.card,
-
-              {
-                backgroundColor:
-                  theme.background === '#020617'
-                    ? 'rgba(255,255,255,0.05)'
-                    : '#fff',
-
-                borderColor:
-                  theme.background === '#020617'
-                    ? 'rgba(255,255,255,0.08)'
-                    : 'rgba(0,0,0,0.06)',
-              },
-            ]}
-            activeOpacity={0.88}
+          <Pressable
             onPress={() =>
               navigation.navigate('OutgoingVideoCallScreen', {
                 user: item,
               })
             }
+            style={({ pressed }) => ({
+              transform: [{ scale: pressed ? 0.985 : 1 }],
+            })}
           >
-            {/* AVATAR */}
-
             <View
-              style={{
-                position: 'relative',
-              }}
+              style={[
+                styles.card,
+                {
+                  backgroundColor:
+                    theme.background === '#020617'
+                      ? 'rgba(255,255,255,0.05)'
+                      : '#fff',
+
+                  borderColor:
+                    theme.background === '#020617'
+                      ? 'rgba(255,255,255,0.08)'
+                      : 'rgba(0,0,0,0.06)',
+                },
+              ]}
             >
-              <Image
-                source={{
-                  uri: item.image,
-                }}
-                style={styles.avatar}
-              />
+              <View style={{ position: 'relative' }}>
+                <Image source={{ uri: item.image }} style={styles.avatar} />
 
-              {item.online && <View style={styles.onlineDot} />}
-            </View>
-
-            {/* USER INFO */}
-
-            <View style={{ flex: 1 }}>
-              <Text
-                style={[
-                  styles.name,
-                  {
-                    color: theme.text,
-                  },
-                ]}
-              >
-                {item.name}
-              </Text>
-
-              <View style={styles.statusRow}>
                 <View
                   style={[
-                    styles.statusDot,
+                    styles.onlineDot,
                     {
-                      backgroundColor: item.online ? '#22C55E' : '#64748B',
+                      backgroundColor: item.online ? COLORS.success : '#64748B',
                     },
                   ]}
                 />
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.name, { color: theme.text }]}>
+                  {item.name}
+                </Text>
 
                 <Text
                   style={[
@@ -166,21 +156,12 @@ const VideoContactsScreen = () => {
                   {item.online ? 'Online' : 'Offline'}
                 </Text>
               </View>
+
+              <TouchableOpacity style={styles.videoButton}>
+                <Icon name="videocam" size={18} color="#fff" />
+              </TouchableOpacity>
             </View>
-
-            {/* VIDEO BUTTON */}
-
-            <TouchableOpacity
-              style={styles.videoButton}
-              onPress={() =>
-                navigation.navigate('OutgoingVideoCallScreen', {
-                  user: item,
-                })
-              }
-            >
-              <Icon name="videocam" size={18} color="#fff" />
-            </TouchableOpacity>
-          </TouchableOpacity>
+          </Pressable>
         )}
       />
     </View>
@@ -192,82 +173,67 @@ export default VideoContactsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingTop: 14,
+    paddingHorizontal: isTablet ? 18 : 14,
+    paddingTop: isTablet ? 12 : 10,
   },
 
   header: {
-    fontSize: 34,
+    fontSize: fontScale(isTablet ? 28 : 34),
     fontWeight: '700',
   },
 
   subHeader: {
-    marginTop: 4,
-    marginBottom: 22,
-    fontSize: 14,
+    marginTop: verticalScale(4),
+    marginBottom: verticalScale(22),
+    fontSize: fontScale(14),
     opacity: 0.7,
   },
 
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    marginBottom: 12,
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(16),
+    borderRadius: moderateScale(12),
+    marginBottom: verticalScale(10),
     borderWidth: 1,
   },
 
   avatar: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    marginRight: 14,
+    width: isTablet ? 56 : 62,
+    height: isTablet ? 56 : 62,
+    borderRadius: isTablet ? 28 : 31,
+    marginRight: moderateScale(14),
   },
 
   onlineDot: {
     position: 'absolute',
-    bottom: 2,
-    right: 14,
-    width: 13,
-    height: 13,
+    bottom: 0,
+    right: 27,
+    width: isTablet ? 12 : 13,
+    height: isTablet ? 12 : 13,
     borderRadius: 7,
     borderWidth: 2,
     borderColor: '#020617',
-    backgroundColor: '#22C55E',
   },
 
   name: {
-    fontSize: 16,
+    fontSize: fontScale(16),
     fontWeight: '600',
   },
 
-  statusRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-  },
-
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 6,
-  },
-
   statusText: {
-    fontSize: 13,
-    fontWeight: '500',
+    marginTop: 4,
+    fontSize: fontScale(13),
   },
 
   videoButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: isTablet ? 36 : 38,
+    height: isTablet ? 36 : 38,
+    borderRadius: isTablet ? 18 : 20,
     backgroundColor: '#8B5CF6',
     justifyContent: 'center',
     alignItems: 'center',
-
     shadowColor: '#8B5CF6',
     shadowOpacity: 0.35,
     shadowRadius: 8,
