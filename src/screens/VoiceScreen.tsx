@@ -298,7 +298,7 @@ const VoiceScreen = () => {
             style={styles.topCallButton}
             onPress={() => navigation.navigate('ContactsScreen')}
           >
-            <Icon name="call" size={18} color="#fff" />
+            <Icon name="call" size={18} color={COLORS.white} />
           </TouchableOpacity>
         </View>
         <View style={styles.segmentOuter}>
@@ -314,8 +314,7 @@ const VoiceScreen = () => {
                     {
                       translateX: toggleAnim.interpolate({
                         inputRange: [0, 1],
-
-                        outputRange: [0, 78],
+                        outputRange: [0, isTablet ? 74 : 78],
                       }),
                     },
                   ],
@@ -401,6 +400,7 @@ const styles = StyleSheet.create({
   subHeader: {
     marginTop: verticalScale(4),
     fontSize: fontScale(14),
+    marginBottom: 0,
     opacity: 0.7,
   },
 
@@ -430,6 +430,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 2,
     borderColor: '#020617',
+    backgroundColor: COLORS.success,
   },
 
   name: {
@@ -445,7 +446,7 @@ const styles = StyleSheet.create({
 
   callType: {
     marginLeft: 5,
-    fontSize: 13,
+    fontSize: fontScale(13),
   },
 
   time: {
@@ -505,7 +506,7 @@ const styles = StyleSheet.create({
 
   activePill: {
     position: 'absolute',
-    width: isTablet ? 80 : 85,
+    width: isTablet ? 78 : 85,
     height: isTablet ? 36 : 38,
     borderRadius: 19,
     top: 3,
@@ -529,7 +530,7 @@ const styles = StyleSheet.create({
   },
 
   activeSegmentText: {
-    color: '#fff',
+    color: COLORS.white,
   },
 
   groupLabel: {

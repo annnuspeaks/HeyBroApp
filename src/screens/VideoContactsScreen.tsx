@@ -118,7 +118,7 @@ const VideoContactsScreen = () => {
                   backgroundColor:
                     theme.background === '#020617'
                       ? 'rgba(255,255,255,0.05)'
-                      : '#fff',
+                      : COLORS.white,
 
                   borderColor:
                     theme.background === '#020617'
@@ -158,7 +158,7 @@ const VideoContactsScreen = () => {
               </View>
 
               <TouchableOpacity style={styles.videoButton}>
-                <Icon name="videocam" size={18} color="#fff" />
+                <Icon name="videocam" size={18} color={COLORS.white} />
               </TouchableOpacity>
             </View>
           </Pressable>

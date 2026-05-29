@@ -11,6 +11,15 @@ import {
   Pressable,
 } from 'react-native';
 
+import {
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
+import { COLORS } from '../theme/colors';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { useNavigation } from '@react-navigation/native';
@@ -370,8 +379,7 @@ const VideoScreen = () => {
                     {
                       translateX: toggleAnim.interpolate({
                         inputRange: [0, 1],
-
-                        outputRange: [0, 78],
+                        outputRange: [0, isTablet ? 74 : 78],
                       }),
                     },
                   ],
@@ -453,8 +461,83 @@ export default VideoScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingTop: 12,
+    paddingHorizontal: isTablet ? 18 : 14,
+    paddingTop: isTablet ? 12 : 10,
+  },
+  
+  header: {
+    fontSize: fontScale(isTablet ? 28 : 34),
+    fontWeight: '700',
+  },
+  
+  subHeader: {
+    marginTop: verticalScale(4),
+    fontSize: fontScale(14),
+    marginBottom: 0,
+    opacity: 0.7,
+  },
+  
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(16),
+    borderRadius: moderateScale(12),
+    marginBottom: verticalScale(10),
+    borderWidth: 1,
+  },
+  
+  avatar: {
+    width: isTablet ? 56 : 62,
+    height: isTablet ? 56 : 62,
+    borderRadius: isTablet ? 28 : 31,
+    marginRight: moderateScale(14),
+  },
+
+  onlineDot: {
+    position: 'absolute',
+    bottom: 0,
+    right: 27,
+    width: isTablet ? 12 : 13,
+    height: isTablet ? 12 : 13,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: '#020617',
+    backgroundColor: COLORS.success,
+  },
+
+  name: {
+    fontSize: fontScale(16),
+    fontWeight: '600',
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+
+  callType: {
+    marginLeft: 5,
+    fontSize: fontScale(13),
+  },
+
+  time: {
+    fontSize: 12,
+    marginBottom: 12,
+  },
+
+  callButton: {
+    width: isTablet ? 36 : 38,
+    height: isTablet ? 36 : 38,
+    borderRadius: isTablet ? 18 : 20,
+    backgroundColor: '#8B5CF6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#8B5CF6',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 5,
   },
 
   headerRow: {
@@ -464,22 +547,10 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
 
-  header: {
-    fontSize: 34,
-    fontWeight: '700',
-  },
-
-  subHeader: {
-    marginTop: 5,
-    marginBottom: 0,
-    fontSize: 14,
-    opacity: 0.7,
-  },
-
   videoFab: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: isTablet ? 44 : 48,
+    height: isTablet ? 44 : 48,
+    borderRadius: isTablet ? 22 : 24,
     backgroundColor: '#8B5CF6',
     justifyContent: 'center',
     alignItems: 'center',
@@ -495,8 +566,8 @@ const styles = StyleSheet.create({
   },
 
   segmentContainer: {
-    width: 170,
-    height: 44,
+    width: isTablet ? 160 : 170,
+    height: isTablet ? 42 : 44,
     borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.06)',
     flexDirection: 'row',
@@ -505,11 +576,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.05)',
   },
-
+  
   activePill: {
     position: 'absolute',
-    width: 85,
-    height: 38,
+    width: isTablet ? 78 : 85,
+    height: isTablet ? 36 : 38,
     borderRadius: 19,
     top: 3,
     left: 3,
@@ -517,24 +588,24 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-
+  
   segmentButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
   },
-
+  
   segmentText: {
     color: '#94A3B8',
     fontSize: 14,
     fontWeight: '600',
   },
-
+  
   activeSegmentText: {
-    color: '#fff',
+    color: COLORS.white,
   },
-
+  
   groupLabel: {
     color: '#94A3B8',
     fontSize: 13,
@@ -543,68 +614,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
     letterSpacing: 1,
     textTransform: 'uppercase',
-  },
-
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    marginBottom: 10,
-    borderWidth: 1,
-  },
-
-  avatar: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    marginRight: 14,
-  },
-
-  onlineDot: {
-    position: 'absolute',
-    bottom: 2,
-    right: 14,
-    width: 13,
-    height: 13,
-    borderRadius: 7,
-    borderWidth: 2,
-    borderColor: '#020617',
-    backgroundColor: '#22C55E',
-  },
-
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-
-  callType: {
-    marginLeft: 5,
-    fontSize: 13,
-  },
-
-  time: {
-    fontSize: 12,
-    marginBottom: 12,
-  },
-
-  callButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 20,
-    backgroundColor: '#8B5CF6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#8B5CF6',
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 5,
   },
 });

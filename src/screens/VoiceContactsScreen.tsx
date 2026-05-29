@@ -84,7 +84,7 @@ const ContactsScreen = () => {
                   backgroundColor:
                     theme.background === '#020617'
                       ? 'rgba(255,255,255,0.05)'
-                      : '#fff',
+                      : COLORS.white,
 
                   borderColor:
                     theme.background === '#020617'
@@ -124,7 +124,7 @@ const ContactsScreen = () => {
               </View>
 
               <TouchableOpacity style={styles.callButton}>
-                <Icon name="call" size={18} color="#fff" />
+                <Icon name="call" size={18} color={COLORS.white} />
               </TouchableOpacity>
             </View>
           </Pressable>
