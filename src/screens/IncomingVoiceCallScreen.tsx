@@ -5,23 +5,23 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Dimensions,
   PanResponder,
   Vibration,
   Easing,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLORS} from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
-
-const isPortrait = height > width;
-
-const BUTTON_SIZE = isPortrait ? width * 0.12 : height * 0.11;
-const AVATAR_SIZE = isPortrait ? width * 0.27 : height * 0.24;
+import { COLORS } from '../theme/colors';
 
 const DRAG_LIMIT = -70;
 
@@ -57,28 +57,21 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     Sound.setCategory('Playback');
 
-    const ringtone = new Sound(
-      'ringtone.mp3',
-      Sound.MAIN_BUNDLE,
-      error => {
-        if (error) {
-          console.log('VOICE RINGTONE ERROR => ', error);
+    const ringtone = new Sound('ringtone.mp3', Sound.MAIN_BUNDLE, error => {
+      if (error) {
+        console.log('VOICE RINGTONE ERROR => ', error);
 
-          return;
-        }
+        return;
+      }
 
-        ringtone.setVolume(1);
+      ringtone.setVolume(1);
 
-        ringtone.setNumberOfLoops(-1);
+      ringtone.setNumberOfLoops(-1);
 
-        ringtone.play(success => {
-          console.log(
-            'VOICE RINGTONE PLAYING => ',
-            success,
-          );
-        });
-      },
-    );
+      ringtone.play(success => {
+        console.log('VOICE RINGTONE PLAYING => ', success);
+      });
+    });
 
     Vibration.vibrate([0, 1000, 700], true);
 
@@ -183,8 +176,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   const openChat = () => {
     navigation.navigate('ChatOpenScreen', {
       user,
-      defaultMessage:
-        "Hello! I'm busy right now. Calling you later.",
+      defaultMessage: "Hello! I'm busy right now. Calling you later.",
     });
   };
 
@@ -192,30 +184,21 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   // DRAG
   // =========================
 
-  const createPanResponder = (
-    animatedValue: any,
-    action: () => void,
-  ) => {
+  const createPanResponder = (animatedValue: any, action: () => void) => {
     let hapticTriggered = false;
 
     return PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
 
       onPanResponderMove: (_, gesture) => {
-        const limitedY = Math.max(
-          gesture.dy,
-          DRAG_LIMIT,
-        );
+        const limitedY = Math.max(gesture.dy, DRAG_LIMIT);
 
         animatedValue.setValue({
           x: 0,
           y: limitedY,
         });
 
-        if (
-          limitedY <= DRAG_LIMIT &&
-          !hapticTriggered
-        ) {
+        if (limitedY <= DRAG_LIMIT && !hapticTriggered) {
           Vibration.vibrate(35);
 
           hapticTriggered = true;
@@ -249,29 +232,15 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
     });
   };
 
-  const acceptPan = createPanResponder(
-    acceptDrag,
-    acceptCall,
-  );
+  const acceptPan = createPanResponder(acceptDrag, acceptCall);
 
-  const rejectPan = createPanResponder(
-    rejectDrag,
-    rejectCall,
-  );
+  const rejectPan = createPanResponder(rejectDrag, rejectCall);
 
-  const messagePan = createPanResponder(
-    messageDrag,
-    openChat,
-  );
+  const messagePan = createPanResponder(messageDrag, openChat);
 
   return (
     <LinearGradient
-      colors={[
-        '#5D5A4D',
-        '#4B4841',
-        '#3B312E',
-        '#2A1515',
-      ]}
+      colors={['#5D5A4D', '#4B4841', '#3B312E', '#2A1515']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
@@ -300,9 +269,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
             ]}
           />
 
-          <Text style={styles.islandText}>
-            Incoming Call
-          </Text>
+          <Text style={styles.islandText}>Incoming Call</Text>
         </Animated.View>
 
         {/* CENTER */}
@@ -335,16 +302,11 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
           {/* TEXT */}
 
           <View style={styles.textContainer}>
-            <Text
-              numberOfLines={1}
-              style={styles.name}
-            >
+            <Text numberOfLines={1} style={styles.name}>
               {user.name}
             </Text>
 
-            <Text style={styles.subText}>
-              Incoming voice call...
-            </Text>
+            <Text style={styles.subText}>Incoming voice call...</Text>
           </View>
         </View>
 
@@ -356,8 +318,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
           <Animated.View
             {...rejectPan.panHandlers}
             style={{
-              transform:
-                rejectDrag.getTranslateTransform(),
+              transform: rejectDrag.getTranslateTransform(),
             }}
           >
             <View style={styles.buttonWrapper}>
@@ -371,7 +332,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
               >
                 <Icon
                   name="call"
-                  size={35}
+                  size={isTablet ? 28 : 35}
                   color="#fff"
                   style={{
                     transform: [
@@ -394,12 +355,11 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
                 ...acceptDrag.getTranslateTransform(),
 
                 {
-                  translateY:
-                    arrowAnim.interpolate({
-                      inputRange: [-10, 0],
+                  translateY: arrowAnim.interpolate({
+                    inputRange: [-10, 0],
 
-                      outputRange: [-10, 0],
-                    }),
+                    outputRange: [-10, 0],
+                  }),
                 },
               ],
             }}
@@ -413,8 +373,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
                   {
                     transform: [
                       {
-                        translateY:
-                          arrowAnim,
+                        translateY: arrowAnim,
                       },
                     ],
                   },
@@ -495,11 +454,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
                   },
                 ]}
               >
-                <Icon
-                  name="call"
-                  size={35}
-                  color="#fff"
-                />
+                <Icon name="call" size={isTablet ? 28 : 35} color="#fff" />
               </Animated.View>
             </View>
           </Animated.View>
@@ -509,8 +464,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
           <Animated.View
             {...messagePan.panHandlers}
             style={{
-              transform:
-                messageDrag.getTranslateTransform(),
+              transform: messageDrag.getTranslateTransform(),
             }}
           >
             <View style={styles.buttonWrapper}>
@@ -524,7 +478,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
               >
                 <Icon
                   name="chatbubble"
-                  size={35}
+                  size={isTablet ? 28 : 35}
                   color="#111"
                 />
               </View>
@@ -545,27 +499,18 @@ const styles = StyleSheet.create({
 
   overlay: {
     flex: 1,
-    backgroundColor:
-      'rgba(0,0,0,0.42)',
+    backgroundColor: 'rgba(0,0,0,0.42)',
     alignItems: 'center',
   },
 
   dynamicIsland: {
-    marginTop: isPortrait ? 22 : 10,
-
-    backgroundColor:
-      'rgba(0,0,0,0.70)',
-
-    paddingHorizontal: 18,
-
-    paddingVertical: 10,
-
+    marginTop: isTablet ? verticalScale(14) : verticalScale(22),
+    paddingHorizontal: moderateScale(18),
+    paddingVertical: verticalScale(10),
+    backgroundColor: 'rgba(0,0,0,0.70)',
     borderRadius: 999,
-
     flexDirection: 'row',
-
     alignItems: 'center',
-
     gap: 8,
   },
 
@@ -577,7 +522,7 @@ const styles = StyleSheet.create({
 
   islandText: {
     color: '#fff',
-    fontSize: 13,
+    fontSize: fontScale(13),
     fontWeight: '600',
   },
 
@@ -588,35 +533,33 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: AVATAR_SIZE,
-    height: AVATAR_SIZE,
+    width: isTablet ? scale(100) : scale(140),
+    height: isTablet ? scale(100) : scale(140),
     borderRadius: 999,
     borderWidth: 2,
-    borderColor:
-      'rgba(255,255,255,0.15)',
+    borderColor: 'rgba(255,255,255,0.15)',
   },
 
   textContainer: {
     alignItems: 'center',
-    marginTop: 24,
-    minHeight: 80,
+    marginTop: verticalScale(24),
+    minHeight: verticalScale(80),
     justifyContent: 'center',
   },
 
   name: {
     color: '#fff',
-    fontSize: isPortrait ? 31 : 26,
+    fontSize: fontScale(isTablet ? 26 : 31),
     fontWeight: '800',
     textAlign: 'center',
   },
 
   subText: {
-    color:
-      'rgba(255,255,255,0.78)',
+    color: 'rgba(255,255,255,0.78)',
 
-    fontSize: 17,
+    fontSize: fontScale(isTablet ? 15 : 17),
 
-    marginTop: 10,
+    marginTop: verticalScale(10),
 
     textAlign: 'center',
   },
@@ -624,11 +567,9 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent:
-      'space-evenly',
+    justifyContent: 'space-evenly',
     alignItems: 'flex-end',
-    marginBottom:
-      isPortrait ? 70 : 35,
+    marginBottom: isTablet ? verticalScale(30) : verticalScale(70),
   },
 
   buttonWrapper: {
@@ -636,8 +577,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: BUTTON_SIZE - 10,
-    height: BUTTON_SIZE - 10,
+    width: isTablet ? scale(24) : scale(42),
+    height: isTablet ? scale(24) : scale(42),
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
@@ -645,7 +586,7 @@ const styles = StyleSheet.create({
   },
 
   arrowsContainer: {
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
     alignItems: 'center',
   },
 });
