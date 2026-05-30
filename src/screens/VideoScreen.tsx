@@ -68,7 +68,7 @@ const VideoCallItem = ({ item, index, theme, navigation }: any) => {
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate('OutgoingVideoCallScreen', {
+        navigation.navigate('IncomingVideoCallScreen', {
           user: item,
         })
       }

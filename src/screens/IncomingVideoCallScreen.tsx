@@ -5,21 +5,26 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Dimensions,
   PanResponder,
   Vibration,
   Easing,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLORS} from '../theme/colors';
-const { width, height } = Dimensions.get('window');
-const isPortrait = height > width;
-const BUTTON_SIZE = isPortrait ? width * 0.12 : height * 0.11;
-const AVATAR_SIZE = isPortrait ? width * 0.27 : height * 0.24;
+import { COLORS } from '../theme/colors';
+
 const DRAG_LIMIT = -70;
+
 const IncomingVideoCallScreen = ({ route, navigation }: any) => {
   const { user } = route.params;
 
@@ -465,10 +470,10 @@ const styles = StyleSheet.create({
   },
 
   dynamicIsland: {
-    marginTop: isPortrait ? 22 : 10,
+    marginTop: isTablet ? verticalScale(14) : verticalScale(22),
     backgroundColor: 'rgba(0,0,0,0.70)',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingHorizontal: moderateScale(18),
+    paddingVertical: verticalScale(10),
     borderRadius: 999,
     flexDirection: 'row',
     alignItems: 'center',
@@ -484,7 +489,7 @@ const styles = StyleSheet.create({
 
   islandText: {
     color: '#fff',
-    fontSize: 13,
+    fontSize: fontScale(13),
     fontWeight: '600',
   },
 
@@ -495,8 +500,8 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: AVATAR_SIZE,
-    height: AVATAR_SIZE,
+    width: isTablet ? scale(100) : scale(140),
+    height: isTablet ? scale(100) : scale(140),
     borderRadius: 999,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.15)',
@@ -504,22 +509,22 @@ const styles = StyleSheet.create({
 
   textContainer: {
     alignItems: 'center',
-    marginTop: 24,
-    minHeight: 80,
+    marginTop: verticalScale(24),
+    minHeight: verticalScale(80),
     justifyContent: 'center',
   },
 
   name: {
     color: '#fff',
-    fontSize: isPortrait ? 31 : 26,
+    fontSize: fontScale(isTablet ? 26 : 31),
     fontWeight: '800',
     textAlign: 'center',
   },
 
   subText: {
     color: 'rgba(255,255,255,0.78)',
-    fontSize: 17,
-    marginTop: 10,
+    fontSize: fontScale(isTablet ? 15 : 17),
+    marginTop: verticalScale(10),
     textAlign: 'center',
   },
 
@@ -528,7 +533,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'flex-end',
-    marginBottom: isPortrait ? 70 : 35,
+    marginBottom: isTablet ? verticalScale(30) : verticalScale(70),
   },
 
   buttonWrapper: {
@@ -536,8 +541,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: BUTTON_SIZE - 10,
-    height: BUTTON_SIZE - 10,
+    width: isTablet ? scale(24) : scale(42),
+    height: isTablet ? scale(24) : scale(42),
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
@@ -545,7 +550,7 @@ const styles = StyleSheet.create({
   },
 
   arrowsContainer: {
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
     alignItems: 'center',
   },
 });

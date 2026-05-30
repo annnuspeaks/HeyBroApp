@@ -33,11 +33,8 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const glowAnim = useRef(new Animated.Value(0.45)).current;
-
   const pulseAnim = useRef(new Animated.Value(1)).current;
-
   const arrowAnim = useRef(new Animated.Value(0)).current;
-
   const islandAnim = useRef(new Animated.Value(1)).current;
 
   // =========================
@@ -45,9 +42,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const acceptDrag = useRef(new Animated.ValueXY()).current;
-
   const rejectDrag = useRef(new Animated.ValueXY()).current;
-
   const messageDrag = useRef(new Animated.ValueXY()).current;
 
   // =========================
@@ -60,14 +55,10 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
     const ringtone = new Sound('ringtone.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log('VOICE RINGTONE ERROR => ', error);
-
         return;
       }
-
       ringtone.setVolume(1);
-
       ringtone.setNumberOfLoops(-1);
-
       ringtone.play(success => {
         console.log('VOICE RINGTONE PLAYING => ', success);
       });
@@ -164,9 +155,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   // =========================
 
   const acceptCall = () => {
-    navigation.replace('VoiceCallScreen', {
-      user,
-    });
+    navigation.replace('VoiceCallScreen', { user });
   };
 
   const rejectCall = () => {
@@ -233,9 +222,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
   };
 
   const acceptPan = createPanResponder(acceptDrag, acceptCall);
-
   const rejectPan = createPanResponder(rejectDrag, rejectCall);
-
   const messagePan = createPanResponder(messageDrag, openChat);
 
   return (
@@ -252,11 +239,7 @@ const IncomingVoiceCallScreen = ({ route, navigation }: any) => {
           style={[
             styles.dynamicIsland,
             {
-              transform: [
-                {
-                  scale: islandAnim,
-                },
-              ],
+              transform: [{ scale: islandAnim }],
             },
           ]}
         >
@@ -518,6 +501,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 999,
+    backgroundColor: '#8B5CF6',
   },
 
   islandText: {
@@ -556,11 +540,8 @@ const styles = StyleSheet.create({
 
   subText: {
     color: 'rgba(255,255,255,0.78)',
-
     fontSize: fontScale(isTablet ? 15 : 17),
-
     marginTop: verticalScale(10),
-
     textAlign: 'center',
   },
 
