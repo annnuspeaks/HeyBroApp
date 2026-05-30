@@ -9,13 +9,21 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
+
 import { useNavigation } from '@react-navigation/native';
 
 import InCallManager from 'react-native-incall-manager';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {COLORS} from '../theme/colors';
+import { COLORS } from '../theme/colors';
 
 const VoiceCallScreen = ({ route }: any) => {
   const navigation = useNavigation<any>();
@@ -211,7 +219,11 @@ const VoiceCallScreen = ({ route }: any) => {
               isMuted && styles.controlBtnActive,
             ]}
           >
-            <Icon name={isMuted ? 'mic-off' : 'mic'} size={24} color="#fff" />
+            <Icon
+              name={isMuted ? 'mic-off' : 'mic'}
+              size={isTablet ? 22 : 24}
+              color={COLORS.white}
+            />
           </TouchableOpacity>
 
           {/* SPEAKER */}
@@ -223,9 +235,7 @@ const VoiceCallScreen = ({ route }: any) => {
 
               isSpeakerOn && {
                 backgroundColor: 'rgba(34,197,94,0.18)',
-
                 borderColor: 'rgba(34,197,94,0.4)',
-
                 shadowColor: COLORS.success,
               },
 
@@ -234,8 +244,8 @@ const VoiceCallScreen = ({ route }: any) => {
           >
             <Icon
               name={isSpeakerOn ? 'volume-high' : 'volume-mute'}
-              size={24}
-              color="#fff"
+              size={isTablet ? 22 : 24}
+              color={COLORS.white}
             />
           </TouchableOpacity>
 
@@ -247,8 +257,8 @@ const VoiceCallScreen = ({ route }: any) => {
           >
             <Icon
               name="call"
-              size={24}
-              color="#fff"
+              size={isTablet ? 22 : 24}
+              color={COLORS.white}
               style={{
                 transform: [
                   {
@@ -273,19 +283,18 @@ const styles = StyleSheet.create({
   },
 
   timerContainer: {
-    position: 'absolute',
-    top: 60,
+    top: isTablet ? verticalScale(40) : verticalScale(60),
     alignSelf: 'center',
     zIndex: 100,
     backgroundColor: 'rgba(0,0,0,0.45)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: moderateScale(16),
+    paddingVertical: verticalScale(8),
+    borderRadius: moderateScale(20),
   },
 
   timerText: {
-    color: '#fff',
-    fontSize: 14,
+    color: COLORS.white,
+    fontSize: fontScale(14),
     fontWeight: '700',
   },
 
@@ -293,65 +302,62 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 80,
+    paddingBottom: isTablet ? verticalScale(40) : verticalScale(80),
   },
 
   avatar: {
-    width: 180,
-    height: 180,
-    borderRadius: 100,
+    width: isTablet ? scale(140) : scale(180),
+    height: isTablet ? scale(140) : scale(180),
+    borderRadius: isTablet ? scale(70) : scale(100),
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
   name: {
-    marginTop: 28,
-    color: '#fff',
-    fontSize: 34,
+    marginTop: verticalScale(24),
+    fontSize: fontScale(isTablet ? 28 : 34),
+    color: COLORS.white,
     fontWeight: '800',
     letterSpacing: 0.3,
   },
 
   status: {
-    marginTop: 12,
+    marginTop: verticalScale(10),
     color: 'rgba(255,255,255,0.62)',
-    fontSize: 17,
+    fontSize: fontScale(isTablet ? 15 : 17),
     fontWeight: '500',
   },
 
   controlsWrapper: {
     position: 'absolute',
-    bottom: 40,
+    bottom: isTablet ? verticalScale(28) : verticalScale(40),
     width: '100%',
     alignItems: 'center',
   },
 
   controlsRow: {
-    width: '72%',
+    width: isTablet ? '52%' : '72%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
 
   controlBtn: {
-    width: 74,
-    height: 74,
-    borderRadius: 40,
+    width: isTablet ? scale(60) : scale(74),
+    height: isTablet ? scale(60) : scale(74),
+    borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(18,18,18,0.78)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.06)',
-
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 6,
     },
-
     shadowOpacity: 0.35,
     shadowRadius: 10,
-
     elevation: 10,
   },
 
