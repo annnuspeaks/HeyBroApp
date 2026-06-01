@@ -1,23 +1,29 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+} from '../theme/responsive';
+
 import LinearGradient from 'react-native-linear-gradient';
 
-const {width, height} = Dimensions.get('window');
+const isLandscape = SCREEN_WIDTH > SCREEN_HEIGHT;
 
-const isTablet = width >= 768;
-const isLandscape = width > height;
-
-const LoginScreen = ({navigation}: any) => {
+const LoginScreen = ({ navigation }: any) => {
   const [phone, setPhone] = useState('');
 
   const isValidPhone = phone.length === 10;
@@ -35,8 +41,8 @@ const LoginScreen = ({navigation}: any) => {
   return (
     <LinearGradient
       colors={['#090B2A', '#1A145C', '#2A0A52']}
-      style={styles.container}>
-      
+      style={styles.container}
+    >
       {/* Floating Spheres */}
 
       <View style={styles.sphereTop} />
@@ -45,20 +51,16 @@ const LoginScreen = ({navigation}: any) => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.centerContainer}>
-        
+        style={styles.centerContainer}
+      >
         <View
           style={[
             styles.card,
             {
-              width: isLandscape
-                ? isTablet
-                  ? '52%'
-                  : '70%'
-                : '88%',
+              width: isLandscape ? (isTablet ? '52%' : '70%') : '88%',
             },
-          ]}>
-          
+          ]}
+        >
           <Text style={styles.appName}>HeyBro</Text>
 
           <Text style={styles.loginText}>LOGIN</Text>
@@ -89,15 +91,16 @@ const LoginScreen = ({navigation}: any) => {
                   ? '#A020F0'
                   : 'rgba(255,255,255,0.15)',
               },
-            ]}>
-            
+            ]}
+          >
             <Text
               style={[
                 styles.buttonText,
                 {
                   opacity: isValidPhone ? 1 : 0.5,
                 },
-              ]}>
+              ]}
+            >
               Continue
             </Text>
           </TouchableOpacity>
@@ -124,65 +127,70 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.10)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.12)',
-    borderRadius: 34,
-    paddingHorizontal: 30,
-    paddingVertical: 40,
+    borderRadius: moderateScale(34),
+    paddingHorizontal: scale(30),
+    paddingVertical: verticalScale(40),
     overflow: 'hidden',
   },
 
   appName: {
     color: '#FFFFFF',
-    fontSize: isTablet ? 42 : 34,
+    fontSize: fontScale(isTablet ? 42 : 34),
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 14,
+    marginBottom: verticalScale(14),
     fontFamily: 'ClashDisplay-Bold',
+    letterSpacing: fontScale(9),
   },
 
   loginText: {
     color: 'rgba(255,255,255,0.9)',
-    fontSize: isTablet ? 36 : 28,
+    fontSize: fontScale(isTablet ? 36 : 28),
     letterSpacing: 4,
     fontWeight: '300',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: verticalScale(40),
   },
 
   label: {
     color: 'rgba(255,255,255,0.7)',
-    marginBottom: 10,
-    fontSize: isTablet ? 18 : 15,
+    marginBottom: verticalScale(10),
+    fontSize: fontScale(isTablet ? 18 : 15),
   },
 
   input: {
-    height: isTablet ? 68 : 58,
-    borderRadius: 18,
-    paddingHorizontal: 22,
+    height: verticalScale(isTablet ? 68 : 58),
+    borderRadius: moderateScale(12),
+    paddingHorizontal: scale(10),
     backgroundColor: 'rgba(255,255,255,0.10)',
     color: '#FFFFFF',
-    fontSize: isTablet ? 20 : 16,
-    marginBottom: 30,
+    fontSize: fontScale(isTablet ? 20 : 16),
+    marginBottom: verticalScale(30),
   },
 
   button: {
-    height: isTablet ? 64 : 56,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#A020F0',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
+  height: verticalScale(isTablet ? 64 : 56),
+  borderRadius: moderateScale(12),
+  justifyContent: 'center',
+  alignItems: 'center',
+  shadowColor: '#A020F0',
+  shadowOffset: {
+    width: 0,
+    height: 0,
   },
+  shadowOpacity: 0.5,
+  shadowRadius: moderateScale(16),
+  elevation: 5,
+  opacity: 0.8,
+
+},
 
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: isTablet ? 20 : 17,
-    fontWeight: '600',
-  },
+  color: '#FFFFFF',
+  fontSize: fontScale(isTablet ? 20 : 17),
+  fontWeight: '600',
+  letterSpacing: fontScale(1.5),
+},
 
   sphereTop: {
     position: 'absolute',
