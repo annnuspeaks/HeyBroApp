@@ -27,10 +27,10 @@ import { useUserStore } from '../store/userStore';
 
 import { COLORS } from '../theme/colors';
 
-const EditProfileScreen = ({ navigation, route }: any) => {
-  const oldProfile = route?.params?.profile;
+const EditProfileScreen = ({ navigation }: any) => {
+  const { profile, setProfile } = useUserStore();
 
-  const { setProfile } = useUserStore();
+  const oldProfile = profile;
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
@@ -118,7 +118,6 @@ const EditProfileScreen = ({ navigation, route }: any) => {
         </View>
 
         <View style={styles.formCard}>
-
           <View style={styles.field}>
             <Text style={styles.label}>Name</Text>
 

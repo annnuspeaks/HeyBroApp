@@ -73,7 +73,7 @@ export default function ProfileScreen({ navigation }: any) {
       style={styles.menuItem}
       onPress={() => {
         if (item.title === 'Account') {
-          navigation.navigate('EditProfile', {});
+          navigation.navigate('EditProfile');
         }
 
         if (item.title === 'Privacy') {
