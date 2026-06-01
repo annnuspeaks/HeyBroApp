@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import {
-  scale,
   verticalScale,
   moderateScale,
   fontScale,
@@ -306,16 +305,16 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    width: isTablet ? scale(140) : scale(180),
-    height: isTablet ? scale(140) : scale(180),
-    borderRadius: isTablet ? scale(70) : scale(100),
+    width: isTablet ? 120 : 150,
+    height: isTablet ? 120 : 150,
+    borderRadius: 999,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
   name: {
     marginTop: verticalScale(24),
-    fontSize: fontScale(isTablet ? 28 : 34),
+    fontSize: isTablet ? 22 : 30,
     color: COLORS.white,
     fontWeight: '800',
     letterSpacing: 0.3,
@@ -324,13 +323,13 @@ const styles = StyleSheet.create({
   status: {
     marginTop: verticalScale(10),
     color: 'rgba(255,255,255,0.62)',
-    fontSize: fontScale(isTablet ? 15 : 17),
+    fontSize: isTablet ? 13 : 16,
     fontWeight: '500',
   },
 
   controlsWrapper: {
     position: 'absolute',
-    bottom: isTablet ? verticalScale(28) : verticalScale(40),
+    bottom: isTablet ? 95 : 40,
     width: '100%',
     alignItems: 'center',
   },
@@ -343,8 +342,8 @@ const styles = StyleSheet.create({
   },
 
   controlBtn: {
-    width: isTablet ? scale(60) : scale(74),
-    height: isTablet ? scale(60) : scale(74),
+    width: 65,
+    height: 65,
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
