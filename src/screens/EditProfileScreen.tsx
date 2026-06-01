@@ -9,25 +9,28 @@ import {
   ScrollView,
   Image,
   Alert,
-  Dimensions,
 } from 'react-native';
+
+import {
+  scale,
+  verticalScale,
+  moderateScale,
+  fontScale,
+  isTablet,
+} from '../theme/responsive';
 
 import DatePicker from 'react-native-date-picker';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {useUserStore} from '../store/userStore';
+import { useUserStore } from '../store/userStore';
 
-import {COLORS} from '../theme/colors';
-
-const { width } = Dimensions.get('window');
-
-const isTablet = width >= 768;
+import { COLORS } from '../theme/colors';
 
 const EditProfileScreen = ({ navigation, route }: any) => {
   const oldProfile = route?.params?.profile;
 
-  const {setProfile} = useUserStore();
+  const { setProfile } = useUserStore();
 
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
@@ -61,10 +64,10 @@ const EditProfileScreen = ({ navigation, route }: any) => {
   };
 
   const handleSave = () => {
-  setProfile(form);
+    setProfile(form);
 
-  navigation.goBack();
-};
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -84,12 +87,13 @@ const EditProfileScreen = ({ navigation, route }: any) => {
           paddingBottom: 120,
         }}
       >
-        <View style={styles.card}>
-          {/* PROFILE IMAGE */}
+        <View style={styles.heroCard}>
+          <View style={styles.heroGlowLeft} />
+          <View style={styles.heroGlowRight} />
 
           <TouchableOpacity
             activeOpacity={0.8}
-            style={styles.imageContainer}
+            style={styles.heroImageContainer}
             onPress={() =>
               Alert.alert('Image Upload', 'Backend ke sath later add krenge 🙂')
             }
@@ -98,17 +102,22 @@ const EditProfileScreen = ({ navigation, route }: any) => {
               source={{
                 uri: form.image,
               }}
-              style={styles.avatar}
+              style={styles.heroAvatar}
             />
 
-            <View style={styles.cameraBadge}>
-              <Ionicons name="camera" size={18} color={COLORS.white} />
+            <View style={styles.heroCameraBadge}>
+              <Ionicons
+                name="camera"
+                size={isTablet ? 25 : 22}
+                color={COLORS.white}
+              />
             </View>
-
-            <Text style={styles.changePhoto}>Change Photo</Text>
           </TouchableOpacity>
+          <Text style={styles.heroName}>{form.name}</Text>
+          <Text style={styles.heroPhone}>{form.phone}</Text>
+        </View>
 
-          {/* NAME */}
+        <View style={styles.formCard}>
 
           <View style={styles.field}>
             <Text style={styles.label}>Name</Text>
@@ -317,36 +326,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.08)',
   },
 
-  imageContainer: {
-    alignItems: 'center',
-    marginBottom: 35,
-  },
-
-  avatar: {
-    width: isTablet ? 140 : 110,
-    height: isTablet ? 140 : 110,
-    borderRadius: 100,
-  },
-
-  cameraBadge: {
-    position: 'absolute',
-    right: width * 0.34,
-    bottom: 28,
-    width: 34,
-    height: 34,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.primaryDark,
-  },
-
-  changePhoto: {
-    marginTop: 12,
-    color: '#C084FC',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
   field: {
     marginBottom: 22,
   },
@@ -416,5 +395,108 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 18,
     fontWeight: '700',
+  },
+
+  heroCard: {
+    marginTop: verticalScale(90),
+
+    width: '92%',
+    maxWidth: 1300,
+
+    alignSelf: 'center',
+
+    borderRadius: moderateScale(32),
+
+    paddingVertical: verticalScale(34),
+    paddingHorizontal: scale(24),
+
+    alignItems: 'center',
+
+    overflow: 'hidden',
+
+    backgroundColor: 'rgba(255,255,255,0.04)',
+
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+
+  heroGlowLeft: {
+    position: 'absolute',
+
+    top: -90,
+    left: -70,
+
+    width: isTablet ? 260 : 220,
+    height: isTablet ? 260 : 220,
+
+    borderRadius: 999,
+
+    backgroundColor: 'rgba(168,85,247,0.18)',
+  },
+
+  heroGlowRight: {
+    position: 'absolute',
+
+    bottom: -80,
+    right: -60,
+
+    width: isTablet ? 240 : 190,
+    height: isTablet ? 240 : 190,
+
+    borderRadius: 999,
+
+    backgroundColor: 'rgba(59,130,246,0.12)',
+  },
+
+  heroImageContainer: {
+    alignItems: 'center',
+  },
+
+  heroAvatar: {
+    width: scale(isTablet ? 80 : 72),
+    height: scale(isTablet ? 80 : 72),
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+
+  heroCameraBadge: {
+    position: 'absolute',
+    right: -2,
+    bottom: 2,
+    width: scale(20),
+    height: scale(20),
+    borderRadius: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.primaryDark,
+  },
+
+  heroName: {
+    marginTop: verticalScale(18),
+
+    color: COLORS.white,
+
+    fontWeight: '700',
+
+    fontSize: fontScale(isTablet ? 24 : 22),
+  },
+
+  heroPhone: {
+    marginTop: verticalScale(8),
+    color: 'rgba(255,255,255,0.55)',
+    fontSize: fontScale(isTablet ? 15 : 14),
+  },
+
+  formCard: {
+    marginTop: verticalScale(24),
+    width: '92%',
+    maxWidth: 1300,
+    alignSelf: 'center',
+    borderRadius: moderateScale(28),
+    padding: scale(24),
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
   },
 });
