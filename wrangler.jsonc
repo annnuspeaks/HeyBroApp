@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "heybro-media-api",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-08-23",
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "heybro-media"
+    }
+  ]
+}

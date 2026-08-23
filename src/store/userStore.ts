@@ -1,6 +1,4 @@
-import {create} from 'zustand';
-
-type ProfileType = {
+export type ProfileType = {
   name: string;
   phone: string;
   image: string;
@@ -12,11 +10,13 @@ type ProfileType = {
   website?: string;
 };
 
-type UserStoreType = {
+export type UserStoreType = {
   profile: ProfileType;
 
   setProfile: (data: Partial<ProfileType>) => void;
 };
+
+import { create } from 'zustand';
 
 export const useUserStore = create<UserStoreType>(set => ({
   profile: {

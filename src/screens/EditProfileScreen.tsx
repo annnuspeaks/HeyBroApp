@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import {
   View,
@@ -94,9 +95,24 @@ const EditProfileScreen = ({ navigation }: any) => {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.heroImageContainer}
-            onPress={() =>
-              Alert.alert('Image Upload', 'Backend ke sath later add krenge 🙂')
-            }
+            onPress={async () => {
+              const result = await launchImageLibrary({
+                mediaType: 'photo',
+                selectionLimit: 1,
+              });
+
+              if (result.didCancel) {
+                return;
+              }
+
+              const asset = result.assets?.[0];
+
+              if (!asset?.uri) {
+                return;
+              }
+
+              handleChange('image', asset.uri);
+            }}
           >
             <Image
               source={{
