@@ -1,19 +1,46 @@
-import React, {createContext, useState, useContext} from 'react';
-import {lightTheme, darkTheme} from './theme';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  type ReactNode,
+} from 'react';
+import { lightTheme, darkTheme } from './theme';
 
-export const useTheme = () => useContext(ThemeContext);
+type Theme = typeof darkTheme;
 
-export const ThemeContext = createContext<any>(null);
+interface ThemeContextValue {
+  theme: Theme;
+  dark: boolean;
+  toggleTheme: () => void;
+}
 
-export const ThemeProvider = ({children}: any) => {
+export const ThemeContext = createContext<ThemeContextValue | undefined>(
+  undefined,
+);
+
+export const useTheme = (): ThemeContextValue => {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw new Error('useTheme must be used inside ThemeProvider');
+  }
+
+  return context;
+};
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [dark, setDark] = useState(true);
 
-  const toggleTheme = () => setDark(!dark);
+  const toggleTheme = () => setDark(prev => !prev);
 
   const theme = dark ? darkTheme : lightTheme;
 
   return (
-    <ThemeContext.Provider value={{theme, dark, toggleTheme}}>
+    <ThemeContext.Provider value={{ theme, dark, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

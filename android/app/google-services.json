@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1014443022149",
-    "project_id": "heybro-app",
-    "storage_bucket": "heybro-app.firebasestorage.app"
+    "project_number": "119378427118",
+    "project_id": "heybro-d52ce",
+    "storage_bucket": "heybro-d52ce.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1014443022149:android:0100ee03608df58d0bd02c",
+        "mobilesdk_app_id": "1:119378427118:android:9e83f8024f4daeea2707ff",
         "android_client_info": {
           "package_name": "com.heybroapp"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDyT1yiHs0D1uBnbNnkQ4viZHksS-CSHrw"
+          "current_key": "AIzaSyAfBqJs3kMYk0WNbD9VJWhRsPPAtL_Y0YQ"
         }
       ],
       "services": {

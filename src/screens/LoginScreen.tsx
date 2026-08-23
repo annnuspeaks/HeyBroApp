@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 
 import {
@@ -21,28 +22,50 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
+import {COLORS} from '../theme/colors';
+import {sendPhoneOtp} from '../services/authService';
+
 const isLandscape = SCREEN_WIDTH > SCREEN_HEIGHT;
 
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = ({navigation}: any) => {
   const [phone, setPhone] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   const isValidPhone = phone.length === 10;
 
-  const handleContinue = () => {
-    if (!isValidPhone) {
+  const handleContinue = async () => {
+    if (!isValidPhone || isSendingOtp) {
       return;
     }
 
-    navigation.navigate('OtpScreen', {
-      phone,
-    });
+    try {
+      setIsSendingOtp(true);
+
+      const phoneNumber = `+91${phone}`;
+
+      const confirmation = await sendPhoneOtp(phoneNumber);
+
+      navigation.navigate('OtpScreen', {
+        phone,
+        confirmation,
+      });
+    } catch (error: any) {
+      console.log('PHONE OTP ERROR:', error);
+
+      Alert.alert(
+        'Unable to send OTP',
+        error?.message ||
+          'Something went wrong while sending the OTP. Please try again.',
+      );
+    } finally {
+      setIsSendingOtp(false);
+    }
   };
 
   return (
     <LinearGradient
       colors={['#090B2A', '#1A145C', '#2A0A52']}
-      style={styles.container}
-    >
+      style={styles.container}>
       {/* Floating Spheres */}
 
       <View style={styles.sphereTop} />
@@ -51,16 +74,18 @@ const LoginScreen = ({ navigation }: any) => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.centerContainer}
-      >
+        style={styles.centerContainer}>
         <View
           style={[
             styles.card,
             {
-              width: isLandscape ? (isTablet ? '52%' : '70%') : '88%',
+              width: isLandscape
+                ? isTablet
+                  ? '52%'
+                  : '70%'
+                : '88%',
             },
-          ]}
-        >
+          ]}>
           <Text style={styles.appName}>HeyBro</Text>
 
           <Text style={styles.loginText}>LOGIN</Text>
@@ -77,31 +102,34 @@ const LoginScreen = ({ navigation }: any) => {
             placeholderTextColor="rgba(255,255,255,0.45)"
             keyboardType="number-pad"
             maxLength={10}
+            editable={!isSendingOtp}
             style={styles.input}
           />
 
           <TouchableOpacity
             activeOpacity={0.8}
-            disabled={!isValidPhone}
+            disabled={!isValidPhone || isSendingOtp}
             onPress={handleContinue}
             style={[
               styles.button,
               {
-                backgroundColor: isValidPhone
-                  ? '#A020F0'
-                  : 'rgba(255,255,255,0.15)',
+                backgroundColor:
+                  isValidPhone && !isSendingOtp
+                    ? '#A020F0'
+                    : 'rgba(255,255,255,0.15)',
               },
-            ]}
-          >
+            ]}>
             <Text
               style={[
                 styles.buttonText,
                 {
-                  opacity: isValidPhone ? 1 : 0.5,
+                  opacity:
+                    isValidPhone && !isSendingOtp
+                      ? 1
+                      : 0.5,
                 },
-              ]}
-            >
-              Continue
+              ]}>
+              {isSendingOtp ? 'Sending OTP...' : 'Continue'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -134,7 +162,7 @@ const styles = StyleSheet.create({
   },
 
   appName: {
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontSize: fontScale(isTablet ? 42 : 34),
     fontWeight: '700',
     textAlign: 'center',
@@ -163,34 +191,33 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
     paddingHorizontal: scale(10),
     backgroundColor: 'rgba(255,255,255,0.10)',
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontSize: fontScale(isTablet ? 20 : 16),
     marginBottom: verticalScale(30),
   },
 
   button: {
-  height: verticalScale(isTablet ? 64 : 56),
-  borderRadius: moderateScale(12),
-  justifyContent: 'center',
-  alignItems: 'center',
-  shadowColor: '#A020F0',
-  shadowOffset: {
-    width: 0,
-    height: 0,
+    height: verticalScale(isTablet ? 64 : 56),
+    borderRadius: moderateScale(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#A020F0',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: moderateScale(16),
+    elevation: 5,
+    opacity: 0.8,
   },
-  shadowOpacity: 0.5,
-  shadowRadius: moderateScale(16),
-  elevation: 5,
-  opacity: 0.8,
-
-},
 
   buttonText: {
-  color: '#FFFFFF',
-  fontSize: fontScale(isTablet ? 20 : 17),
-  fontWeight: '600',
-  letterSpacing: fontScale(1.5),
-},
+    color: COLORS.white,
+    fontSize: fontScale(isTablet ? 20 : 17),
+    fontWeight: '600',
+    letterSpacing: fontScale(1.5),
+  },
 
   sphereTop: {
     position: 'absolute',

@@ -9,6 +9,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,8 +21,11 @@ const { width, height } = Dimensions.get('window');
 const isTablet = width >= 768;
 const isLandscape = width > height;
 
-const OtpScreen = ({ navigation }: any) => {
-  const [otp, setOtp] = useState(['', '', '', '']);
+const OtpScreen = ({ navigation, route }: any) => {
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const confirmation = route?.params?.confirmation;
 
   const inputRefs = useRef<any[]>([]);
 
@@ -44,7 +48,7 @@ const OtpScreen = ({ navigation }: any) => {
     setOtp(updatedOtp);
 
     // NEXT INPUT AUTO FOCUS
-    if (cleaned && index < 3) {
+    if (cleaned && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
 
@@ -53,15 +57,35 @@ const OtpScreen = ({ navigation }: any) => {
       inputRefs.current[index - 1]?.focus();
     }
 
-    // AUTO NAVIGATE
-    if (updatedOtp.join('').length === 4) {
-      setTimeout(() => {
-        navigation.replace('MainTabs');
-      }, 250);
-    }
+    
   };
 
-  const isOtpComplete = otp.join('').length === 4;
+  const isOtpComplete = otp.join('').length === 6;
+
+  const handleVerify = async () => {
+    if (!isOtpComplete || isVerifying) {
+      return;
+    }
+
+    if (!confirmation?.confirm) {
+      Alert.alert('Unable to verify OTP', 'OTP verification session is missing. Please go back and request a new OTP.');
+      return;
+    }
+
+    try {
+      setIsVerifying(true);
+      await confirmation.confirm(otp.join(''));
+      navigation.replace('MainTabs');
+    } catch (error: any) {
+      console.error('OTP VERIFY ERROR:', error);
+      Alert.alert(
+        'Invalid OTP',
+        error?.message || 'The OTP is incorrect or has expired. Please try again.',
+      );
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -69,7 +93,6 @@ const OtpScreen = ({ navigation }: any) => {
       style={styles.container}
     >
       {/* Floating Spheres */}
-
       <View style={styles.sphereTop} />
       <View style={styles.sphereLeft} />
       <View style={styles.sphereBottom} />
@@ -86,10 +109,21 @@ const OtpScreen = ({ navigation }: any) => {
             },
           ]}
         >
+          {/* BACK BUTTON
+              Visual size remains exactly the same.
+              Only invisible touch area is enlarged. */}
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.backButton}
+            hitSlop={{
+              top: isTablet ? 18 : 14,
+              bottom: isTablet ? 18 : 14,
+              left: isTablet ? 18 : 14,
+              right: isTablet ? 18 : 14,
+            }}
             onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
           >
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
           </TouchableOpacity>
@@ -99,7 +133,7 @@ const OtpScreen = ({ navigation }: any) => {
           <Text style={styles.title}>VERIFY OTP</Text>
 
           <Text style={styles.subtitle}>
-            Enter the 4 digit OTP sent to your phone
+            Enter the 6 digit OTP sent to your phone
           </Text>
 
           <View style={styles.otpContainer}>
@@ -116,15 +150,12 @@ const OtpScreen = ({ navigation }: any) => {
                 keyboardType="number-pad"
                 maxLength={1}
                 autoFocus={index === 0}
-                caretHidden={true} // CURSOR HIDE
+                caretHidden={true}
                 selectionColor="transparent"
                 contextMenuHidden={true}
                 importantForAutofill="yes"
                 textContentType="oneTimeCode"
-                style={[
-                  styles.otpInput,
-                  digit ? styles.activeOtpInput : null,
-                ]}
+                style={[styles.otpInput, digit ? styles.activeOtpInput : null]}
                 placeholder="•"
                 placeholderTextColor="rgba(255,255,255,0.25)"
               />
@@ -133,8 +164,8 @@ const OtpScreen = ({ navigation }: any) => {
 
           <TouchableOpacity
             activeOpacity={0.8}
-            disabled={!isOtpComplete}
-            onPress={() => navigation.replace('MainTabs')}
+            disabled={!isOtpComplete || isVerifying}
+            onPress={handleVerify}
             style={[
               styles.button,
               {
@@ -148,11 +179,11 @@ const OtpScreen = ({ navigation }: any) => {
               style={[
                 styles.buttonText,
                 {
-                  opacity: isOtpComplete ? 1 : 0.5,
+                  opacity: isOtpComplete && !isVerifying ? 1 : 0.5,
                 },
               ]}
             >
-              Verify
+              {isVerifying ? 'Verifying...' : 'Verify'}
             </Text>
           </TouchableOpacity>
 
@@ -213,22 +244,26 @@ const styles = StyleSheet.create({
   },
 
   otpContainer: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 35,
+    gap: isTablet ? 10 : 6,
   },
 
   otpInput: {
-    width: isTablet ? 78 : 62,
-    height: isTablet ? 78 : 62,
+    flex: 0,
+    width: isTablet ? 78 : 42,
+    height: isTablet ? 78 : 58,
     borderRadius: 20,
     backgroundColor: 'rgba(255,255,255,0.10)',
     color: '#FFFFFF',
-    textAlign: 'center', // CENTER ALIGN
+    textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: isTablet ? 28 : 22,
     fontWeight: '600',
-    marginHorizontal: 6,
+    marginHorizontal: 0,
     padding: 0,
   },
 
