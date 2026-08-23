@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Alert,
 } from 'react-native';
 
 import {
@@ -25,6 +24,9 @@ import DatePicker from 'react-native-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useUserStore } from '../store/userStore';
+import { saveUserProfile } from '../services/firestoreService';
+import { getCurrentUser } from '../services/authService';
+import { uploadProfileImage, deleteProfileImage } from '../services/r2Service';
 
 import { COLORS } from '../theme/colors';
 
@@ -64,8 +66,44 @@ const EditProfileScreen = ({ navigation }: any) => {
     });
   };
 
-  const handleSave = () => {
-    setProfile(form);
+  const handleSave = async () => {
+    const user = getCurrentUser();
+
+    if (!user) {
+      return;
+    }
+
+    const oldImage = profile.image;
+    let imageUrl = form.image;
+
+    if (form.image.startsWith('file://')) {
+      const uploadResult = await uploadProfileImage(form.image, 'image/jpeg');
+
+      if (!uploadResult?.success || !uploadResult?.url) {
+        throw new Error('Profile image upload failed');
+      }
+
+      imageUrl = uploadResult.url;
+    }
+
+    const updatedProfile = {
+      ...form,
+      image: imageUrl,
+    };
+
+    await saveUserProfile(user.uid, updatedProfile);
+
+    // Delete old R2 image only after the new image
+    // has been successfully uploaded and saved.
+    if (
+      form.image.startsWith('file://') &&
+      oldImage &&
+      oldImage.includes('/profile/')
+    ) {
+      await deleteProfileImage(oldImage);
+    }
+
+    setProfile(updatedProfile);
 
     navigation.goBack();
   };

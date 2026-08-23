@@ -12,6 +12,10 @@ import {
   Alert,
 } from 'react-native';
 
+import { getCurrentUser } from '../services/authService';
+import { getUserProfile } from '../services/firestoreService';
+import { useUserStore } from '../store/userStore';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -56,8 +60,6 @@ const OtpScreen = ({ navigation, route }: any) => {
     if (!cleaned && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
-
-    
   };
 
   const isOtpComplete = otp.join('').length === 6;
@@ -68,19 +70,36 @@ const OtpScreen = ({ navigation, route }: any) => {
     }
 
     if (!confirmation?.confirm) {
-      Alert.alert('Unable to verify OTP', 'OTP verification session is missing. Please go back and request a new OTP.');
+      Alert.alert(
+        'Unable to verify OTP',
+        'OTP verification session is missing. Please go back and request a new OTP.',
+      );
       return;
     }
 
     try {
       setIsVerifying(true);
+
       await confirmation.confirm(otp.join(''));
+
+      const user = getCurrentUser();
+
+      if (user) {
+        const profile = await getUserProfile(user.uid);
+
+        if (profile) {
+          useUserStore.getState().setProfile(profile);
+        }
+      }
+
       navigation.replace('MainTabs');
     } catch (error: any) {
       console.error('OTP VERIFY ERROR:', error);
+
       Alert.alert(
         'Invalid OTP',
-        error?.message || 'The OTP is incorrect or has expired. Please try again.',
+        error?.message ||
+          'The OTP is incorrect or has expired. Please try again.',
       );
     } finally {
       setIsVerifying(false);
