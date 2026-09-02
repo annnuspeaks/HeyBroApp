@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   Dimensions,
+  Pressable,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -59,6 +60,12 @@ const OtpScreen = ({ navigation, route }: any) => {
     // AUTO BACK TO PREVIOUS
     if (!cleaned && index > 0) {
       inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
     }
   };
 
@@ -131,21 +138,22 @@ const OtpScreen = ({ navigation, route }: any) => {
           {/* BACK BUTTON
               Visual size remains exactly the same.
               Only invisible touch area is enlarged. */}
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.backButton}
-            hitSlop={{
-              top: isTablet ? 18 : 14,
-              bottom: isTablet ? 18 : 14,
-              left: isTablet ? 18 : 14,
-              right: isTablet ? 18 : 14,
+          <Pressable
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.backButtonPressed,
+            ]}
+            onPressIn={handleBack}
+            hitSlop={8}
+            android_ripple={{
+              color: 'rgba(255,255,255,0.15)',
+              borderless: true,
             }}
-            onPress={() => navigation.goBack()}
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
+          </Pressable>
 
           <Text style={styles.appName}>HeyBro</Text>
 
@@ -356,13 +364,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 20,
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.08)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.12)',
+    zIndex: 10,
+    elevation: 10,
+  },
+
+  backButtonPressed: {
+    opacity: 0.7,
   },
 });
