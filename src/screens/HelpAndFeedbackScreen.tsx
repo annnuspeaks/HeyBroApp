@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -25,6 +26,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 export default function HelpAndFeedbackScreen({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
@@ -64,7 +67,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
               <Ionicons
                 name="arrow-back"
                 size={isTablet ? 34 : 24}
-                color={COLORS.white}
+                color={theme.text}
               />
             </TouchableOpacity>
 
@@ -142,7 +145,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
 
               <TextInput
                 placeholder="Subject"
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor={theme.subText}
                 value={subject}
                 onChangeText={setSubject}
                 style={styles.input}
@@ -167,7 +170,7 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
 
               <TextInput
                 placeholder="Describe your issue or feedback..."
-                placeholderTextColor="rgba(255,255,255,0.35)"
+                placeholderTextColor={theme.subText}
                 value={message}
                 onChangeText={setMessage}
                 multiline
@@ -219,10 +222,10 @@ export default function HelpAndFeedbackScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   scrollContent: {
@@ -243,11 +246,11 @@ const styles = StyleSheet.create({
     borderRadius: isTablet ? 29 : 21,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 28 : 24),
     fontWeight: '700',
   },
@@ -263,9 +266,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   /* CROPPED BUBBLES */
@@ -303,13 +306,13 @@ const styles = StyleSheet.create({
   },
 
   mainTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 48 : 28),
     fontWeight: '700',
   },
 
   subtitle: {
-    color: 'rgba(255,255,255,0.6)',
+    color: theme.subText,
     marginTop: verticalScale(14),
     lineHeight: verticalScale(isTablet ? 42 : 24),
     fontSize: fontScale(isTablet ? 26 : 15),
@@ -329,20 +332,20 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(24),
     paddingVertical: verticalScale(28),
     paddingHorizontal: scale(18),
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   quickTitle: {
-    color: COLORS.white,
+    color: theme.text,
     marginTop: 16,
     fontSize: fontScale(isTablet ? 22 : 17),
     fontWeight: '700',
   },
 
   quickSub: {
-    color: 'rgba(255,255,255,0.55)',
+    color: theme.subText,
     marginTop: 8,
     lineHeight: 20,
     fontSize: 13,
@@ -356,13 +359,13 @@ const styles = StyleSheet.create({
     maxWidth: 1350,
     width: '92%',
     alignSelf: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   sectionTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 24 : 20),
     fontWeight: '700',
     marginBottom: 20,
@@ -373,13 +376,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 18,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: theme.card,
     marginBottom: 18,
   },
 
   input: {
     flex: 1,
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(16),
     marginLeft: 12,
     height: isTablet ? 72 : 58,
@@ -387,7 +390,7 @@ const styles = StyleSheet.create({
 
   messageInput: {
     flex: 1,
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(16),
     marginLeft: 12,
     minHeight: isTablet ? 220 : 140,
@@ -405,7 +408,7 @@ const styles = StyleSheet.create({
   },
 
   submitText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontSize: fontScale(16),
     fontWeight: '700',
     marginLeft: 10,
@@ -419,9 +422,9 @@ const styles = StyleSheet.create({
     maxWidth: 1350,
     width: '92%',
     alignSelf: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   faqItem: {
@@ -430,11 +433,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 18,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
+    borderBottomColor: theme.border,
   },
 
   faqText: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(15),
     flex: 1,
     marginRight: 10,

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -22,6 +23,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 export default function PrivacyScreen({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [privacy, setPrivacy] = useState({
     lastSeen: true,
     profilePhoto: true,
@@ -123,7 +126,7 @@ export default function PrivacyScreen({ navigation }: any) {
             <Ionicons
               name="arrow-back"
               size={isTablet ? 26 : 22}
-              color={COLORS.white}
+              color={theme.text}
             />
           </TouchableOpacity>
 
@@ -220,10 +223,10 @@ export default function PrivacyScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   scrollContent: {
@@ -247,11 +250,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 26),
     fontWeight: '700',
   },
@@ -267,9 +270,9 @@ const styles = StyleSheet.create({
     maxWidth: 1300,
     overflow: 'hidden',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   glow1: {
@@ -303,14 +306,14 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 27),
     fontWeight: '700',
     textAlign: 'center',
   },
 
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.6)',
+    color: theme.subText,
     marginTop: verticalScale(14),
     lineHeight: verticalScale(isTablet ? 28 : 24),
     fontSize: fontScale(isTablet ? 16 : 15),
@@ -327,7 +330,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 22 : 20),
     marginBottom: verticalScale(18),
     fontWeight: '700',
@@ -342,9 +345,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(18),
     marginBottom: verticalScale(14),
     minHeight: isTablet ? 92 : 82,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   leftSection: {
@@ -367,13 +370,13 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 18 : 16),
     fontWeight: '700',
   },
 
   itemSubtitle: {
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.subText,
     marginTop: verticalScale(6),
     fontSize: fontScale(isTablet ? 14 : 13),
     lineHeight: verticalScale(isTablet ? 24 : 20),
@@ -390,7 +393,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.subText,
     marginLeft: 10,
     textAlign: 'center',
     lineHeight: 22,

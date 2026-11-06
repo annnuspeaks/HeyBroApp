@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -23,6 +24,8 @@ import {
 } from '../theme/responsive';
 
 export default function InviteFriendsScreen({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const handleInvite = async () => {
     try {
       await Share.share({
@@ -44,7 +47,7 @@ export default function InviteFriendsScreen({ navigation }: any) {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" size={isTablet ? 34 : 24} color="#fff" />
+          <Ionicons name="arrow-back" size={isTablet ? 34 : 24} color={theme.text} />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Invite Friends</Text>
@@ -164,10 +167,10 @@ export default function InviteFriendsScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   header: {
@@ -185,11 +188,11 @@ const styles = StyleSheet.create({
     borderRadius: isTablet ? 29 : 21,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: fontScale(24),
     fontWeight: '700',
   },
@@ -206,9 +209,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: scale(26),
     paddingVertical: verticalScale(40),
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   glow1: {
@@ -242,14 +245,14 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: isTablet ? 54 : 30,
     fontWeight: '800',
     textAlign: 'center',
   },
 
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.65)',
+    color: theme.subText,
     fontSize: isTablet ? 28 : 15,
     lineHeight: verticalScale(28),
     textAlign: 'center',
@@ -269,7 +272,7 @@ const styles = StyleSheet.create({
   },
 
   inviteButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: fontScale(17),
     fontWeight: '700',
     marginLeft: scale(12),
@@ -283,9 +286,9 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     borderRadius: moderateScale(30),
     overflow: 'hidden',
-    backgroundColor: 'rgba(255,255,255,0.03)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   featureRow: {
@@ -301,7 +304,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(18),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: theme.card,
   },
 
   featureTextContainer: {
@@ -310,13 +313,13 @@ const styles = StyleSheet.create({
   },
 
   featureTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: fontScale(18),
     fontWeight: '700',
   },
 
   featureDescription: {
-    color: 'rgba(255,255,255,0.55)',
+    color: theme.subText,
     fontSize: fontScale(14),
     lineHeight: verticalScale(24),
     marginTop: verticalScale(6),
@@ -324,7 +327,7 @@ const styles = StyleSheet.create({
 
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: theme.card,
     marginLeft: scale(96),
   },
 
@@ -334,7 +337,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: 'rgba(255,255,255,0.45)',
+    color: theme.subText,
     fontSize: fontScale(14),
     letterSpacing: 0.5,
   },

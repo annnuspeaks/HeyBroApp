@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -24,6 +25,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 export default function LinkedDevices({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [devices, setDevices] = useState([
     {
       id: 1,
@@ -108,7 +111,7 @@ export default function LinkedDevices({ navigation }: any) {
             <Ionicons
               name="arrow-back"
               size={isTablet ? 26 : 22}
-              color={COLORS.white}
+              color={theme.text}
             />
           </TouchableOpacity>
 
@@ -245,10 +248,10 @@ export default function LinkedDevices({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   scrollContent: {
@@ -272,11 +275,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 26),
     fontWeight: '700',
   },
@@ -292,9 +295,9 @@ const styles = StyleSheet.create({
     maxWidth: 1300,
     overflow: 'hidden',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   glow1: {
@@ -328,14 +331,14 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 27),
     fontWeight: '700',
     textAlign: 'center',
   },
 
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.6)',
+    color: theme.subText,
     textAlign: 'center',
     marginTop: verticalScale(14),
     lineHeight: verticalScale(isTablet ? 28 : 24),
@@ -355,7 +358,7 @@ const styles = StyleSheet.create({
   },
 
   linkButtonText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontWeight: '700',
     fontSize: fontScale(isTablet ? 17 : 16),
     marginLeft: scale(10),
@@ -370,7 +373,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontWeight: '700',
     fontSize: fontScale(isTablet ? 22 : 20),
     marginBottom: verticalScale(18),
@@ -381,9 +384,9 @@ const styles = StyleSheet.create({
     padding: scale(22),
     marginBottom: verticalScale(18),
     minHeight: isTablet ? 190 : 170,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   deviceTop: {
@@ -419,14 +422,14 @@ const styles = StyleSheet.create({
   },
 
   deviceName: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 19 : 17),
     maxWidth: SCREEN_WIDTH * 0.42,
     fontWeight: '700',
   },
 
   location: {
-    color: 'rgba(255,255,255,0.55)',
+    color: theme.subText,
     marginTop: verticalScale(6),
     fontSize: fontScale(isTablet ? 15 : 14),
   },
@@ -446,13 +449,13 @@ const styles = StyleSheet.create({
   },
 
   trustedTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 16 : 15),
     fontWeight: '700',
   },
 
   trustedSubtitle: {
-    color: 'rgba(255,255,255,0.45)',
+    color: theme.subText,
     marginTop: verticalScale(4),
     fontSize: fontScale(isTablet ? 14 : 13),
   },
@@ -486,7 +489,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.subText,
     marginLeft: scale(10),
     fontSize: fontScale(isTablet ? 14 : 13),
     textAlign: 'center',

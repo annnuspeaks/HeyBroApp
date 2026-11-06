@@ -20,93 +20,42 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useUserStore } from '../store/userStore';
+import { useTheme } from '../theme/ThemeContext';
 import { COLORS } from '../theme/colors';
 
 const menuItems1 = [
-  {
-    title: 'Account',
-    icon: 'person-outline',
-  },
-  {
-    title: 'Privacy',
-    icon: 'lock-closed-outline',
-  },
-  {
-    title: 'Chats',
-    icon: 'chatbubble-ellipses-outline',
-  },
-  {
-    title: 'Notifications',
-    icon: 'notifications-outline',
-  },
-  {
-    title: 'Storage',
-    icon: 'server-outline',
-  },
-  {
-    title: 'Linked Devices',
-    icon: 'desktop-outline',
-  },
+  { title: 'Account', icon: 'person-outline' },
+  { title: 'Privacy', icon: 'lock-closed-outline' },
+  { title: 'Chats', icon: 'chatbubble-ellipses-outline' },
+  { title: 'Notifications', icon: 'notifications-outline' },
+  { title: 'Storage', icon: 'server-outline' },
+  { title: 'Linked Devices', icon: 'desktop-outline' },
 ];
 
 const menuItems2 = [
-  {
-    title: 'Invite a Friend',
-    icon: 'heart-outline',
-  },
-  {
-    title: 'Help and Feedback',
-    icon: 'help-circle-outline',
-  },
-  {
-    title: 'Terms and Conditions',
-    icon: 'document-text-outline',
-  },
+  { title: 'Invite a Friend', icon: 'heart-outline' },
+  { title: 'Help and Feedback', icon: 'help-circle-outline' },
+  { title: 'Terms and Conditions', icon: 'document-text-outline' },
 ];
 
 export default function ProfileScreen({ navigation }: any) {
   const { profile } = useUserStore();
+  const { theme } = useTheme();
 
   const renderItem = (item: any, isLogout = false) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.menuItem}
       onPress={() => {
-        if (item.title === 'Account') {
-          navigation.navigate('EditProfile');
-        }
-
-        if (item.title === 'Privacy') {
-          navigation.navigate('PrivacyScreen');
-        }
-
-        if (item.title === 'Chats') {
-          navigation.navigate('ChatSettingScreen');
-        }
-
-        if (item.title === 'Notifications') {
-          navigation.navigate('NotificationsScreen');
-        }
-
-        if (item.title === 'Storage') {
-          navigation.navigate('StorageScreen');
-        }
-
-        if (item.title === 'Linked Devices') {
-          navigation.navigate('LinkedDevicesScreen');
-        }
-
-        if (item.title === 'Invite a Friend') {
-          navigation.navigate('InviteFriendsScreen');
-        }
-
-        if (item.title === 'Help and Feedback') {
-          navigation.navigate('HelpAndFeedbackScreen');
-        }
-
-        if (item.title === 'Terms and Conditions') {
-          navigation.navigate('TermsAndConditionsScreen');
-        }
+        if (item.title === 'Account') navigation.navigate('EditProfile');
+        if (item.title === 'Privacy') navigation.navigate('PrivacyScreen');
+        if (item.title === 'Chats') navigation.navigate('ChatSettingScreen');
+        if (item.title === 'Notifications') navigation.navigate('NotificationsScreen');
+        if (item.title === 'Storage') navigation.navigate('StorageScreen');
+        if (item.title === 'Linked Devices') navigation.navigate('LinkedDevicesScreen');
+        if (item.title === 'Invite a Friend') navigation.navigate('InviteFriendsScreen');
+        if (item.title === 'Help and Feedback') navigation.navigate('HelpAndFeedbackScreen');
+        if (item.title === 'Terms and Conditions') navigation.navigate('TermsAndConditionsScreen');
 
         if (item.title === 'Logout') {
           navigation.reset({
@@ -120,16 +69,13 @@ export default function ProfileScreen({ navigation }: any) {
         <Ionicons
           name={item.icon}
           size={isTablet ? 26 : 24}
-          color={isLogout ? '#ff3b30' : COLORS.white}
+          color={isLogout ? '#ff3b30' : theme.text}
         />
 
         <Text
           style={[
             styles.menuText,
-
-            isLogout && {
-              color: '#ff3b30',
-            },
+            { color: isLogout ? '#ff3b30' : theme.text },
           ]}
         >
           {item.title}
@@ -140,37 +86,35 @@ export default function ProfileScreen({ navigation }: any) {
         <Ionicons
           name="chevron-forward"
           size={isTablet ? 22 : 20}
-          color="rgba(255,255,255,0.4)"
+          color={theme.subText}
         />
       )}
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: 140,
-        }}
+        contentContainerStyle={{ paddingBottom: 140 }}
       >
         {/* PROFILE */}
-
         <View style={styles.profileContainer}>
           <View style={styles.avatarWrapper}>
             <Image
-              source={{
-                uri: profile.image,
-              }}
+              source={{ uri: profile.image }}
               style={styles.avatar}
             />
 
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.qrButton}
+              style={[
+                styles.qrButton,
+                { borderColor: theme.background },
+              ]}
               onPress={() =>
                 navigation.navigate('MyProfileQRScreen', {
-                  profile: profile, // <-- YE IMPORTANT FIX HAI
+                  profile: profile,
                 })
               }
             >
@@ -182,29 +126,56 @@ export default function ProfileScreen({ navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.name}>{profile.name}</Text>
+          <Text style={[styles.name, { color: theme.text }]}>
+            {profile.name}
+          </Text>
 
-          <Text style={styles.number}>{profile.phone}</Text>
+          <Text style={[styles.number, { color: theme.subText }]}>
+            {profile.phone}
+          </Text>
 
           {!!profile.bio && (
-            <View style={styles.bioBox}>
-              <Text style={styles.bioText}>“{profile.bio}”</Text>
+            <View
+              style={[
+                styles.bioBox,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.border,
+                },
+              ]}
+            >
+              <Text style={[styles.bioText, { color: theme.text }]}>
+                “{profile.bio}”
+              </Text>
             </View>
           )}
 
           {!!profile.website && (
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.websiteContainer}
+              style={[
+                styles.websiteContainer,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.border,
+                },
+              ]}
               onPress={() => {
                 if (profile.website) {
                   Linking.openURL(profile.website);
                 }
               }}
             >
-              <Ionicons name="globe-outline" size={18} color="#C084FC" />
+              <Ionicons
+                name="globe-outline"
+                size={18}
+                color={COLORS.primaryLight}
+              />
 
-              <Text numberOfLines={1} style={styles.website}>
+              <Text
+                numberOfLines={1}
+                style={[styles.website, { color: theme.text }]}
+              >
                 {profile.website}
               </Text>
             </TouchableOpacity>
@@ -212,38 +183,63 @@ export default function ProfileScreen({ navigation }: any) {
         </View>
 
         {/* SETTINGS */}
-
-        <View style={styles.card}>
-          <Text style={styles.groupTitle}>Settings</Text>
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.border,
+            },
+          ]}
+        >
+          <Text style={[styles.groupTitle, { color: theme.subText }]}>
+            Settings
+          </Text>
 
           {menuItems1.map((item, index) => (
             <View key={index}>
               {renderItem(item)}
-
               {index !== menuItems1.length - 1 && (
-                <View style={styles.divider} />
+                <View
+                  style={[styles.divider, { backgroundColor: theme.border }]}
+                />
               )}
             </View>
           ))}
         </View>
 
         {/* SECOND GROUP */}
-
-        <View style={styles.card}>
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.border,
+            },
+          ]}
+        >
           {menuItems2.map((item, index) => (
             <View key={index}>
               {renderItem(item)}
-
               {index !== menuItems2.length - 1 && (
-                <View style={styles.divider} />
+                <View
+                  style={[styles.divider, { backgroundColor: theme.border }]}
+                />
               )}
             </View>
           ))}
         </View>
 
         {/* LOGOUT */}
-
-        <View style={styles.card}>
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.border,
+            },
+          ]}
+        >
           {renderItem(
             {
               title: 'Logout',
@@ -254,9 +250,10 @@ export default function ProfileScreen({ navigation }: any) {
         </View>
 
         {/* FOOTER */}
-
         <View style={styles.footerContainer}>
-          <Text style={styles.fromText}>from</Text>
+          <Text style={[styles.fromText, { color: theme.subText }]}>
+            from
+          </Text>
 
           <Image
             source={require('../assets/brand-logo.png')}
@@ -272,7 +269,6 @@ export default function ProfileScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
 
   profileContainer: {
@@ -307,17 +303,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: COLORS.background,
   },
 
   name: {
-    color: COLORS.white,
     fontSize: fontScale(isTablet ? 32 : 28),
     fontWeight: '700',
   },
 
   number: {
-    color: COLORS.textMuted,
     marginTop: verticalScale(8),
     fontSize: fontScale(isTablet ? 18 : 16),
   },
@@ -328,13 +321,10 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(14),
     borderRadius: moderateScale(18),
     maxWidth: isTablet ? '72%' : '88%',
-    backgroundColor: 'rgba(124,58,237,0.14)',
     borderWidth: 1,
-    borderColor: 'rgba(124,58,237,0.35)',
   },
 
   bioText: {
-    color: '#E9D5FF',
     fontSize: fontScale(isTablet ? 17 : 15),
     lineHeight: verticalScale(isTablet ? 30 : 24),
     textAlign: 'center',
@@ -349,17 +339,15 @@ const styles = StyleSheet.create({
     maxWidth: isTablet ? '70%' : '90%',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(168,85,247,0.14)',
     borderWidth: 1,
-    borderColor: 'rgba(192,132,252,0.28)',
   },
 
   website: {
-    color: '#E9D5FF',
     fontSize: fontScale(isTablet ? 15 : 14),
     fontWeight: '700',
     marginLeft: scale(10),
     letterSpacing: 0.5,
+    flexShrink: 1,
   },
 
   card: {
@@ -370,13 +358,10 @@ const styles = StyleSheet.create({
     width: '92%',
     alignSelf: 'center',
     overflow: 'hidden',
-    backgroundColor: COLORS.glass,
     borderWidth: 1,
-    borderColor: COLORS.divider,
   },
 
   groupTitle: {
-    color: COLORS.textMuted,
     fontSize: fontScale(isTablet ? 17 : 15),
     marginTop: verticalScale(18),
     marginLeft: scale(22),
@@ -397,7 +382,6 @@ const styles = StyleSheet.create({
   },
 
   menuText: {
-    color: COLORS.white,
     marginLeft: scale(18),
     fontSize: fontScale(isTablet ? 18 : 17),
     fontWeight: '500',
@@ -405,7 +389,6 @@ const styles = StyleSheet.create({
 
   divider: {
     height: 1,
-    backgroundColor: COLORS.divider,
     marginLeft: scale(65),
   },
 
@@ -417,7 +400,6 @@ const styles = StyleSheet.create({
   },
 
   fromText: {
-    color: COLORS.textMuted,
     fontSize: 14,
     marginBottom: 10,
     letterSpacing: 1,

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -22,6 +23,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 export default function StorageScreen({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const [storageData, setStorageData] = useState({
     photos: 2.8,
     videos: 8.4,
@@ -117,7 +120,7 @@ export default function StorageScreen({ navigation }: any) {
             <Ionicons
               name="arrow-back"
               size={isTablet ? 26 : 22}
-              color="#fff"
+              color={theme.text}
             />
           </TouchableOpacity>
 
@@ -239,10 +242,10 @@ export default function StorageScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   scrollContent: {
@@ -266,11 +269,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 26),
     fontWeight: '700',
   },
@@ -286,9 +289,9 @@ const styles = StyleSheet.create({
     maxWidth: 1300,
     overflow: 'hidden',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   glow1: {
@@ -324,26 +327,26 @@ const styles = StyleSheet.create({
   },
 
   storageValue: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 32 : 28),
     fontWeight: '800',
   },
 
   storageLabel: {
-    color: 'rgba(255,255,255,0.6)',
+    color: theme.subText,
     marginTop: verticalScale(6),
     fontSize: fontScale(isTablet ? 15 : 14),
   },
 
   heroTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 30 : 27),
     fontWeight: '700',
     textAlign: 'center',
   },
 
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.6)',
+    color: theme.subText,
     marginTop: verticalScale(14),
     lineHeight: verticalScale(isTablet ? 28 : 24),
     fontSize: fontScale(isTablet ? 16 : 15),
@@ -360,7 +363,7 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: fontScale(isTablet ? 22 : 20),
     marginBottom: verticalScale(18),
     fontWeight: '700',
@@ -375,9 +378,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(18),
     marginBottom: verticalScale(14),
     minHeight: isTablet ? 92 : 82,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: theme.border,
   },
 
   leftRow: {
@@ -396,19 +399,19 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    color: '#fff',
+    color: theme.text,
     fontSize: fontScale(isTablet ? 18 : 16),
     fontWeight: '700',
   },
 
   itemSubtitle: {
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.subText,
     marginTop: verticalScale(6),
     fontSize: fontScale(isTablet ? 14 : 13),
   },
 
   itemValue: {
-    color: '#fff',
+    color: theme.text,
     fontSize: fontScale(isTablet ? 16 : 15),
     fontWeight: '700',
   },
@@ -432,7 +435,7 @@ const styles = StyleSheet.create({
   },
 
   clearButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: fontScale(isTablet ? 17 : 16),
     marginLeft: scale(10),
     fontWeight: '700',
@@ -448,7 +451,7 @@ const styles = StyleSheet.create({
   },
 
   manageButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: fontScale(isTablet ? 17 : 16),
     marginLeft: scale(10),
     fontWeight: '700',
@@ -465,7 +468,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.subText,
     textAlign: 'center',
     marginLeft: scale(10),
     lineHeight: verticalScale(isTablet ? 24 : 22),

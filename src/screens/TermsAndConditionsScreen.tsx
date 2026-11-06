@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 import {
   View,
@@ -22,6 +23,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../theme/colors';
 
 export default function TermsAndConditionsScreen({ navigation }: any) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
@@ -35,7 +38,7 @@ export default function TermsAndConditionsScreen({ navigation }: any) {
           <Ionicons
             name="arrow-back"
             size={isTablet ? 26 : 22}
-            color={COLORS.white}
+            color={theme.text}
           />
         </TouchableOpacity>
 
@@ -187,10 +190,10 @@ export default function TermsAndConditionsScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.background,
   },
 
   header: {
@@ -211,11 +214,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: theme.card,
   },
 
   headerTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 26 : 22),
     fontWeight: '700',
   },
@@ -234,9 +237,9 @@ const styles = StyleSheet.create({
     maxWidth: 1300,
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: COLORS.heroCardBackgroundColor,
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: COLORS.heroCardBorderColor,
+    borderColor: theme.border,
   },
 
   heroGlow: {
@@ -250,14 +253,14 @@ const styles = StyleSheet.create({
   },
 
   heroTitle: {
-    color: COLORS.white,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 32 : 28),
     marginTop: verticalScale(18),
     fontWeight: '800',
   },
 
   heroSubtitle: {
-    color: COLORS.heroSubtitleColor,
+    color: theme.subText,
     textAlign: 'center',
     fontSize: fontScale(isTablet ? 16 : 15),
     lineHeight: verticalScale(isTablet ? 28 : 24),
@@ -274,20 +277,20 @@ const styles = StyleSheet.create({
     width: '92%',
     alignSelf: 'center',
     maxWidth: 1300,
-    backgroundColor: COLORS.sectionCardBackgroundColor,
+    backgroundColor: theme.card,
     borderWidth: 1,
-    borderColor: COLORS.sectionCardBorderColor,
+    borderColor: theme.border,
   },
 
   sectionTitle: {
-    color: COLORS.sectionTitleColor,
+    color: theme.text,
     fontWeight: '700',
     fontSize: fontScale(isTablet ? 20 : 18),
     marginBottom: verticalScale(14),
   },
 
   sectionText: {
-    color: COLORS.sectionTextColor,
+    color: theme.subText,
     fontSize: fontScale(isTablet ? 16 : 15),
     lineHeight: verticalScale(isTablet ? 32 : 28),
     letterSpacing: 0.2,
@@ -300,13 +303,13 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: COLORS.footerColor,
+    color: theme.text,
     fontSize: fontScale(isTablet ? 16 : 15),
     fontWeight: '700',
   },
 
   footerSubText: {
-    color: COLORS.footerSubColor,
+    color: theme.subText,
     fontSize: fontScale(isTablet ? 14 : 13),
     marginTop: verticalScale(10),
   },

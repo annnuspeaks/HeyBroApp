@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 import {
@@ -31,6 +32,8 @@ import { uploadProfileImage, deleteProfileImage } from '../services/r2Service';
 import { COLORS } from '../theme/colors';
 
 const EditProfileScreen = ({ navigation }: any) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const { profile, setProfile } = useUserStore();
 
   const oldProfile = profile;
@@ -117,7 +120,7 @@ const EditProfileScreen = ({ navigation }: any) => {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+        <Ionicons name="arrow-back" size={24} color={theme.text} />
       </TouchableOpacity>
 
       <ScrollView
@@ -178,7 +181,7 @@ const EditProfileScreen = ({ navigation }: any) => {
             <TextInput
               value={form.name}
               placeholder="Enter name"
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor={theme.subText}
               onChangeText={text => handleChange('name', text)}
               style={styles.input}
             />
@@ -246,7 +249,7 @@ const EditProfileScreen = ({ navigation }: any) => {
             >
               <Text
                 style={{
-                  color: form.dob ? COLORS.white : 'rgba(255,255,255,0.35)',
+                  color: form.dob ? theme.text : theme.subText,
                 }}
               >
                 {form.dob || 'Select Date'}
@@ -262,7 +265,7 @@ const EditProfileScreen = ({ navigation }: any) => {
             <TextInput
               value={form.qualification}
               placeholder="Your qualification"
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor={theme.subText}
               onChangeText={text => handleChange('qualification', text)}
               style={styles.input}
             />
@@ -277,7 +280,7 @@ const EditProfileScreen = ({ navigation }: any) => {
               value={form.email}
               keyboardType="email-address"
               placeholder="example@gmail.com"
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor={theme.subText}
               onChangeText={text => handleChange('email', text)}
               style={styles.input}
             />
@@ -291,7 +294,7 @@ const EditProfileScreen = ({ navigation }: any) => {
             <TextInput
               value={form.website}
               placeholder="https://yourwebsite.com"
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor={theme.subText}
               onChangeText={text => handleChange('website', text)}
               style={styles.input}
             />
@@ -306,7 +309,7 @@ const EditProfileScreen = ({ navigation }: any) => {
               multiline
               value={form.bio}
               placeholder="Write something unique..."
-              placeholderTextColor="rgba(255,255,255,0.35)"
+              placeholderTextColor={theme.subText}
               onChangeText={text => handleChange('bio', text)}
               style={[styles.input, styles.bioInput]}
             />
@@ -349,207 +352,208 @@ const EditProfileScreen = ({ navigation }: any) => {
 
 export default EditProfileScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
 
-  backButton: {
-    position: 'absolute',
-    top: 45,
-    left: 20,
-    zIndex: 999,
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.overlay,
-  },
+    backButton: {
+      position: 'absolute',
+      top: 45,
+      left: 20,
+      zIndex: 999,
+      width: 46,
+      height: 46,
+      borderRadius: 23,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.card,
+    },
 
-  card: {
-    marginTop: 90,
-    width: '88%',
-    alignSelf: 'center',
-    borderRadius: 34,
-    padding: 24,
-    backgroundColor: COLORS.overlay,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
+    card: {
+      marginTop: 90,
+      width: '88%',
+      alignSelf: 'center',
+      borderRadius: 34,
+      padding: 24,
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  field: {
-    marginBottom: 22,
-  },
+    field: {
+      marginBottom: 22,
+    },
 
-  label: {
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 10,
-    fontSize: 15,
-  },
+    label: {
+      color: theme.subText,
+      marginBottom: 10,
+      fontSize: 15,
+    },
 
-  input: {
-    minHeight: 58,
-    borderRadius: 18,
-    paddingHorizontal: 18,
-    color: COLORS.white,
-    fontSize: 16,
-    justifyContent: 'center',
-    backgroundColor: COLORS.input,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
+    input: {
+      minHeight: 58,
+      borderRadius: 18,
+      paddingHorizontal: 18,
+      color: theme.text,
+      fontSize: 16,
+      justifyContent: 'center',
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  bioInput: {
-    minHeight: 120,
-    paddingTop: 18,
-    textAlignVertical: 'top',
-  },
+    bioInput: {
+      minHeight: 120,
+      paddingTop: 18,
+      textAlignVertical: 'top',
+    },
 
-  genderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+    genderRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
 
-  genderButton: {
-    width: '31%',
-    height: 54,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.input,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
+    genderButton: {
+      width: '31%',
+      height: 54,
+      borderRadius: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  genderButtonActive: {
-    backgroundColor: COLORS.primaryDark,
-  },
+    genderButtonActive: {
+      backgroundColor: COLORS.primaryDark,
+    },
 
-  genderText: {
-    color: 'rgba(255,255,255,0.6)',
-    fontWeight: '600',
-  },
+    genderText: {
+      color: theme.subText,
+      fontWeight: '600',
+    },
 
-  saveButton: {
-    position: 'absolute',
-    bottom: 24,
-    left: 20,
-    right: 20,
-    height: 64,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.primaryDark,
-  },
+    saveButton: {
+      position: 'absolute',
+      bottom: 24,
+      left: 20,
+      right: 20,
+      height: 64,
+      borderRadius: 22,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: COLORS.primaryDark,
+    },
 
-  saveText: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: '700',
-  },
+    saveText: {
+      color: theme.text,
+      fontSize: 18,
+      fontWeight: '700',
+    },
 
-  heroCard: {
-    marginTop: verticalScale(90),
+    heroCard: {
+      marginTop: verticalScale(90),
 
-    width: '92%',
-    maxWidth: 1300,
+      width: '92%',
+      maxWidth: 1300,
 
-    alignSelf: 'center',
+      alignSelf: 'center',
 
-    borderRadius: moderateScale(32),
+      borderRadius: moderateScale(32),
 
-    paddingVertical: verticalScale(34),
-    paddingHorizontal: scale(24),
+      paddingVertical: verticalScale(34),
+      paddingHorizontal: scale(24),
 
-    alignItems: 'center',
+      alignItems: 'center',
 
-    overflow: 'hidden',
+      overflow: 'hidden',
 
-    backgroundColor: 'rgba(255,255,255,0.04)',
+      backgroundColor: theme.card,
 
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
-  },
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  heroGlowLeft: {
-    position: 'absolute',
+    heroGlowLeft: {
+      position: 'absolute',
 
-    top: -90,
-    left: -70,
+      top: -90,
+      left: -70,
 
-    width: isTablet ? 260 : 220,
-    height: isTablet ? 260 : 220,
+      width: isTablet ? 260 : 220,
+      height: isTablet ? 260 : 220,
 
-    borderRadius: 999,
+      borderRadius: 999,
 
-    backgroundColor: 'rgba(168,85,247,0.18)',
-  },
+      backgroundColor: 'rgba(168,85,247,0.18)',
+    },
 
-  heroGlowRight: {
-    position: 'absolute',
+    heroGlowRight: {
+      position: 'absolute',
 
-    bottom: -80,
-    right: -60,
+      bottom: -80,
+      right: -60,
 
-    width: isTablet ? 240 : 190,
-    height: isTablet ? 240 : 190,
+      width: isTablet ? 240 : 190,
+      height: isTablet ? 240 : 190,
 
-    borderRadius: 999,
+      borderRadius: 999,
 
-    backgroundColor: 'rgba(59,130,246,0.12)',
-  },
+      backgroundColor: 'rgba(59,130,246,0.12)',
+    },
 
-  heroImageContainer: {
-    alignItems: 'center',
-  },
+    heroImageContainer: {
+      alignItems: 'center',
+    },
 
-  heroAvatar: {
-    width: scale(isTablet ? 80 : 72),
-    height: scale(isTablet ? 80 : 72),
-    borderRadius: 999,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
+    heroAvatar: {
+      width: scale(isTablet ? 80 : 72),
+      height: scale(isTablet ? 80 : 72),
+      borderRadius: 999,
+      borderWidth: 2,
+      borderColor: theme.border,
+    },
 
-  heroCameraBadge: {
-    position: 'absolute',
-    right: -2,
-    bottom: 2,
-    width: scale(20),
-    height: scale(20),
-    borderRadius: 999,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.primaryDark,
-  },
+    heroCameraBadge: {
+      position: 'absolute',
+      right: -2,
+      bottom: 2,
+      width: scale(20),
+      height: scale(20),
+      borderRadius: 999,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: COLORS.primaryDark,
+    },
 
-  heroName: {
-    marginTop: verticalScale(18),
+    heroName: {
+      marginTop: verticalScale(18),
 
-    color: COLORS.white,
+      color: theme.text,
 
-    fontWeight: '700',
+      fontWeight: '700',
 
-    fontSize: fontScale(isTablet ? 24 : 22),
-  },
+      fontSize: fontScale(isTablet ? 24 : 22),
+    },
 
-  heroPhone: {
-    marginTop: verticalScale(8),
-    color: 'rgba(255,255,255,0.55)',
-    fontSize: fontScale(isTablet ? 15 : 14),
-  },
+    heroPhone: {
+      marginTop: verticalScale(8),
+      color: theme.subText,
+      fontSize: fontScale(isTablet ? 15 : 14),
+    },
 
-  formCard: {
-    marginTop: verticalScale(24),
-    width: '92%',
-    maxWidth: 1300,
-    alignSelf: 'center',
-    borderRadius: moderateScale(28),
-    padding: scale(24),
-    backgroundColor: 'rgba(255,255,255,0.04)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
-  },
-});
+    formCard: {
+      marginTop: verticalScale(24),
+      width: '92%',
+      maxWidth: 1300,
+      alignSelf: 'center',
+      borderRadius: moderateScale(28),
+      padding: scale(24),
+      backgroundColor: theme.card,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+  });
