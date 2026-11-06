@@ -264,10 +264,40 @@ const ChatScreen = () => {
           opacity: fadeAnim,
         }}
         ListEmptyComponent={() => (
-          <View style={{ alignItems: 'center', marginTop: 100 }}>
-            <Text style={{ color: theme.text, opacity: 0.5 }}>
-              Start a new conversation 🚀
+          <View
+            style={{
+              alignItems: 'center',
+              marginTop: 100,
+              paddingHorizontal: 24,
+            }}
+          >
+            <Text
+              style={{
+                color: theme.text,
+                opacity: 0.8,
+                fontSize: 18,
+                fontWeight: '600',
+                textAlign: 'center',
+              }}
+            >
+              {searchQuery.trim()
+                ? 'No chats found'
+                : 'Start a new conversation 🚀'}
             </Text>
+
+            {searchQuery.trim() ? (
+              <Text
+                style={{
+                  color: theme.text,
+                  opacity: 0.6,
+                  fontSize: 14,
+                  textAlign: 'center',
+                  marginTop: 8,
+                }}
+              >
+                Try searching with another name or message.
+              </Text>
+            ) : null}
           </View>
         )}
         ListHeaderComponent={
