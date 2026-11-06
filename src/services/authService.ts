@@ -4,14 +4,45 @@ import {
   signOut,
 } from '@react-native-firebase/auth';
 
+let otpConfirmation: any = null;
+let otpPhoneNumber: string | null = null;
+
 export const sendPhoneOtp = async (phoneNumber: string) => {
   const auth = getAuth();
 
-  return signInWithPhoneNumber(auth, phoneNumber);
+  otpPhoneNumber = phoneNumber;
+  otpConfirmation = await signInWithPhoneNumber(auth, phoneNumber);
+
+  return otpConfirmation;
 };
 
-export const confirmPhoneOtp = async (confirmation: any, code: string) => {
-  return confirmation.confirm(code);
+export const resendPhoneOtp = async () => {
+  if (!otpPhoneNumber) {
+    throw new Error('Phone number is missing. Please request OTP again.');
+  }
+
+  const auth = getAuth();
+
+  otpConfirmation = await signInWithPhoneNumber(auth, otpPhoneNumber);
+
+  return otpConfirmation;
+};
+
+export const confirmPhoneOtp = async (code: string) => {
+  if (!otpConfirmation) {
+    throw new Error('OTP session has expired. Please request a new OTP.');
+  }
+
+  const result = await otpConfirmation.confirm(code);
+
+  otpConfirmation = null;
+
+  return result;
+};
+
+export const clearOtpConfirmation = () => {
+  otpConfirmation = null;
+  otpPhoneNumber = null;
 };
 
 export const getCurrentUser = () => {

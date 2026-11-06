@@ -138,6 +138,7 @@ const ChatItem = ({ item, index, theme, onPress }: any) => {
 
 const ChatScreen = () => {
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation<any>();
   const { theme } = useContext(ThemeContext);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -207,6 +208,19 @@ const ChatScreen = () => {
     },
   ];
 
+  const filteredChats = chats.filter(chat => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      return true;
+    }
+
+    return (
+      chat.name.toLowerCase().includes(query) ||
+      chat.message.toLowerCase().includes(query)
+    );
+  });
+
   const renderItem = ({ item, index }: any) => (
     <ChatItem
       item={item}
@@ -241,7 +255,7 @@ const ChatScreen = () => {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <FloatingThemeToggle />
       <Animated.FlatList
-        data={chats}
+        data={filteredChats}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -259,9 +273,12 @@ const ChatScreen = () => {
         ListHeaderComponent={
           <>
             <Image source={require('../assets/logo.png')} style={styles.logo} />
+
             <TextInput
               placeholder="Search chats..."
               placeholderTextColor="#aaa"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
               style={[
                 styles.search,
                 {

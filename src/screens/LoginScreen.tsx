@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -22,12 +22,12 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-import {COLORS} from '../theme/colors';
-import {sendPhoneOtp} from '../services/authService';
+import { COLORS } from '../theme/colors';
+import { sendPhoneOtp } from '../services/authService';
 
 const isLandscape = SCREEN_WIDTH > SCREEN_HEIGHT;
 
-const LoginScreen = ({navigation}: any) => {
+const LoginScreen = ({ navigation }: any) => {
   const [phone, setPhone] = useState('');
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
@@ -43,11 +43,10 @@ const LoginScreen = ({navigation}: any) => {
 
       const phoneNumber = `+91${phone}`;
 
-      const confirmation = await sendPhoneOtp(phoneNumber);
+      await sendPhoneOtp(phoneNumber);
 
       navigation.navigate('OtpScreen', {
         phone,
-        confirmation,
       });
     } catch (error: any) {
       console.log('PHONE OTP ERROR:', error);
@@ -65,7 +64,8 @@ const LoginScreen = ({navigation}: any) => {
   return (
     <LinearGradient
       colors={['#090B2A', '#1A145C', '#2A0A52']}
-      style={styles.container}>
+      style={styles.container}
+    >
       {/* Floating Spheres */}
 
       <View style={styles.sphereTop} />
@@ -74,18 +74,16 @@ const LoginScreen = ({navigation}: any) => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.centerContainer}>
+        style={styles.centerContainer}
+      >
         <View
           style={[
             styles.card,
             {
-              width: isLandscape
-                ? isTablet
-                  ? '52%'
-                  : '70%'
-                : '88%',
+              width: isLandscape ? (isTablet ? '52%' : '70%') : '88%',
             },
-          ]}>
+          ]}
+        >
           <Text style={styles.appName}>HeyBro</Text>
 
           <Text style={styles.loginText}>LOGIN</Text>
@@ -118,17 +116,16 @@ const LoginScreen = ({navigation}: any) => {
                     ? '#A020F0'
                     : 'rgba(255,255,255,0.15)',
               },
-            ]}>
+            ]}
+          >
             <Text
               style={[
                 styles.buttonText,
                 {
-                  opacity:
-                    isValidPhone && !isSendingOtp
-                      ? 1
-                      : 0.5,
+                  opacity: isValidPhone && !isSendingOtp ? 1 : 0.5,
                 },
-              ]}>
+              ]}
+            >
               {isSendingOtp ? 'Sending OTP...' : 'Continue'}
             </Text>
           </TouchableOpacity>

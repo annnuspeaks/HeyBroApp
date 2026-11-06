@@ -13,7 +13,11 @@ import {
   Alert,
 } from 'react-native';
 
-import { getCurrentUser } from '../services/authService';
+import {
+  getCurrentUser,
+  confirmPhoneOtp,
+  resendPhoneOtp,
+} from '../services/authService';
 import { getUserProfile } from '../services/firestoreService';
 import { useUserStore } from '../store/userStore';
 
@@ -26,11 +30,10 @@ const { width, height } = Dimensions.get('window');
 const isTablet = width >= 768;
 const isLandscape = width > height;
 
-const OtpScreen = ({ navigation, route }: any) => {
+const OtpScreen = ({ navigation }: any) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isVerifying, setIsVerifying] = useState(false);
-
-  const confirmation = route?.params?.confirmation;
+  const [isResending, setIsResending] = useState(false);
 
   const inputRefs = useRef<any[]>([]);
 
@@ -76,18 +79,10 @@ const OtpScreen = ({ navigation, route }: any) => {
       return;
     }
 
-    if (!confirmation?.confirm) {
-      Alert.alert(
-        'Unable to verify OTP',
-        'OTP verification session is missing. Please go back and request a new OTP.',
-      );
-      return;
-    }
-
     try {
       setIsVerifying(true);
 
-      await confirmation.confirm(otp.join(''));
+      await confirmPhoneOtp(otp.join(''));
 
       const user = getCurrentUser();
 
@@ -101,15 +96,39 @@ const OtpScreen = ({ navigation, route }: any) => {
 
       navigation.replace('MainTabs');
     } catch (error: any) {
-      console.error('OTP VERIFY ERROR:', error);
-
       Alert.alert(
         'Invalid OTP',
-        error?.message ||
-          'The OTP is incorrect or has expired. Please try again.',
+        'The OTP you entered is incorrect or has expired. Please check the code and try again.',
       );
     } finally {
       setIsVerifying(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (isResending || isVerifying) {
+      return;
+    }
+
+    try {
+      setIsResending(true);
+
+      await resendPhoneOtp();
+
+      setOtp(['', '', '', '', '', '']);
+
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+
+      Alert.alert('OTP Sent', 'A new OTP has been sent to your phone.');
+    } catch (error: any) {
+      Alert.alert(
+        'Unable to Resend OTP',
+        'We could not send a new OTP. Please try again.',
+      );
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -214,8 +233,14 @@ const OtpScreen = ({ navigation, route }: any) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.7}>
-            <Text style={styles.resendText}>Resend OTP</Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleResendOtp}
+            disabled={isResending || isVerifying}
+          >
+            <Text style={styles.resendText}>
+              {isResending ? 'Sending...' : 'Resend OTP'}
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
