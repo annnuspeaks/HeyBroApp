@@ -30,6 +30,16 @@ const { width, height } = Dimensions.get('window');
 const isTablet = width >= 768;
 const isLandscape = width > height;
 
+// Match the OTP row to the card's usable width (card width minus 30dp padding on each side).
+const otpCardWidth = isLandscape
+  ? width * (isTablet ? 0.52 : 0.70)
+  : width * 0.88;
+const otpGap = isTablet ? 8 : 4;
+const otpBoxWidth = Math.max(
+  30,
+  Math.min(isTablet ? 68 : 42, Math.floor((otpCardWidth - 60 - otpGap * 5) / 6)),
+);
+
 const OtpScreen = ({ navigation }: any) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -196,6 +206,7 @@ const OtpScreen = ({ navigation }: any) => {
                 keyboardType="number-pad"
                 maxLength={1}
                 autoFocus={index === 0}
+                multiline={false}
                 caretHidden={true}
                 selectionColor="transparent"
                 contextMenuHidden={true}
@@ -301,19 +312,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 35,
-    gap: isTablet ? 10 : 6,
+    gap: otpGap,
   },
 
   otpInput: {
     flex: 0,
-    width: isTablet ? 78 : 42,
-    height: isTablet ? 78 : 58,
+    width: otpBoxWidth,
+    height: isTablet ? 68 : 54,
     borderRadius: 20,
     backgroundColor: 'rgba(255,255,255,0.10)',
     color: '#FFFFFF',
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: isTablet ? 28 : 22,
+    fontSize: isTablet ? 26 : 20,
     fontWeight: '600',
     marginHorizontal: 0,
     padding: 0,

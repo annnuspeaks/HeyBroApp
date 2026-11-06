@@ -153,7 +153,7 @@
 ---
 
 # 💬 PHASE 6 — CHAT LIST SCREEN
-**Status: ✅ COMPLETE — FINAL REGRESSION PENDING**
+**Status: ✅ COMPLETE**
 
 - [x] Base UI
 - [x] Search
@@ -172,9 +172,9 @@
 - [x] Stacked-card visual treatment
 - [x] Card animation/push behavior
 - [x] Active-dot positioning
-- [ ] Final phone regression test
-- [ ] Final tablet portrait regression test
-- [ ] Final tablet landscape regression test
+- [x] Final phone regression test
+- [x] Final tablet portrait regression test
+- [x] Final tablet landscape regression test
 
 ---
 

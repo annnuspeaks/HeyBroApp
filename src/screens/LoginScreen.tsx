@@ -100,6 +100,9 @@ const LoginScreen = ({ navigation }: any) => {
             placeholderTextColor="rgba(255,255,255,0.45)"
             keyboardType="number-pad"
             maxLength={10}
+            multiline={false}
+            numberOfLines={1}
+            ellipsizeMode="tail"
             editable={!isSendingOtp}
             style={styles.input}
           />
@@ -184,12 +187,17 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: verticalScale(isTablet ? 68 : 58),
+    height: isTablet ? 60 : 54,
+    minWidth: 0,
     borderRadius: moderateScale(12),
-    paddingHorizontal: scale(10),
+    paddingHorizontal: scale(12),
+    paddingVertical: 0,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
     backgroundColor: 'rgba(255,255,255,0.10)',
     color: COLORS.white,
-    fontSize: fontScale(isTablet ? 20 : 16),
+    fontSize: isTablet ? 18 : 16,
+    lineHeight: isTablet ? 22 : 20,
     marginBottom: verticalScale(30),
   },
 
